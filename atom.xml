@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-26T20:34:31+08:00</updated>
+  <updated>2014-03-26T20:56:40+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,17 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[测试一下]]></title>
-    <link href="http://daryl5.github.io/blog/2014/03/26/ce-shi-%5B%3F%5D-xia/"/>
-    <updated>2014-03-26T20:22:07+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/03/26/ce-shi-[?]-xia</id>
-    <content type="html"><![CDATA[<h1>标题一</h1>
-
-<h2>标题二</h2>
-
-<h3>标题三</h3>
-
-<p><strong>粗体</strong></p>
+    <title type="html"><![CDATA[I LOVE YOU]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/26/i-love-you/"/>
+    <updated>2014-03-26T20:55:46+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/26/i-love-you</id>
+    <content type="html"><![CDATA[<h3>爱你么么哒</h3>
 ]]></content>
   </entry>
   
