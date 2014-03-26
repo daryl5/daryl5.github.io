@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-26T20:58:43+08:00</updated>
+  <updated>2014-03-26T21:01:21+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -19,6 +19,8 @@
     <updated>2014-03-26T20:55:46+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/26/i-love-you</id>
     <content type="html"><![CDATA[<h3>爱你么么哒</h3>
+
+<p><img src="./%E5%AA%B3%E5%A6%87.jpg" alt="媳妇" /></p>
 ]]></content>
   </entry>
   
