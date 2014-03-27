@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-27T14:17:00+08:00</updated>
+  <updated>2014-03-27T14:23:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,5 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[This is a test]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/27/this-is-a-test/"/>
+    <updated>2014-03-27T14:21:45+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/27/this-is-a-test</id>
+    <content type="html"><![CDATA[<h2>Hello world!</h2>
+
+<h3>This is a test.</h3>
+
+<ol>
+<li>List item 1.</li>
+<li>2</li>
+<li>3</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
 </feed>
