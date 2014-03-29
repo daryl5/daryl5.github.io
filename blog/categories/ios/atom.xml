@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
+  <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://daryl5.github.io/"/>
+  <updated>2014-03-29T22:47:47+08:00</updated>
+  <id>http://daryl5.github.io/</id>
+  <author>
+    <name><![CDATA[Daryl5]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Another test haha]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/29/another-test-haha/"/>
+    <updated>2014-03-29T22:46:26+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/29/another-test-haha</id>
+    <content type="html"><![CDATA[<p>刚刚进行完阿里在线笔试，bless~</p>
+]]></content>
+  </entry>
+  
+</feed>
