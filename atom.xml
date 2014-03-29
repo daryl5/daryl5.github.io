@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-27T14:44:52+08:00</updated>
+  <updated>2014-03-29T22:42:11+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Zai Ce Shi [?] Xia]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/29/zai-ce-shi-%5B%3F%5D-xia/"/>
+    <updated>2014-03-29T00:00:00+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/29/zai-ce-shi-[?]-xia</id>
+    <content type="html"><![CDATA[<p>刚刚进行完阿里在线笔试，关于职位相关的题答得不错，其他感觉都挺蛋疼的，bless！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[This is a test]]></title>
