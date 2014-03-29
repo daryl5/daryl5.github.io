@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-29T22:45:14+08:00</updated>
+  <updated>2014-03-29T22:46:59+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,11 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Another Test]]></title>
-    <link href="http://daryl5.github.io/blog/2014/03/29/zai-ce-shi-%5B%3F%5D-xia/"/>
-    <updated>2014-03-29T22:41:11+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/03/29/zai-ce-shi-[?]-xia</id>
-    <content type="html"><![CDATA[<p>刚刚进行完阿里在线笔试，关于职位相关的题答得不错，其他感觉都挺蛋疼的，bless！</p>
+    <title type="html"><![CDATA[Another test haha]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/29/another-test-haha/"/>
+    <updated>2014-03-29T22:46:26+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/29/another-test-haha</id>
+    <content type="html"><![CDATA[<p>刚刚进行完阿里在线笔试，bless~</p>
 ]]></content>
   </entry>
   
