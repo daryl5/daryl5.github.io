@@ -9,8 +9,8 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content=" Blog Archives
-">
+	<meta name="description" content="Mar 30th, 2014 iOS 读Inkpad源代码笔记 Inkpad是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。 1
+This is a test 1. 关于CGRectGetWidth 以前总是写成self.frame.size.width。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -99,6 +99,90 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-30T19:55:11+08:00" data-updated="true" itemprop="datePublished">Mar 30<span>th</span>, 2014</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/ios/'>iOS</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/03/30/reading-inkpad-source-code/" itemprop="url">读Inkpad源代码笔记</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>This is a test</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>1. 关于<code>CGRectGetWidth</code></h3>
+
+<p>以前总是写成<code>self.frame.size.width</code>。此外还有CGRectGetMidX。写了好多累赘代码。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2);</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面</h3>
+
+<p>建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span> <span class="nf">helpURL</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">resource</span> <span class="o">=</span> <span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@&quot;index&quot;</span><span class="p">,</span> <span class="s">@&quot;Name of Help html file&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="n">resource</span> <span class="nl">ofType:</span><span class="s">@&quot;html&quot;</span> <span class="nl">inDirectory:</span><span class="s">@&quot;Help&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nl">fileURLWithPath:</span><span class="n">path</span> <span class="nl">isDirectory:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">loadView</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">UIWebView</span> <span class="o">*</span><span class="n">webView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIWebView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
+</span><span class='line'>    <span class="n">webView</span><span class="p">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="n">UIViewAutoresizingFlexibleWidth</span> <span class="o">|</span> <span class="n">UIViewAutoresizingFlexibleHeight</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">webView</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">webView</span> <span class="nl">loadRequest:</span><span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">self</span> <span class="n">helpURL</span><span class="p">]]];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3.</h3>
+
+		
+		
+	</div>
+
+</article>
 
 </div>
 <nav id="pagenavi">
