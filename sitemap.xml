@@ -1,16 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://daryl5.github.io/blog/2014/03/27/this-is-a-test/</loc>
-        <lastmod>2014-03-27T14:44:43+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://daryl5.github.io/blog/2014/03/29/another-test-haha/</loc>
-        <lastmod>2014-03-29T22:47:44+08:00</lastmod>
+        <loc>http://daryl5.github.io/about/</loc>
+        <lastmod>2014-03-30T14:21:20+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/archives/</loc>
-        <lastmod>2014-03-29T22:47:44+08:00</lastmod>
+        <lastmod>2014-03-27T13:23:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/categories/</loc>
@@ -18,7 +14,7 @@
     </url>
     <url>
         <loc>http://daryl5.github.io/</loc>
-        <lastmod>2014-03-29T22:47:44+08:00</lastmod>
+        <lastmod>2014-03-27T13:23:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/robots.txt</loc>
