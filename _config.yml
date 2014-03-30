@@ -78,12 +78,12 @@ github_skip_forks: true
 # Pinboard
 
 # Delicious
-#delicious_user:
-#delicious_count: 3
+delicious_user:
+delicious_count: 3
 
 # Disqus Comments
-#disqus_short_name:
-#disqus_show_comment_count: false
+disqus_short_name:
+disqus_show_comment_count: false
 
 # Google Analytics
 #google_analytics_tracking_id:

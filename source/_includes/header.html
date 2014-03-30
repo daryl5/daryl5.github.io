@@ -11,12 +11,13 @@
 	</script>
 	{% endif %}
      -->
-    <img src="../images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
 </div>
 {% include custom/header.html %}
 <nav id="main-nav">{% include navigation.html %}</nav>
 <nav id="sub-nav">
 	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
 		{% if site.email %}
 			<a class="email" href="mailto:{{ site.email }}" title="Email">Email</a>
 		{% endif %}
