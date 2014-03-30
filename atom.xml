@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-30T22:27:35+08:00</updated>
+  <updated>2014-03-30T22:29:07+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -19,10 +19,6 @@
     <updated>2014-03-30T19:55:11+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>This is a test</span></code></pre></td></tr></table></div></figure>
-
 
 <h3>1. 关于<code>CGRectGetWidth</code></h3>
 
