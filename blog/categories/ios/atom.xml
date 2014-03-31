@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-31T14:44:52+08:00</updated>
+  <updated>2014-03-31T21:37:14+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,22 +14,32 @@
 
   
   <entry>
-    <title type="html"><![CDATA[读Inkpad源代码笔记]]></title>
+    <title type="html"><![CDATA[读Inkpad源代码]]></title>
     <link href="http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/"/>
     <updated>2014-03-30T19:55:11+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。</p>
 
-<h3>1. 关于<code>CGRectGetWidth</code></h3>
+<h3>0. 内联函数的使用</h3>
 
-<p>以前总是写成<code>self.frame.size.width</code>。此外还有CGRectGetMidX。写了好多累赘代码。
-<code>
-CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2);
-</code></p>
+<h3>1. 一些简洁的写法</h3>
 
-<h3>2. 应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面</h3>
+<ul>
+<li><p><code>CGRectGetWidth</code>，以前总是写成<code>self.frame.size.width</code>。此外还有CGRectGetMidX，直接得到矩形中心点的X坐标。</p>
 
-<p>建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。
+<pre><code>  CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2);
+</code></pre></li>
+<li><p><code>[NSDictionary objectForKey]</code>，可以直接<code>dictionary[key]</code>。</p></li>
+<li><p><code>BOOL isolate</code>转NSString，<code>@(isolate)</code>。NSArray的类似写法：</p>
+
+<pre><code>  NSArray *items = @[actionItem_, gearItem_, albumItem_, zoomToFitItem_];
+</code></pre></li>
+</ul>
+
+
+<h3>2. Best Practice</h3>
+
+<p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。
 ```objective-c
 &ndash; (NSURL *) helpURL
 {</p>
@@ -39,21 +49,20 @@ NSString *path = [[NSBundle mainBundle] pathForResource:resource ofType:@"html" 
 return [NSURL fileURLWithPath:path isDirectory:NO];
 </code></pre>
 
-<p>}</p>
+<p>}
+&ndash; (void)loadView
+{</p>
 
-<ul>
-<li>(void)loadView
-{
-  UIWebView *webView = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  self.view = webView;
-  [webView loadRequest:[NSURLRequest requestWithURL:[self helpURL]]];
-}
-```
+<pre><code>UIWebView *webView = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+self.view = webView;
+[webView loadRequest:[NSURLRequest requestWithURL:[self helpURL]]];
+</code></pre>
 
-<h3>3.</h3></li>
-</ul>
+<p>}
+```</p>
 
+<h3>3.</h3>
 ]]></content>
   </entry>
   
