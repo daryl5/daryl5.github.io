@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-03-31T21:37:14+08:00</updated>
+  <updated>2014-03-31T21:40:48+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -25,7 +25,7 @@
 <h3>1. 一些简洁的写法</h3>
 
 <ul>
-<li><p><code>CGRectGetWidth</code>，以前总是写成<code>self.frame.size.width</code>。此外还有CGRectGetMidX，直接得到矩形中心点的X坐标。</p>
+<li><p><code>CGRectGetWidth</code>，以前总是写成<code>self.frame.size.width</code>。此外还有<code>CGRectGetMidX</code>，直接得到矩形中心点的X坐标。</p>
 
 <pre><code>  CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2);
 </code></pre></li>
