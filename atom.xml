@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-01T22:23:52+08:00</updated>
+  <updated>2014-04-01T23:24:52+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -25,9 +25,11 @@
 
 <p><img src="http://daryl5.github.io/images/blogimage/2014/useuidocument.jpg" alt="草图" /></p>
 
+<h2>其他</h2>
+
 <h3>1.设备旋转支持</h3>
 
-<p>好多大厂的软件居然也能支持反过来操作，真是不可理解。</p>
+<p>好多大厂的App居然也能支持反过来操作，真是不可理解。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
