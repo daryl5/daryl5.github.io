@@ -5,11 +5,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Category: iOS - Daryl's Blog</title>
+	<title>UIDocument的使用 - Daryl's Blog</title>
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="Category: iOS">
+	<meta name="description" content="UIDocument的使用 读Inkpad源码时看到使用了UIDocument，然后搜到了Ray Wenderlich的博文：iCloud and UIDocument: Beyond the Basics，整理了一下大致用法。 1.设备旋转支持 好多大厂的软件居然也能支持反过来操作， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
 
 	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://daryl5.github.ioblog/categories/ios/">
+	<link rel="canonical" href="http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -97,48 +97,43 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner">
-	
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">UIDocument的使用</h1>
+	<div class="entry-content" itemprop="articleBody"><p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
+
+<!--more-->
 
 
-	
-	
-	<section class="archives"><h1 class="year">2014</h1>
+<p><img src="/images/blogimage/2014/useuidocument.jpg" alt="草图" /></p>
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2014-04-01T21:42:32+08:00" itemprop="datePublished">Apr  1</time></span>
-		<br>
-		<span class="tags">
+<h3>1.设备旋转支持</h3>
 
+<p>好多大厂的软件居然也能支持反过来操作，真是不可理解。</p>
 
-	<a class='category' href='/blog/categories/ios/'>iOS</a>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">shouldAutorotateToInterfaceOrientation:</span><span class="p">(</span><span class="n">UIInterfaceOrientation</span><span class="p">)</span><span class="nv">interfaceOrientation</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">interfaceOrientation</span> <span class="o">!=</span> <span class="n">UIInterfaceOrientationPortraitUpsideDown</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
+</div>
 
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/01/how-to-use-uidocument/">UIDocument的使用</a></h1>
 </article>
 
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2014-03-30T19:55:11+08:00" itemprop="datePublished">Mar 30</time></span>
-		<br>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/ios/'>iOS</a>
-
-
-</span>
-	    
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/03/30/reading-inkpad-source-code/">读Inkpad源代码</a></h1>
-</article>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
 
 </div>
 			</div>
