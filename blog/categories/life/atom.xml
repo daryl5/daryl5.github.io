@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: life | Daryl's Blog]]></title>
+  <link href="http://daryl5.github.io/blog/categories/life/atom.xml" rel="self"/>
+  <link href="http://daryl5.github.io/"/>
+  <updated>2014-04-02T17:23:44+08:00</updated>
+  <id>http://daryl5.github.io/</id>
+  <author>
+    <name><![CDATA[Daryl5]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[不要戳进来]]></title>
+    <link href="http://daryl5.github.io/blog/1989/08/13/i-love-grace/"/>
+    <updated>1989-08-13T17:23:25+09:00</updated>
+    <id>http://daryl5.github.io/blog/1989/08/13/i-love-grace</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>我爱你，王小妞。</p>
+]]></content>
+  </entry>
+  
+</feed>

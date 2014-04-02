@@ -1,28 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://daryl5.github.io/blog/1989/08/13/i-love-grace/</loc>
+        <lastmod>2014-04-02T17:03:07+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/</loc>
-        <lastmod>2014-04-01T23:22:08+08:00</lastmod>
+        <lastmod>2014-04-02T17:03:07+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument/</loc>
-        <lastmod>2014-04-01T22:30:11+08:00</lastmod>
+        <lastmod>2014-04-02T17:03:07+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://daryl5.github.io/blog/2014/04/02/use-alfred-with-octopress/</loc>
+        <lastmod>2014-04-02T17:03:07+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/about/</loc>
-        <lastmod>2014-03-30T14:21:20+08:00</lastmod>
+        <lastmod>2014-04-02T17:02:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/archives/</loc>
-        <lastmod>2014-04-01T23:22:08+08:00</lastmod>
+        <lastmod>2014-04-02T16:28:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/categories/</loc>
-        <lastmod>2014-03-27T13:23:59+08:00</lastmod>
+        <lastmod>2014-04-02T17:02:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/</loc>
-        <lastmod>2014-04-01T23:22:08+08:00</lastmod>
+        <lastmod>2014-04-02T16:28:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/robots.txt</loc>
