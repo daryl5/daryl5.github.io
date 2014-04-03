@@ -7,6 +7,7 @@ categories: iOS
 ---
 [Inkpad](https://github.com/sprang/Inkpad)是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。
 ###0. 内联函数的使用
+
 ###1. 一些简洁的写法
 - `CGRectGetWidth`，以前总是写成`self.frame.size.width`。此外还有`CGRectGetMidX`，直接得到矩形中心点的X坐标。
 
