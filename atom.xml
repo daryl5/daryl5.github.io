@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-03T13:14:09+08:00</updated>
+  <updated>2014-04-03T23:43:40+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -70,7 +70,7 @@
     <link href="http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/"/>
     <updated>2014-03-30T19:55:11+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画图App，这篇博文记录阅读其源代码时的收获。</p>
+    <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。</p>
 
 <h3>0. 内联函数的使用</h3>
 
@@ -121,6 +121,32 @@
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h3>3. <code>NSNotification</code>的名字应该在哪定义</h3>
+
+<p>在<code>WDToolManager.m</code>中，<code>NSString *WDActiveToolDidChange = @"WDActiveToolDidChange";</code>，然后在头文件中<code>extern NSString *WDActiveToolDidChange;</code>。一般来说关心这个通知（当前工具改变）的类都引用了这个类的头文件，这样比放在一个<code>ConstantsDefine.h</code>里要好。</p>
+
+<h3>4.枚举定义中为什么要用左移</h3>
+
+<p>这里解释的很详细<a href="http://stackoverflow.com/questions/3999922/why-use-the-bitwise-shift-operator-for-values-in-a-c-enum-definition">Why use the Bitwise-Shift operator for values in a C enum definition?</a>。如果用</p>
+
+<pre><code>typedef enum { WDToolDefault, WDToolShiftKey, WDToolOptionKey }  
+</code></pre>
+
+<p>那么<code>WDToolDefault | WDToolShiftKey</code>就是<code>1 | 2</code>会得到3！！用左移就不会有这个问题，就是<strong><em>可以在一个变量中支持多个枚举值</em></strong>（将其相加或者取或），判断的时候取与。</p>
+
+<pre><code>typedef enum {
+    WDToolDefault           = 0,
+    WDToolShiftKey          = 1 &lt;&lt; 0,
+    WDToolOptionKey         = 1 &lt;&lt; 1,
+    WDToolControlKey        = 1 &lt;&lt; 2,
+    WDToolSecondaryTouch    = 1 &lt;&lt; 3
+} WDToolFlags;  
+</code></pre>
+
+<h3>5. 子类不能重写touchesBegan但要在其发生同时完成处理</h3>
+
+<p><code>FingerTackerView</code>重写<code>touchesBegan</code>等等方法，然后在其内部进行一些操作后调用<code>[self methodForSubclassOverwritten]</code>，这个方法可以置空。<code>HandWritingView</code>，<code>GestureEditorView</code>等继承自<code>FingerTrackerView</code>的类里重写<code>[self methodForSubclassOverwritten]</code>，这样就能在采集点的同时，对点的处理根据当前选择功能（即所处的视图）来由对应的子类来处理。子类不会出现<code>touchesBegan</code>等，但是可以通过重写方法来实现手势运动时处理。</p>
 ]]></content>
   </entry>
   
