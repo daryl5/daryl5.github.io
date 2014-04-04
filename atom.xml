@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-04T15:04:57+08:00</updated>
+  <updated>2014-04-04T15:06:43+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -92,7 +92,7 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 </ul>
 </blockquote></blockquote>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -101,15 +101,16 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if ([self.contentModel.content isEqual:str]) {
-</span><span class='line'>    return;
-</span><span class='line'>}
-</span><span class='line'>    
-</span><span class='line'>NSString *oldContent = self.contentModel.content;
-</span><span class='line'>self.contentModel.content = str;
-</span><span class='line'>    
-</span><span class='line'>[self.undoManager setActionName:@"Content Change"];
-</span><span class='line'>[self.undoManager registerUndoWithTarget:self selector:@selector(setContentString:) object:oldContent];</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">contentModel</span><span class="p">.</span><span class="n">content</span> <span class="nl">isEqual:</span><span class="n">str</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">oldContent</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">contentModel</span><span class="p">.</span><span class="n">content</span><span class="p">;</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">contentModel</span><span class="p">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">str</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">undoManager</span> <span class="nl">setActionName:</span><span class="s">@&quot;Content Change&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">undoManager</span> <span class="nl">registerUndoWithTarget:</span><span class="n">self</span> <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">setContentString:</span><span class="p">)</span> <span class="nl">object:</span><span class="n">oldContent</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>其他</h2>

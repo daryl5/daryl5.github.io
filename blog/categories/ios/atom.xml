@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-04T15:04:57+08:00</updated>
+  <updated>2014-04-04T15:06:43+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -68,7 +68,7 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 <li>重写<code>loadFromContents</code>和<code>contentsForType</code>，loadFromContents里面self.wrapper = (NSFileWrapper *)contents;给wrapper赋值，contentsForType里面把两个model encode进wrapper</li>
 <li>重写<code>titleModel</code>和<code>contentModel</code>两个getter实现Lazy Loading，需要的时候再decode；如果文件不存在则把model初始化为nil</li>
 <li>实现ContentModel的content的Accessor来实现undo/redo，在Setter里面执行如下代码块：
-```
+```objective-c
 if ([self.contentModel.content isEqual:str]) {
   return;
 }</li>
