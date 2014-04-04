@@ -50,7 +50,7 @@
     <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
 </div>
 <h1><a href="/">Daryl's Blog</a></h1>
-<p class="subtitle">Talk Is Cheap. Show Me The Code.</p>
+<p class="subtitle">忌眼高手低，忌浮躁。</p>
 <nav id="main-nav"><ul class="main-navigation">
     <li><a href="/">Blog</a></li>
     <li><a href="/blog/archives">Archives</a></li>
@@ -100,7 +100,15 @@
 
 <h3>2. 输入输出格式</h3>
 
-<p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。</p>
+<p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。FileWrapper内部是Key-Value形式的存储，文件名是key，文件存在本地的archive内容（或是archive文件名）是value，所以会有：</p>
+
+<pre><code>//从文件名（如xxxx.title，不是xxxx.note）得到FileWrapper
+NSFileWrapper *fileWrapper = [self.fileWrapper.fileWrappers objectForKey:preferredFilename];
+
+//从FileWrapper得到文件内容
+NSData *data = [fileWrapper regularFileContents];
+NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+</code></pre>
 
 <h3>3. iCloud</h3>
 
@@ -114,6 +122,48 @@
 <h3>4. 关于undo/redo</h3>
 
 <p>UIDocument有undo/redo支持，访问器是注册undo动作最合适的地方，所以document类里，对需要添加undo/redo功能的数据要重写访问器。对不需要undo/redo功能的数据，直接给document用property添加一个model就好。</p>
+
+<h3>5. 整体的实现结构</h3>
+
+<p>以记事本为例，title和content两个model，其中都只包含一个NSString。主视图直接在title，detailViewController再加载content。</p>
+
+<blockquote><p><code>TitleModel</code>和<code>ContentModel</code>都实现<code>NSCoding</code>协议方法，这里可以考虑把<code>VersionNumber</code>encode进去以便后期支持文件格式扩展。
+<strong>NoteDocument.h</strong></p>
+
+<blockquote><p><code>@property (nonatomic, strong) TitleModel *titleModel;
+//这里对ContentModel中的内容实现访问器，原因第4条有，方便undo/redo</code>
+<code>- (NSString *)contentString;</code><br/>
+<code>- (void)setContentString:(NSString *)str;</code></p></blockquote>
+
+<p><strong>NoteDocument.m</strong></p>
+
+<blockquote><ul>
+<li>类扩展里定义<code>contentModel</code>和<code>fileWrapper</code>(读文件时候用)，<code>titleModel</code>直接放在头文件是因为It’s OK if the user accesses the metadata directly though, as it’s not something the app will modify. Instead, the metadata will be automatically updated when the user sets the photo.</li>
+<li>重写<code>loadFromContents</code>和<code>contentsForType</code>，loadFromContents里面self.wrapper = (NSFileWrapper *)contents;给wrapper赋值，contentsForType里面把两个model encode进wrapper</li>
+<li>重写<code>titleModel</code>和<code>contentModel</code>两个getter实现Lazy Loading，需要的时候再decode；如果文件不存在则把model初始化为nil</li>
+<li>实现ContentModel的content的Accessor来实现undo/redo，在Setter里面执行如下代码块：</li>
+</ul>
+</blockquote></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if ([self.contentModel.content isEqual:str]) {
+</span><span class='line'>    return;
+</span><span class='line'>}
+</span><span class='line'>    
+</span><span class='line'>NSString *oldContent = self.contentModel.content;
+</span><span class='line'>self.contentModel.content = str;
+</span><span class='line'>    
+</span><span class='line'>[self.undoManager setActionName:@"Content Change"];
+</span><span class='line'>[self.undoManager registerUndoWithTarget:self selector:@selector(setContentString:) object:oldContent];</span></code></pre></td></tr></table></div></figure>
+
 
 <h2>其他</h2>
 
