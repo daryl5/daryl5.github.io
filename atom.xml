@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-03T23:43:40+08:00</updated>
+  <updated>2014-04-04T11:51:05+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -41,16 +41,32 @@
     <id>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument</id>
     <content type="html"><![CDATA[<p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
 
+<h3>1. 继承UIDocument并重写方法</h3>
+
+<p>需要重写<code>loadFromContents:ofType:error</code>方法来读，重写<code>contentsForType:error</code>方法来写。</p>
+
+<h3>2. 输入输出格式</h3>
+
+<p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。</p>
+
+<h3>3. iCloud</h3>
+
+<p>Apple规定，应用的所有documents要么在沙盒，要么在iCloud本地文件夹，用户不能选择某一文件来让其单独的存储在iCloud。</p>
+
+<blockquote><p>All documents of an application are stored either in the local sandbox or in an iCloud container directory. A user should not be able to select individual documents for storage in iCloud.</p></blockquote>
+
 <!--more-->
 
 
-<p><img src="http://daryl5.github.io/blogimage/2014/useuidocument.jpg" alt="useuidocument" /></p>
+<h3>4. 关于undo/redo</h3>
+
+<p>UIDocument有undo/redo支持，访问器是注册undo动作最合适的地方，所以document类里，对需要添加undo/redo功能的数据要重写访问器。对不需要undo/redo功能的数据，直接给document用property添加一个model就好。</p>
 
 <h2>其他</h2>
 
-<h3>1.设备旋转支持</h3>
+<h3>1. 设备旋转支持</h3>
 
-<p>好多大厂的App居然也能支持反过来操作，真是不可理解。</p>
+<p>好多大厂的App居然也能支持反过来操作，真是不可理解。代码摘自引用博文实现的工程。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -62,6 +78,8 @@
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p><img src="http://daryl5.github.io/blogimage/2014/useuidocument.jpg" alt="useuidocument" /></p>
 ]]></content>
   </entry>
   
