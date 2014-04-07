@@ -1,0 +1,199 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>『Effective Objective-C 2.0』笔记 - Daryl's Blog</title>
+	<meta name="author" content="Daryl5">
+
+	
+	<meta name="description" content="『Effective Objective-C 2.0』笔记 《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：Matt Galloway 1: Accustoming &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!-- 
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+          //$('.profilepic').append("<img src='../images/avatar.jpg" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='../images/avatar.jpg alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+     -->
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+</div>
+<h1><a href="/">Daryl's Blog</a></h1>
+<p class="subtitle">忌眼高手低，忌浮躁。</p>
+<nav id="main-nav"><ul class="main-navigation">
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+    <li><a href="/blog/categories">Categories</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/daryl5" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">『Effective Objective-C 2.0』笔记</h1>
+	<div class="entry-content" itemprop="articleBody"><p>《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：<a href="http://www.galloway.me.uk/">Matt Galloway</a></p>
+
+<h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
+
+<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</font></h3>
+
+<p>a.如下引文，试了一下互相import，没有报错- -！</p>
+
+<blockquote><p>The use of #import rather than #include doesn&rsquo;t end in an infinite loop but does mean that one of ther classes won&rsquo;t compile correctly.</p></blockquote>
+
+<p>b.协议相关<br/>
+一些代理相关的协议，可以把协议头文件在.m文件里再引入，把代理<code>id&lt;XXXProtocol&gt; delegate</code>定义放在类扩展里。
+也可以考虑单独创建一个头文件，里面只放协议定义。</p>
+
+<h3>Item 3: 使用字面量语法而不是其等价方法&mdash;Prefer Literal Syntax over the Equivalent Methods</h3>
+
+<p>a.字面量使用</p>
+
+<pre><code>NSString *str           = @"Test String";
+NSNumber *boolValue     = @YES;
+NSNumber *charValue     = @'a';
+NSNumber *expressionVal = @(x * y);//int x &amp; float y
+
+NSArray *animals        = @[@"cat", @"dog"];
+NSString *dog           = animails[1];//下标直接访问
+
+NSDictionary *person    = @{@"firstName" : @"Matt", @"age" : @28};
+NSString *firstName     = person[@"firstName"];//key值直接访问value
+
+//Assign value or replace
+mutableArray[1] = @"dog";
+mutableDictionary[@"lastName"] = @"Galloway";
+</code></pre>
+
+<p>b.好处<br/>
+如果NSArray用3个object来初始化，第二个是nil，那么arrayWithObjects将会返回一个只包含object1的array，而字面量初始化会报错。<strong>“报错”比“少了个数”更安全。</strong>
+对于NSDictonary，初始化会在遇到nil时候停止，dictionaryWithObjectsAndKeys可能会少了某一个value；字面量更安全。<br/>
+c.缺点<br/>
+字面量语法只能用于Foundation框架的一些类，对于自定义的类没法这样定义（显然）。<br/>
+对于mutable对象的定义，需要进行mutableCopy。增加了额外的方法调用和对象创建</p>
+
+<pre><code>NSMutableArray *mutable = [@[@1, @2, @3] mutableCopy];
+</code></pre>
+
+<h3>Item 4: 使用类型化常量而不是预处理指令#define&mdash;Prefer Typed Constants to Preprocessor #define</h3>
+
+<p>a.#define的缺点<br/>
+预处理指令<code>#define ANIMATION_DURATION 0.3</code>只是在预处理阶段进行<code>替换</code>，它没有包含类型信息。（如果定义在头文件，所有包含该头文件的文件也都会进行替换。）<br/>
+b.类型化常量的使用（static const）<br/>
+用上编译器让常量有类型信息：<code>static const NSTimerInterval kAnimationDuration = 0.3;</code>
+常量命名规范：</p>
+
+<blockquote><p>The usual convertion for constants is to prefix with lettr k for constants that are local to a translation unit(implementation file). For constants that are exposed outside of a class, it is usual to prefix with the class name.<br/>
+在.m中定义，对于这个translation unit是局部变量的话用k作前缀；如果要暴露给外界，用类名开头，如EOCViewClassAnimationDuration。</p></blockquote>
+
+<p><code>static</code>关键词说明这个变量对于当前translation unit是局部的，如果没定义为static，编译器将会为其创建一个external symbol，如果另一translation unit声明了一个同名变量，链接器将会报错；<code>const</code>关键词说明不能被修改。</p>
+
+<blockquote><p>A translation unit is the input the compiler receives to generate one object file. In OC, this usually means that there is one translation unit per class: every .m file.</p></blockquote>
+
+<p>SO的一个问题：<a href="http://stackoverflow.com/questions/11382502/how-different-static-variable-declarations-in-objective-c">How different static variable declarations in Objective-C?</a><br/>
+c.类型化常量的使用（extern）<br/>
+跟<code>NSNotification</code>相关，通知名应该这样处理：</p>
+
+<pre><code>// In .h
+// extern--"Trust me, there's a variable called EOCStringConstant declared in another file"
+// EOC是类名
+extern NSString *const EOCStringConstant;
+
+// In .m
+//反着读：EOCStringConstantis a const pointer point to NSString
+NSString *const EOCStringConstant = @"NotificationName";
+//如果不是对象那这里是const NSTimeInterval EOCAnimated...
+</code></pre>
+
+<p>d.总结<br/>
+类型化常量有类型- -！
+类型化常量借助编译器来确保常量的一致性（const），预处理指令#define可以在别的地方重定义。<br/>
+.m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。</p>
+</div>
+</article>
+<!--
+
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Daryl5
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>
