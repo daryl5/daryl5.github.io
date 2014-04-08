@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T22:42:03+08:00</updated>
+  <updated>2014-04-08T23:31:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -257,8 +257,25 @@ self.view = webView;
 </ul>
 
 
-<p>相关代码如下：
+<p>在<code>WDDrawingController</code>中有<code>WDPropertyManager</code>。除了下面的示例代码，很多属性的管理都在这里，<strong>区别是</strong>settings<em>只管理<code>设置</code>视图里能改变的属性，并且其值会被存储到document里，跟单独drawing相关；<del>而propertyManager管理<code>应用状态</code>，比如不选路径的时候“路径”的popover tableView里就全部不可用，如添加锚点、合并路径。</del>
 ```objective-c
+// constantly updating the user defaults kills responsiveness after the keyboard has been made visible
+// so use this temporary dictionary to avoid hitting the defaults all the time<br/>
+NSMutableDictionary *defaults</em> = [[NSMutableDictionary alloc] init];//in init</p>
+
+<p>//&ndash; (void) didEnterBackground:(NSNotification *)aNotification
+&ndash; (void) updateUserDefaults
+{</p>
+
+<pre><code>for (NSString *key in [defaults_ allKeys]) {
+    [[NSUserDefaults standardUserDefaults] setObject:defaults_[key] forKey:key];
+}
+</code></pre>
+
+<p>}
+<code>
+相关代码如下：
+</code>objective-c
 //属性设置-在“设置”界面控件响应方法中
 //WDSettingsController
 &ndash; (void) takeShowGridFrom:(id)sender

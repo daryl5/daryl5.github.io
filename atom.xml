@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T22:42:03+08:00</updated>
+  <updated>2014-04-08T23:31:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -299,6 +299,33 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 <li>可能是考虑到在初始化时一次读取NSUserDefaults而不是需要属性就去查NSUserDefaults更好;</li>
 <li>还有个原因就是每个drawing都会把settings_当做Document的一部分进行存储，NSMutableDictionary才能去存储。</li>
 </ul>
+
+
+<p>在<code>WDDrawingController</code>中有<code>WDPropertyManager</code>。除了下面的示例代码，很多属性的管理都在这里，<strong>区别是</strong>settings_只管理<code>设置</code>视图里能改变的属性，并且其值会被存储到document里，跟单独drawing相关；<del>而propertyManager管理<code>应用状态</code>，比如不选路径的时候“路径”的popover tableView里就全部不可用，如添加锚点、合并路径。</del></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// constantly updating the user defaults kills responsiveness after the keyboard has been made visible</span>
+</span><span class='line'><span class="c1">// so use this temporary dictionary to avoid hitting the defaults all the time  </span>
+</span><span class='line'><span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">defaults_</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableDictionary</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span><span class="c1">//in init</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//- (void) didEnterBackground:(NSNotification *)aNotification</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">updateUserDefaults</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">key</span> <span class="k">in</span> <span class="p">[</span><span class="n">defaults_</span> <span class="n">allKeys</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">setObject:</span><span class="n">defaults_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="nl">forKey:</span><span class="n">key</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>相关代码如下：</p>
