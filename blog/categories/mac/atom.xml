@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mac | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/mac/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T22:36:11+08:00</updated>
+  <updated>2014-04-08T22:42:03+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -21,6 +21,9 @@
     <content type="html"><![CDATA[<p><strong><a href="http://www.alfredapp.com/">Alfred</a>真是神器！</strong>自己做了两个workflow来简化Octopress发表博文和修改博文的流程，实现的很简单。</p>
 
 <p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code></p>
+
+<!--more-->
+
 
 <p><img src="/blogimage/2014/pb.png" alt="pb" /></p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T22:36:11+08:00</updated>
+  <updated>2014-04-08T22:42:03+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -31,6 +31,9 @@
 <p>b.协议相关<br/>
 一些代理相关的协议，可以把协议头文件在.m文件里再引入，把代理<code>id&lt;XXXProtocol&gt; delegate</code>定义放在类扩展里。
 也可以考虑单独创建一个头文件，里面只放协议定义。</p>
+
+<!--more-->
+
 
 <h3>Item 3: 使用字面量语法而不是其等价方法&mdash;Prefer Literal Syntax over the Equivalent Methods</h3>
 
@@ -113,6 +116,9 @@ NSString *const EOCStringConstant = @"NotificationName";
 <h3>2. 输入输出格式</h3>
 
 <p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。FileWrapper内部是Key-Value形式的存储，文件名是key，文件存在本地的archive内容（或是archive文件名）是value，所以会有：</p>
+
+<!--more-->
+
 
 <pre><code>//从文件名（如xxxx.title，不是xxxx.note）得到FileWrapper
 NSFileWrapper *fileWrapper = [self.fileWrapper.fileWrappers objectForKey:preferredFilename];
@@ -214,8 +220,12 @@ self.contentModel.content = str;</p>
 
 <h4>(1) “帮助”、“关于”视图</h4>
 
-<p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。
-```objective-c
+<p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。</p>
+
+<!--more-->
+
+
+<p>```objective-c
 &ndash; (NSURL *) helpURL
 {</p>
 

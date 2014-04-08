@@ -102,6 +102,9 @@
 
 <p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。FileWrapper内部是Key-Value形式的存储，文件名是key，文件存在本地的archive内容（或是archive文件名）是value，所以会有：</p>
 
+<!--more-->
+
+
 <pre><code>//从文件名（如xxxx.title，不是xxxx.note）得到FileWrapper
 NSFileWrapper *fileWrapper = [self.fileWrapper.fileWrappers objectForKey:preferredFilename];
 
