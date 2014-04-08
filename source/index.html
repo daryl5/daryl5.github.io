@@ -1,5 +1,7 @@
 ---
 layout: default
+description: "Daryl's Blog"
+keywords: iOS, Objective-C, iPhone, iPad, Mac, Octopress, development
 ---
 
 {% assign index = true %}
@@ -9,12 +11,3 @@ layout: default
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">{% include article.html %}</article>
 {% endfor %}
 </div>
-<nav id="pagenavi">
-    {% if paginator.previous_page %}
-        <a href="{{paginator.previous_page}}" class="prev">Prev</a>
-    {% endif %}
-    {% if paginator.next_page %}
-        <a href="{{paginator.next_page}}" class="next">Next</a>
-    {% endif %}
-    <div class="center"><a href="{{ root_url }}/blog/archives">Blog Archives</a></div>
-</nav>
