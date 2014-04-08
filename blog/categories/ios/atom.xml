@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-07T16:26:32+08:00</updated>
+  <updated>2014-04-08T22:36:11+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -212,6 +212,8 @@ self.contentModel.content = str;</p>
 
 <h3>2. Best Practice</h3>
 
+<h4>(1) “帮助”、“关于”视图</h4>
+
 <p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。
 ```objective-c
 &ndash; (NSURL *) helpURL
@@ -230,6 +232,108 @@ return [NSURL fileURLWithPath:path isDirectory:NO];
 webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 self.view = webView;
 [webView loadRequest:[NSURLRequest requestWithURL:[self helpURL]]];
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>(2) 应用“设置”功能</h4>
+
+<p>以“显示网格”这一设置项为例，通过<code>UILable  UISwitch</code>来实现。其实可以全部通过NSUserDefaults实现，但inkpad中有个NSMutableDictionary的settings_作为”中间变量“:</p>
+
+<ul>
+<li>可能是考虑到在初始化时一次读取NSUserDefaults而不是需要属性就去查NSUserDefaults更好;</li>
+<li>还有个原因就是每个drawing都会把settings_当做Document的一部分进行存储，NSMutableDictionary才能去存储。</li>
+</ul>
+
+
+<p>相关代码如下：
+```objective-c
+//属性设置-在“设置”界面控件响应方法中
+//WDSettingsController
+&ndash; (void) takeShowGridFrom:(id)sender
+{</p>
+
+<pre><code>UISwitch    *mySwitch = (UISwitch *)sender;
+
+[[NSUserDefaults standardUserDefaults] setBool:mySwitch.isOn forKey:WDShowGrid];
+[[NSUserDefaults standardUserDefaults] synchronize];
+
+drawing_.showGrid = mySwitch.isOn;//Setter方法
+</code></pre>
+
+<p>}</p>
+
+<p>//属性管理的中间类-在Accessor中设置和应用，发送通知最终应用设置
+//WDDrawing:NSObject
+&ndash; (void) setShowGrid:(BOOL)showGrid
+{</p>
+
+<pre><code>settings_[WDShowGrid] = @(showGrid);//settings_是NSMutableDictionary，WDShowGrid是NSString “WDShowGrid”
+[[NSNotificationCenter defaultCenter] postNotificationName:WDDrawingChangedNotification object:self];
+
+// this isn't an undoable action so it does not dirty the document
+[self.document markChanged];
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(BOOL) showGrid
+{
+  return [settings_[WDShowGrid] boolValue];
+}</li>
+</ul>
+
+
+<p>//属性改变的即时应用-接收通知并通过setNeedsDisplay处发drawRect重绘
+//WDCanvas
+&ndash; (void) invalidateFromNotification:(NSNotification *)aNotification
+{</p>
+
+<pre><code>NSValue     *rectValue = [aNotification userInfo][@"rect"];
+NSArray     *rects = [aNotification userInfo][@"rects"];
+CGRect      dirtyRect;
+float       fudge = (-1.0f) / viewScale_;
+
+if (rectValue) {
+    //...
+} else if (rects) {
+    //...
+} else {//没有任何userInfo，对应showGrid这一属性的改变
+    [self setNeedsDisplay];
+}
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(void)drawRect:(CGRect)rect
+{
+  //&hellip;
+  if (drawing_.showGrid &amp;&amp; !drawingIsolatedLayer) {
+      [self drawGrid:ctx];
+  }
+  //&hellip;
+}</li>
+</ul>
+
+
+<p>//属性的保存-主要在WDSettingsController，设置并同步
+借助NSUserDefaults</p>
+
+<p>//属性的加载-各种init方法中从NSUserDefaults初始化settings_
+//WDDrawing
+&ndash; (id) initWithSize:(CGSize)size andUnits:(NSString *)units
+{</p>
+
+<pre><code>// each drawing saves its own settings, but when a user alters them they become the default settings for new documents
+// since this is a new document, look up the values in the defaults...
+NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+NSArray *keyArray = @[WDShowGrid, WDSnapToGrid, WDSnapToPoints, WDSnapToEdges, WDDynamicGuides, WDRulersVisible];
+for (NSString *key in keyArray) {
+    settings_[key] = @([defaults boolForKey:key]);
+}
 </code></pre>
 
 <p>}

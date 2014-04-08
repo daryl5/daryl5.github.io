@@ -355,6 +355,8 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 
 <h3>2. Best Practice</h3>
 
+<h4>(1) “帮助”、“关于”视图</h4>
+
 <p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -382,6 +384,161 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 </span><span class='line'>    <span class="n">webView</span><span class="p">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="n">UIViewAutoresizingFlexibleWidth</span> <span class="o">|</span> <span class="n">UIViewAutoresizingFlexibleHeight</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">webView</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">[</span><span class="n">webView</span> <span class="nl">loadRequest:</span><span class="p">[</span><span class="n">NSURLRequest</span> <span class="nl">requestWithURL:</span><span class="p">[</span><span class="n">self</span> <span class="n">helpURL</span><span class="p">]]];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>(2) 应用“设置”功能</h4>
+
+<p>以“显示网格”这一设置项为例，通过<code>UILable  UISwitch</code>来实现。其实可以全部通过NSUserDefaults实现，但inkpad中有个NSMutableDictionary的settings_作为”中间变量“:</p>
+
+<ul>
+<li>可能是考虑到在初始化时一次读取NSUserDefaults而不是需要属性就去查NSUserDefaults更好;</li>
+<li>还有个原因就是每个drawing都会把settings_当做Document的一部分进行存储，NSMutableDictionary才能去存储。</li>
+</ul>
+
+
+<p>相关代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//属性设置-在“设置”界面控件响应方法中</span>
+</span><span class='line'><span class="c1">//WDSettingsController</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">takeShowGridFrom:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">UISwitch</span>    <span class="o">*</span><span class="n">mySwitch</span> <span class="o">=</span> <span class="p">(</span><span class="n">UISwitch</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">setBool:</span><span class="n">mySwitch</span><span class="p">.</span><span class="n">isOn</span> <span class="nl">forKey:</span><span class="n">WDShowGrid</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="n">synchronize</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">drawing_</span><span class="p">.</span><span class="n">showGrid</span> <span class="o">=</span> <span class="n">mySwitch</span><span class="p">.</span><span class="n">isOn</span><span class="p">;</span><span class="c1">//Setter方法</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//属性管理的中间类-在Accessor中设置和应用，发送通知最终应用设置</span>
+</span><span class='line'><span class="c1">//WDDrawing:NSObject</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">setShowGrid:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">showGrid</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">settings_</span><span class="p">[</span><span class="n">WDShowGrid</span><span class="p">]</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="n">showGrid</span><span class="p">);</span><span class="c1">//settings_是NSMutableDictionary，WDShowGrid是NSString “WDShowGrid”</span>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">postNotificationName:</span><span class="n">WDDrawingChangedNotification</span> <span class="nl">object:</span><span class="n">self</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// this isn&#39;t an undoable action so it does not dirty the document</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">document</span> <span class="n">markChanged</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">showGrid</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">settings_</span><span class="p">[</span><span class="n">WDShowGrid</span><span class="p">]</span> <span class="n">boolValue</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//属性改变的即时应用-接收通知并通过setNeedsDisplay处发drawRect重绘</span>
+</span><span class='line'><span class="c1">//WDCanvas</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">invalidateFromNotification:</span><span class="p">(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">aNotification</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSValue</span>     <span class="o">*</span><span class="n">rectValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">aNotification</span> <span class="n">userInfo</span><span class="p">][</span><span class="s">@&quot;rect&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSArray</span>     <span class="o">*</span><span class="n">rects</span> <span class="o">=</span> <span class="p">[</span><span class="n">aNotification</span> <span class="n">userInfo</span><span class="p">][</span><span class="s">@&quot;rects&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">CGRect</span>      <span class="n">dirtyRect</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span>       <span class="n">fudge</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewScale_</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">rectValue</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//...</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">rects</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//...</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="c1">//没有任何userInfo，对应showGrid这一属性的改变</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="n">setNeedsDisplay</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawRect:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">//...</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">drawing_</span><span class="p">.</span><span class="n">showGrid</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">drawingIsolatedLayer</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">drawGrid:</span><span class="n">ctx</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">//...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//属性的保存-主要在WDSettingsController，设置并同步</span>
+</span><span class='line'><span class="err">借助</span><span class="n">NSUserDefaults</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//属性的加载-各种init方法中从NSUserDefaults初始化settings_</span>
+</span><span class='line'><span class="c1">//WDDrawing</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nl">initWithSize:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="n">size</span> <span class="nl">andUnits:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">units</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// each drawing saves its own settings, but when a user alters them they become the default settings for new documents</span>
+</span><span class='line'>    <span class="c1">// since this is a new document, look up the values in the defaults...</span>
+</span><span class='line'>    <span class="n">NSUserDefaults</span> <span class="o">*</span><span class="n">defaults</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSArray</span> <span class="o">*</span><span class="n">keyArray</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="n">WDShowGrid</span><span class="p">,</span> <span class="n">WDSnapToGrid</span><span class="p">,</span> <span class="n">WDSnapToPoints</span><span class="p">,</span> <span class="n">WDSnapToEdges</span><span class="p">,</span> <span class="n">WDDynamicGuides</span><span class="p">,</span> <span class="n">WDRulersVisible</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">key</span> <span class="k">in</span> <span class="n">keyArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">settings_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="err">@</span><span class="p">([</span><span class="n">defaults</span> <span class="nl">boolForKey:</span><span class="n">key</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
