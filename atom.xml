@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T23:31:22+08:00</updated>
+  <updated>2014-04-09T17:16:51+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -22,7 +22,7 @@
 
 <h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
 
-<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</font></h3>
+<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
 
 <p>a.如下引文，试了一下互相import，没有报错- -！</p>
 
@@ -99,6 +99,82 @@ NSString *const EOCStringConstant = @"NotificationName";
 类型化常量有类型- -！
 类型化常量借助编译器来确保常量的一致性（const），预处理指令#define可以在别的地方重定义。<br/>
 .m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。</p>
+
+<h2><strong>2: Objects, Messaging, and the Runtime</strong></h2>
+
+<h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
+
+<p>a.一般都是通过<code>继承</code>来给既有类添加数据，但行不通的时候就要用到<code>关联对象</code>了。以UIAlertView为例：</p>
+
+<ul>
+<li>一般的实现中buttonIndex和其action的对应，即button的定义和其响应方法的声明不在一个地方，这样可读性不好；</li>
+<li>如果同一个类里有多个alertView，那么在代理方法中还要判断是哪一个，然后再判断buttonIndex；</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">static</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">EOCMyAlertViewKey</span> <span class="o">=</span> <span class="s">&quot;EOCMyAlertViewKey&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">askUserAQuestion</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">UIAlertView</span> <span class="o">*</span><span class="n">alert</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIAlertView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTitle:</span><span class="s">@&quot;Question&quot;</span>
+</span><span class='line'>                                                    <span class="nl">message:</span><span class="s">@&quot;What do you want to do?&quot;</span>
+</span><span class='line'>                                                   <span class="nl">delegate:</span><span class="n">self</span>
+</span><span class='line'>                                          <span class="nl">cancelButtonTitle:</span><span class="s">@&quot;Cancel&quot;</span>
+</span><span class='line'>                                          <span class="nl">otherButtonTitles:</span><span class="s">@&quot;Continue&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="n">block</span><span class="p">)(</span><span class="n">NSInteger</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="n">NSInteger</span> <span class="n">buttonIndex</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">buttonIndex</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="n">doCancel</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="n">doContinue</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">objc_setAssociatedObject</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="n">EOCMyAlertViewKey</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">OBJC_ASSOCIATION_COPY</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">alert</span> <span class="n">show</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// UIAlertViewDelegate protocol method</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">alertView:</span><span class="p">(</span><span class="n">UIAlertView</span> <span class="o">*</span><span class="p">)</span><span class="nv">alertView</span> <span class="nf">clickedButtonAtIndex:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">buttonIndex</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">block</span><span class="p">)(</span><span class="n">NSInteger</span><span class="p">)</span> <span class="o">=</span> <span class="n">objc_getAssociatedObject</span><span class="p">(</span><span class="n">alertView</span><span class="p">,</span> <span class="n">EOCMyAlertViewKey</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">block</span><span class="p">(</span><span class="n">buttonIndex</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>b.总结<br/>
+关联对象就是把两个object链接在一起了；关联对象只有在其他方法都不可行的时候才使用，因为很容易造成<code>Retain Cycle</code>；上例中还可以通过继承AlertView并附加这个block对象来实现，如果类中alertView要多次用到，更建议继承而不是关联对象。</p>
+
+<h3>Item 14: 理解类的对象- Understand What a Class Object Is</h3>
+
+<p>a.OC是<code>动态类型</code>的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。</p>
 ]]></content>
   </entry>
   

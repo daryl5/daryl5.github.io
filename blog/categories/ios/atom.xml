@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-08T23:31:22+08:00</updated>
+  <updated>2014-04-09T17:16:51+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -22,7 +22,7 @@
 
 <h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
 
-<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</font></h3>
+<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
 
 <p>a.如下引文，试了一下互相import，没有报错- -！</p>
 
@@ -99,6 +99,55 @@ NSString *const EOCStringConstant = @"NotificationName";
 类型化常量有类型- -！
 类型化常量借助编译器来确保常量的一致性（const），预处理指令#define可以在别的地方重定义。<br/>
 .m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。</p>
+
+<h2><strong>2: Objects, Messaging, and the Runtime</strong></h2>
+
+<h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
+
+<p>a.一般都是通过<code>继承</code>来给既有类添加数据，但行不通的时候就要用到<code>关联对象</code>了。以UIAlertView为例：</p>
+
+<ul>
+<li>一般的实现中buttonIndex和其action的对应，即button的定义和其响应方法的声明不在一个地方，这样可读性不好；</li>
+<li><p>如果同一个类里有多个alertView，那么在代理方法中还要判断是哪一个，然后再判断buttonIndex；
+```objective-c
+static const void *EOCMyAlertViewKey = &ldquo;EOCMyAlertViewKey&rdquo;;</p></li>
+<li><p>(void)askUserAQuestion {
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@&ldquo;Question&rdquo;
+                                                  message:@&ldquo;What do you want to do?&rdquo;
+                                                 delegate:self
+                                        cancelButtonTitle:@&ldquo;Cancel&rdquo;
+                                        otherButtonTitles:@&ldquo;Continue&rdquo;, nil];</p>
+
+<p>  void(^block)(NSInteger) = ^(NSInteger buttonIndex) {
+      if (buttonIndex == 0) {
+          [self doCancel];
+      } else {
+          [self doContinue];
+      }
+  };</p>
+
+<p>  objc_setAssociatedObject(alert, EOCMyAlertViewKey, block, OBJC_ASSOCIATION_COPY);</p>
+
+<p>  [alert show];
+}</p></li>
+</ul>
+
+
+<p>// UIAlertViewDelegate protocol method
+&ndash; (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {</p>
+
+<pre><code>void (^block)(NSInteger) = objc_getAssociatedObject(alertView, EOCMyAlertViewKey);
+block(buttonIndex);
+</code></pre>
+
+<p>}
+<code>``
+b.总结  
+关联对象就是把两个object链接在一起了；关联对象只有在其他方法都不可行的时候才使用，因为很容易造成</code>Retain Cycle`；上例中还可以通过继承AlertView并附加这个block对象来实现，如果类中alertView要多次用到，更建议继承而不是关联对象。</p>
+
+<h3>Item 14: 理解类的对象- Understand What a Class Object Is</h3>
+
+<p>a.OC是<code>动态类型</code>的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。</p>
 ]]></content>
   </entry>
   
