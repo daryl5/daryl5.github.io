@@ -1,0 +1,193 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>所有遇到过的坑们 - Daryl's Blog</title>
+	<meta name="author" content="Daryl5">
+
+	
+	<meta name="description" content="所有遇到过的坑们 1.CGBitmapContextCreate: unsupported parameter combination 创建位图上下文时出现的错误： CGBitmapContextCreate: unsupported parameter combination: 8 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!-- 
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+          //$('.profilepic').append("<img src='../images/avatar.jpg" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='../images/avatar.jpg alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+     -->
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+</div>
+<h1><a href="/">Daryl's Blog</a></h1>
+<p class="subtitle">忌眼高手低，忌浮躁。</p>
+<nav id="main-nav"><ul class="main-navigation">
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+    <li><a href="/blog/categories">Categories</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/daryl5" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">所有遇到过的坑们</h1>
+	<div class="entry-content" itemprop="articleBody"><h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
+
+<p>创建位图上下文时出现的错误：</p>
+
+<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
+
+<p>代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">contextToDraw</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">8</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">colorSpace</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
+
+<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
+
+<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说得很详细。</p>
+
+<h3>2.创建支持Retina的CGBitmapContext</h3>
+
+<p>原理是创建两倍长两倍宽的位图，同时ScaleCTM使系统绘图时进行坐标转换。代码如下，摘自<a href="http://stackoverflow.com/questions/10867767/how-to-create-a-cgbitmapcontext-which-works-for-retina-display-and-not-wasting-s">这里</a>：</p>
+
+<blockquote><p>A key factor is that, CGContextScaleCTM(context, scaleFactor, scaleFactor); is used to adjust the coordinate system, so that any drawing by Core Graphics, such as CGContextMoveToPoint, etc, will automatically work, no matter it is standard resolution or the Retina resolution.</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//The sample is to create a 768 x 768 point region.  </span>
+</span><span class='line'><span class="c1">//On The New iPad, it will be 1536 x 1536 pixel.  </span>
+</span><span class='line'><span class="c1">//On iPad 2, it is 768 x 768 pixel.</span>
+</span><span class='line'><span class="kt">float</span> <span class="n">scaleFactor</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">scale</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGSize</span> <span class="n">size</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="mi">768</span><span class="p">,</span> <span class="mi">768</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGColorSpaceRef</span> <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGColorSpaceCreateDeviceRGB</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGContextRef</span> <span class="n">context</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span>
+</span><span class='line'>                           <span class="mi">8</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scaleFactor</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">colorSpace</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">kCGImageAlphaPremultipliedFirst</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGContextScaleCTM</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+</article>
+<!--
+
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Daryl5
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-09T17:16:51+08:00</updated>
+  <updated>2014-04-09T22:18:09+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -301,6 +301,12 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>2. Undo/Redo</h3>
+
+<p><a href="http://blog.163.com/chenchen..1986/blog/static/760631462013222314817/">这里</a>的例子简单有效。</p>
+
+<h3>3. 自己画的大致思路，实际实现没这么做。</h3>
+
 <p><img src="http://daryl5.github.io/blogimage/2014/useuidocument.jpg" alt="useuidocument" /></p>
 ]]></content>
   </entry>
@@ -574,6 +580,86 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 <h3>5. 子类不能重写touchesBegan但要在其发生同时完成处理</h3>
 
 <p><code>FingerTackerView</code>重写<code>touchesBegan</code>等等方法，然后在其内部进行一些操作后调用<code>[self methodForSubclassOverwritten]</code>，这个方法可以置空。<code>HandWritingView</code>，<code>GestureEditorView</code>等继承自<code>FingerTrackerView</code>的类里重写<code>[self methodForSubclassOverwritten]</code>，这样就能在采集点的同时，对点的处理根据当前选择功能（即所处的视图）来由对应的子类来处理。子类不会出现<code>touchesBegan</code>等，但是可以通过重写方法来实现手势运动时处理。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[所有遇到过的坑们]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/"/>
+    <updated>2014-03-21T12:22:22+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng</id>
+    <content type="html"><![CDATA[<h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
+
+<p>创建位图上下文时出现的错误：</p>
+
+<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
+
+<p>代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">contextToDraw</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">8</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">colorSpace</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
+
+<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
+
+<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说得很详细。</p>
+
+<h3>2.创建支持Retina的CGBitmapContext</h3>
+
+<p>原理是创建两倍长两倍宽的位图，同时ScaleCTM使系统绘图时进行坐标转换。代码如下，摘自<a href="http://stackoverflow.com/questions/10867767/how-to-create-a-cgbitmapcontext-which-works-for-retina-display-and-not-wasting-s">这里</a>：</p>
+
+<blockquote><p>A key factor is that, CGContextScaleCTM(context, scaleFactor, scaleFactor); is used to adjust the coordinate system, so that any drawing by Core Graphics, such as CGContextMoveToPoint, etc, will automatically work, no matter it is standard resolution or the Retina resolution.</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//The sample is to create a 768 x 768 point region.  </span>
+</span><span class='line'><span class="c1">//On The New iPad, it will be 1536 x 1536 pixel.  </span>
+</span><span class='line'><span class="c1">//On iPad 2, it is 768 x 768 pixel.</span>
+</span><span class='line'><span class="kt">float</span> <span class="n">scaleFactor</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">scale</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGSize</span> <span class="n">size</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="mi">768</span><span class="p">,</span> <span class="mi">768</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGColorSpaceRef</span> <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGColorSpaceCreateDeviceRGB</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGContextRef</span> <span class="n">context</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span>
+</span><span class='line'>                           <span class="mi">8</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scaleFactor</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">colorSpace</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">kCGImageAlphaPremultipliedFirst</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">CGContextScaleCTM</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
