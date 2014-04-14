@@ -7,7 +7,13 @@ categories: iOS
 ---
 [Inkpad](https://github.com/sprang/Inkpad)是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。
 ###0. 内联函数的使用
-
+内联函数只是给编译器的提示，最终能不能内联还要看编译器。  
+####(1)相同点
+`static inline double radians (double degrees) { return degrees * M_PI/180; }`；都是在与处理阶段对代码块进行替换。  
+####(2)不同点
+内联函数是值传递，宏定义是简单替换。内联函数有类型检查，此外`省去了很多函数调用汇编代码如：call和ret等`。  
+`#define MAX(a, b) a>b?a:b`如果`MAX( num1, num2 )`就没问题，但是如果是`MAX( 17+32, 25+21)`，展开后是`17+32>25+21?17+32:25+21`。甚至`#define A 2+3`，然后`c = 4 * A`都会成为`4 * 2 + 3`。比较安全的写法是`#define MAX( (a), (b) ) (a)>(b)?(a)b)`，但是这样还是有问题，`MAX(i++,j++)`完了每个都会加2了。
+宏定义执行快是因为没有`函数调用`的开销，但是如果宏用的多文件就会变很大，执行文件太大可能导致执行时换页频繁（略夸张）。
 ###1. 一些简洁的写法
 - `CGRectGetWidth`，以前总是写成`self.frame.size.width`。此外还有`CGRectGetMidX`，直接得到矩形中心点的X坐标。
 
@@ -43,6 +49,20 @@ categories: iOS
 - 可能是考虑到在初始化时一次读取NSUserDefaults而不是需要属性就去查NSUserDefaults更好;
 - 还有个原因就是每个drawing都会把settings_当做Document的一部分进行存储，NSMutableDictionary才能去存储。
 
+在`WDDrawingController`中有`WDPropertyManager`。除了下面的示例代码，很多属性的管理都在这里，**区别是**settings_只管理`设置`视图里能改变的属性，并且其值会被存储到document里，跟单独drawing相关；~~而propertyManager管理`应用状态`，比如不选路径的时候“路径”的popover tableView里就全部不可用，如添加锚点、合并路径。~~
+```objective-c
+// constantly updating the user defaults kills responsiveness after the keyboard has been made visible
+// so use this temporary dictionary to avoid hitting the defaults all the time  
+NSMutableDictionary *defaults_ = [[NSMutableDictionary alloc] init];//in init
+
+//- (void) didEnterBackground:(NSNotification *)aNotification
+- (void) updateUserDefaults
+{
+    for (NSString *key in [defaults_ allKeys]) {
+        [[NSUserDefaults standardUserDefaults] setObject:defaults_[key] forKey:key];
+    }
+}
+```
 相关代码如下：
 ```objective-c
 //属性设置-在“设置”界面控件响应方法中

@@ -6,4 +6,4 @@ comments: false
 sharing: false
 footer: true
 ---
-此博客主要用于读书笔记、感想之类。
+一本写的很粗浅的读书/学习笔记

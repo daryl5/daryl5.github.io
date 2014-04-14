@@ -7,7 +7,7 @@ categories: iOS
 ---
 《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：[Matt Galloway](http://www.galloway.me.uk/)  
 ##**1: Accustoming Yourself to Objective-C**
-###Item 2: 缩减头文件--Minimize Importing Headers in Headers</font>
+###Item 2: 缩减头文件--Minimize Importing Headers in Headers
 a.如下引文，试了一下互相import，没有报错- -！
 > The use of #import rather than #include doesn't end in an infinite loop but does mean that one of ther classes won't compile correctly.
 
@@ -65,8 +65,46 @@ c.类型化常量的使用（extern）
 d.总结  
 类型化常量有类型- -！
 类型化常量借助编译器来确保常量的一致性（const），预处理指令#define可以在别的地方重定义。  
-.m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。
+.m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。  
+##**2: Objects, Messaging, and the Runtime**
+###Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed
+a.一般都是通过`继承`来给既有类添加数据，但行不通的时候就要用到`关联对象`了。以UIAlertView为例：
 
+- 一般的实现中buttonIndex和其action的对应，即button的定义和其响应方法的声明不在一个地方，这样可读性不好；
+- 如果同一个类里有多个alertView，那么在代理方法中还要判断是哪一个，然后再判断buttonIndex；
+```objective-c
+static const void *EOCMyAlertViewKey = "EOCMyAlertViewKey";
+
+- (void)askUserAQuestion {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Question"
+                                                    message:@"What do you want to do?"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Continue", nil];
+    
+    void(^block)(NSInteger) = ^(NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            [self doCancel];
+        } else {
+            [self doContinue];
+        }
+    };
+    
+    objc_setAssociatedObject(alert, EOCMyAlertViewKey, block, OBJC_ASSOCIATION_COPY);
+    
+    [alert show];
+}
+
+// UIAlertViewDelegate protocol method
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    void (^block)(NSInteger) = objc_getAssociatedObject(alertView, EOCMyAlertViewKey);
+    block(buttonIndex);
+}
+```
+b.总结  
+关联对象就是把两个object链接在一起了；关联对象只有在其他方法都不可行的时候才使用，因为很容易造成`Retain Cycle`；上例中还可以通过继承AlertView并附加这个block对象来实现，如果类中alertView要多次用到，更建议继承而不是关联对象。
+###Item 14: 理解类的对象- Understand What a Class Object Is
+a.OC是`动态类型`的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。
 
 
 

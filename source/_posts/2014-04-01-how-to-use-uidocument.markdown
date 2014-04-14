@@ -61,4 +61,7 @@ self.contentModel.content = str;
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 ```
+###2. Undo/Redo
+[这里](http://blog.163.com/chenchen..1986/blog/static/760631462013222314817/)的例子简单有效。
+###3. 自己画的大致思路，实际实现没这么做。
 ![useuidocument](/blogimage/2014/useuidocument.jpg)
