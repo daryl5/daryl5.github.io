@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-14T22:28:30+08:00</updated>
+  <updated>2014-04-14T23:38:03+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -734,7 +734,9 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这样的实现非常2，内存开销增加了很大。用<code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</code>就好了，函数说明就是<code>Paints a transparent rectangle</code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。</p>
+<p>这样的实现非常2，内存开销增加了很大。用<code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</code>就好了，函数说明就是<code>Paints a transparent rectangle</code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。<br/>
+同时要注意，要创建透明位图就要在初始化位图上下文时指定CGBitmapInfo为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast</code>，也可以换成<code>kCGImageAlphaPremultipliedFirst</code>，last就是RGBA反之是ARGB，预乘alpha就代表图像是有alpha通道的，不设置这个clearRect后会是黑色。假如一个像素(A，R，G，B)的四个分量都用规一化的数值表示，(A，R，G，B)为(1，1，0，0)时显示红色。当像素为 (0.5,1,0,0)时，预乘的结果就变成(0.5,0.5,0,0)，这表示原来该像素显示的红色的强度为1，而现在显示的红色的强度降了一半。<br/>
+另，<code>颜色深度</code>就是颜色位数，比如RGB一个分量用8位，总共24位，每个像素可以用2的24次方就是16777216中颜色表示，也就是几年前卖手机时候说的1600w色- -！</p>
 
 <h3>6.toolbar死活不显示</h3>
 
