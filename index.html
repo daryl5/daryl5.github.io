@@ -317,32 +317,7 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/03/21/mutablearray-of-keng/" itemprop="url">所有遇到过的坑们</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
-
-<p>创建位图上下文时出现的错误：</p>
-
-<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
-
-<p>代码如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">contextToDraw</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="mi">8</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">colorSpace</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+		
 		
 		<a href="/blog/2014/03/21/mutablearray-of-keng/" class="more-link">阅读全文 &rarr;</a>
 	</div>

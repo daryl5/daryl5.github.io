@@ -9,7 +9,7 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="所有遇到过的坑们 1.CGBitmapContextCreate: unsupported parameter combination 创建位图上下文时出现的错误： CGBitmapContextCreate: unsupported parameter combination: 8 &hellip;">
+	<meta name="description" content="所有遇到过的坑们 11.DRDPoint和DRDInkPoint的encode decode 10.iOS7中自定义导航栏、状态栏的样式 Customizing Navigation Bar and Status Bar in iOS 7，这个不错。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,13 +92,75 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">所有遇到过的坑们</h1>
-	<div class="entry-content" itemprop="articleBody"><h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
+	<div class="entry-content" itemprop="articleBody"><!--more-->
 
-<p>创建位图上下文时出现的错误：</p>
 
-<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
+<h3>11.DRDPoint和DRDInkPoint的encode decode</h3>
 
-<p>代码如下：</p>
+<h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
+
+<p><a href="http://www.appcoda.com/customize-navigation-status-bar-ios-7/">Customizing Navigation Bar and Status Bar in iOS 7</a>，这个不错。<br/>
+不过里面对单独viewController的statusbar设置<code>UIStatusBarStyle</code>没有成功，没搞懂。<a href="http://stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7/17768797#17768797">How to change Status Bar text color in iOS 7.</a>和这个<a href="http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19032879#19032879">preferredStatusBarStyle isn&rsquo;t called</a>可以看看。发现我很蛋疼，老是关注这些意义不大的东西。</p>
+
+<h3>9.UIButton设置tintColor</h3>
+
+<p><code>tintColor</code>属性并不是所有button都有的，只有<code>[UIButton buttonWithType:UIButtonTypeSystem]</code>才能设置。如果是init或者initWithFrame，设置了不会显示。</p>
+
+<h3>8.在主线程更新UI-闪烁光标的实现</h3>
+
+<p>在KVO里要调用drawCursorWithRect画光标，而且这个函数里会启动timer来实现光标闪烁，如果直接调用会不闪烁，然后过一会儿闪一次。记着所有跟UI相关的东西都放在主线程执行。这里还有就是NSValue的<code>valueWithCGRect</code>和<code>CGRectValue</code>。还有就是<code>runloop</code>相关的东西，后面看看。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">keyPath</span> <span class="nl">isEqual:</span><span class="s">@&quot;cursorStartPoint&quot;</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">CGPoint</span> <span class="n">cursorStartPoint</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">document</span><span class="p">.</span><span class="n">cursorStartPoint</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">CGRect</span> <span class="n">cursorRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="n">cursorStartPoint</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">cursorStartPoint</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">kCursorOffsetY</span><span class="p">,</span> <span class="n">kCursorWidth</span><span class="p">,</span> <span class="n">kCursorHeight</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">NSValue</span> <span class="o">*</span><span class="n">cursorRectValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nl">valueWithCGRect:</span><span class="n">cursorRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">performSelectorOnMainThread:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">drawCursorWithRect:</span><span class="p">)</span> <span class="nl">withObject:</span><span class="n">cursorRectValue</span> <span class="nl">waitUntilDone:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外一个问题是，当有新的手写字符时光标要移动，直接改变cursorLayer的frame属性，会有移动过程的动画，看<a href="http://stackoverflow.com/questions/12103142/calayer-animates-with-frame-change">CALayer animates with frame change?</a>。去掉这个动画的方法是：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">CATransaction</span> <span class="n">begin</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//或者[CATransaction setAnimationDuration:0];</span>
+</span><span class='line'><span class="c1">//或者[CATransaction setDisableActions:YES];</span>
+</span><span class='line'><span class="p">[</span><span class="n">CATransaction</span> <span class="nl">setValue:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">kCFBooleanTrue</span> <span class="nl">forKey:</span><span class="n">kCATransactionDisableActions</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">myView</span><span class="p">.</span><span class="n">myCALayer</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="p">(</span><span class="n">CGRect</span><span class="p">){</span> <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span> <span class="p">},</span> <span class="p">{</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span> <span class="p">}</span> <span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">CATransaction</span> <span class="n">commit</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>7.程序突然运行不起来</h3>
+
+<p>先记着后面写，可能是因为最开始建工程时候包含storyboard，中途删掉了storyboard改了Main Interface和AppDelegate和plist，但是可能设备里还是有storyboard的。这样删了程序重新跑的时候就错了。很悲剧的时，设置了异常断点，而问题出在main.m里，这个都没报错的，去掉了才说找不到storyboard。<br/>
+试了一下只是简单的在viewDidLoad里改背景颜色，感觉还是怪怪的。直接删了storyboard不改工程配置也能运行，完了删了app重新运行也行，甚至删掉makeKeyAndVisible都能，但是这时候再把Main Interface里的Main删掉，就是黑屏了。</p>
+
+<h3>6.Decode Mutable的东西时要注意mutableCopy</h3>
+
+<blockquote><p>Decoding an archive gives you immutable objects regardless of whether they were mutable or immutable when you encoded them.</p></blockquote>
+
+<p>需要<code>[self setMyArray:[[decoder decodeObjectForKey:@"myArray"] mutableCopy];</code><br/>
+还要注意的就是object要copy不然会autorelease <code>You must also copy or retain the string object, otherwise it will be autoreleased:</code>。链接在<a href="http://stackoverflow.com/questions/10391803/nskeyedarchiver-and-nskeyedunarchiver-with-nsmutablearray/10392017#10392017">NSKeyedArchiver and NSKeyedUnarchiver with NSMutableArray</a></p>
+
+<h3>5.toolbar死活不显示</h3>
+
+<p>navigationController的setToolbarHidden属性没设置默认是TRUE。</p>
+
+<h3>4.CGBitmapContext画透明图的实现</h3>
+
+<p>之前是先用一个特定的颜色填充，然后画内容，画完之后再把之前那个颜色mask掉。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -107,24 +169,59 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">contextToDraw</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="mi">8</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">colorSpace</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Use a &quot;strange or unique&quot; color fill the context add mask it after drawing</span>
+</span><span class='line'><span class="n">UIColor</span> <span class="o">*</span><span class="n">fillColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nl">colorWithRed:</span><span class="mf">220.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">green:</span><span class="mf">198.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">blue:</span><span class="mf">225.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">alpha:</span><span class="mf">1.0</span><span class="p">];</span>
+</span><span class='line'><span class="n">CGContextSetFillColorWithColor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">bitmapContext</span><span class="p">,</span> <span class="n">fillColor</span><span class="p">.</span><span class="n">CGColor</span><span class="p">);</span>
+</span><span class='line'><span class="n">CGContextFillRect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">bitmapContext</span><span class="p">,</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">realDisplayWidth</span><span class="p">,</span> <span class="n">realDisplayHeight</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Mask</span>
+</span><span class='line'><span class="n">CGImageRef</span> <span class="n">pageImageRef</span> <span class="o">=</span> <span class="n">CGBitmapContextCreateImage</span><span class="p">(</span><span class="n">bitmapContext</span><span class="p">);</span>
+</span><span class='line'><span class="k">const</span> <span class="kt">float</span> <span class="n">colorMasking</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">220</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">};</span>
+</span><span class='line'><span class="n">CGImageRef</span> <span class="n">pageImageMask</span> <span class="o">=</span> <span class="n">CGImageCreateWithMaskingColors</span><span class="p">(</span><span class="n">pageImageRef</span><span class="p">,</span> <span class="n">colorMasking</span><span class="p">);</span>
+</span><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">pageImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageWithCGImage:</span><span class="n">pageImageMask</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<!--more-->
+<p>这样的实现非常2，内存开销增加了很大。用<code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</code>就好了，函数说明就是<code>Paints a transparent rectangle</code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。<br/>
+同时要注意，要创建透明位图就要在初始化位图上下文时指定CGBitmapInfo为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast</code>，也可以换成<code>kCGImageAlphaPremultipliedFirst</code>，last就是RGBA反之是ARGB，预乘alpha就代表图像是有alpha通道的，不设置这个clearRect后会是黑色。假如一个像素(A，R，G，B)的四个分量都用规一化的数值表示，(A，R，G，B)为(1，1，0，0)时显示红色。当像素为 (0.5,1,0,0)时，预乘的结果就变成(0.5,0.5,0,0)，这表示原来该像素显示的红色的强度为1，而现在显示的红色的强度降了一半。<br/>
+另，<code>颜色深度</code>就是颜色位数，比如RGB一个分量用8位，总共24位，每个像素可以用2的24次方就是16777216中颜色表示，也就是几年前卖手机时候说的1600w色- -！</p>
+
+<h3>3.使用CGBitmapContext并行绘图时报错</h3>
+
+<p>用如下代码进行简单的并行绘制每个字符，结果出现<code>CGContextAddLineToPoint: no current point</code>的错误，就是说在<code>CGContextAddLineToPoint</code>之前并没有一个<code>CGContextMoveToPoint</code>的操作。<br/>
+想了一下下面代码有问题，并行绘图的代码里会有这两个操作，待绘制字符多的时候并行程度高，就可能在绘制单个字符的代码中一个的<code>CGContextStrokePath</code>刚执行完，<strong>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().</strong> context中move到的point已经释放，而另一个正好要执行<code>CGContextAddLineToPoint</code>，于是就<code>no current point</code>了。下面的引文来自<a href="http://lists.apple.com/archives/quartz-dev/2011/Feb/msg00030.html">这里</a></p>
+
+<blockquote><p>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().ClosePath() isn&rsquo;t there to balance BeginPath() — it modifies the current path by adding a line segment from the current point to the beginning of the current subpath (in such a way that there&rsquo;s a linejoin at that point rather than a pair of line ends).</p></blockquote>
+
+<p>并行绘制最终没想到一个好的并行办法，因为context必须用同一个。最后的解决办法是，能保留上次绘制的context就保留，在其基础上接着绘制- -！</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Draw characters concurrently</span>
+</span><span class='line'><span class="n">NSIndexSet</span> <span class="o">*</span><span class="n">indexSetToDraw</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSIndexSet</span> <span class="nl">indexSetWithIndexesInRange:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">startIndex</span><span class="p">,</span> <span class="n">characterNum</span><span class="p">)];</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="nl">enumerateObjectsAtIndexes:</span><span class="n">indexSetToDraw</span>
+</span><span class='line'>                                      <span class="nl">options:</span><span class="n">NSEnumerationConcurrent</span>
+</span><span class='line'>                                   <span class="nl">usingBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">DRDCharUnit</span> <span class="o">*</span><span class="n">charUnitToDraw</span><span class="p">,</span> <span class="n">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                                       <span class="n">currentCharUnit</span> <span class="o">=</span> <span class="n">charUnitToDraw</span><span class="p">;</span>
+</span><span class='line'>                                       <span class="n">originPoint</span> <span class="o">=</span> <span class="n">dataUnitUpperLeftPoints</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="n">startIndex</span><span class="p">];</span>
+</span><span class='line'>                                       <span class="p">[</span><span class="n">self</span> <span class="nl">drawCharacter:</span><span class="n">currentCharUnit</span> <span class="nl">withOrigin:</span><span class="n">originPoint</span> <span class="nl">inContext:</span><span class="n">bitmapContext</span><span class="p">];</span>
+</span><span class='line'>                                   <span class="p">}];</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
-
-<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
-
-<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说得很详细。</p>
+<p><a href="http://stackoverflow.com/questions/9150665/trouble-drawing-coregraphics-lines-in-drawrect-method">Trouble drawing CoreGraphics lines in drawRect() method</a> 里的回答:You have to place CGContextStrokePath(context); outside the for loop. Otherwise it will create a fresh path on every run through the loop and that fails.
+这个人的问题在于for循环最后都strokePath了，而for循环开头都没有moveToPoint，于是错误发生。<br/>
+<a href="http://stackoverflow.com/questions/9799682/cgcontextaddlinetopoint-no-current-point">CGContextAddLineToPoint: no current point</a> 还有一个回答：You must first create a path with CGContextBeginPath before you can start adding points and lines to it. 然后有一个针对这个答案的评论：Not true. A CGContext always has a current path (possibly an empty one) which you can add elements to. You need CGContextBeginPath only when you want to discard the current path and start with a new empty path.</p>
 
 <h3>2.创建支持Retina的CGBitmapContext</h3>
 
@@ -165,43 +262,13 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>4.使用CGBitmapContext并行绘图时报错</h3>
+<h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
 
-<p>用如下代码进行简单的并行绘制每个字符，结果出现<code>CGContextAddLineToPoint: no current point</code>的错误，就是说在<code>CGContextAddLineToPoint</code>之前并没有一个<code>CGContextMoveToPoint</code>的操作。<br/>
-想了一下下面代码有问题，并行绘图的代码里会有这两个操作，待绘制字符多的时候并行程度高，就可能在绘制单个字符的代码中一个的<code>CGContextStrokePath</code>刚执行完，<strong>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().</strong> context中move到的point已经释放，而另一个正好要执行<code>CGContextAddLineToPoint</code>，于是就<code>no current point</code>了。下面的引文来自<a href="http://lists.apple.com/archives/quartz-dev/2011/Feb/msg00030.html">这里</a></p>
+<p>创建位图上下文时出现的错误：</p>
 
-<blockquote><p>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().ClosePath() isn&rsquo;t there to balance BeginPath() — it modifies the current path by adding a line segment from the current point to the beginning of the current subpath (in such a way that there&rsquo;s a linejoin at that point rather than a pair of line ends).</p></blockquote>
+<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
 
-<p>并行绘制最终没想到一个好的并行办法，因为context必须用同一个。最后的解决办法是，能保留上次绘制的context就保留，在其基础上接着绘制- -！</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Draw characters concurrently</span>
-</span><span class='line'><span class="n">NSIndexSet</span> <span class="o">*</span><span class="n">indexSetToDraw</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSIndexSet</span> <span class="nl">indexSetWithIndexesInRange:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">startIndex</span><span class="p">,</span> <span class="n">characterNum</span><span class="p">)];</span>
-</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="nl">enumerateObjectsAtIndexes:</span><span class="n">indexSetToDraw</span>
-</span><span class='line'>                                      <span class="nl">options:</span><span class="n">NSEnumerationConcurrent</span>
-</span><span class='line'>                                   <span class="nl">usingBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">DRDCharUnit</span> <span class="o">*</span><span class="n">charUnitToDraw</span><span class="p">,</span> <span class="n">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                                       <span class="n">currentCharUnit</span> <span class="o">=</span> <span class="n">charUnitToDraw</span><span class="p">;</span>
-</span><span class='line'>                                       <span class="n">originPoint</span> <span class="o">=</span> <span class="n">dataUnitUpperLeftPoints</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="n">startIndex</span><span class="p">];</span>
-</span><span class='line'>                                       <span class="p">[</span><span class="n">self</span> <span class="nl">drawCharacter:</span><span class="n">currentCharUnit</span> <span class="nl">withOrigin:</span><span class="n">originPoint</span> <span class="nl">inContext:</span><span class="n">bitmapContext</span><span class="p">];</span>
-</span><span class='line'>                                   <span class="p">}];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://stackoverflow.com/questions/9150665/trouble-drawing-coregraphics-lines-in-drawrect-method">Trouble drawing CoreGraphics lines in drawRect() method</a> 里的回答:You have to place CGContextStrokePath(context); outside the for loop. Otherwise it will create a fresh path on every run through the loop and that fails.
-这个人的问题在于for循环最后都strokePath了，而for循环开头都没有moveToPoint，于是错误发生。<br/>
-<a href="http://stackoverflow.com/questions/9799682/cgcontextaddlinetopoint-no-current-point">CGContextAddLineToPoint: no current point</a> 还有一个回答：You must first create a path with CGContextBeginPath before you can start adding points and lines to it. 然后有一个针对这个答案的评论：Not true. A CGContext always has a current path (possibly an empty one) which you can add elements to. You need CGContextBeginPath only when you want to discard the current path and start with a new empty path.</p>
-
-<h3>5.CGBitmapContext画透明图的实现</h3>
-
-<p>之前是先用一个特定的颜色填充，然后画内容，画完之后再把之前那个颜色mask掉。</p>
+<p>代码如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -210,43 +277,21 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Use a &quot;strange or unique&quot; color fill the context add mask it after drawing</span>
-</span><span class='line'><span class="n">UIColor</span> <span class="o">*</span><span class="n">fillColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nl">colorWithRed:</span><span class="mf">220.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">green:</span><span class="mf">198.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">blue:</span><span class="mf">225.0</span><span class="o">/</span><span class="mf">255.0</span> <span class="nl">alpha:</span><span class="mf">1.0</span><span class="p">];</span>
-</span><span class='line'><span class="n">CGContextSetFillColorWithColor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">bitmapContext</span><span class="p">,</span> <span class="n">fillColor</span><span class="p">.</span><span class="n">CGColor</span><span class="p">);</span>
-</span><span class='line'><span class="n">CGContextFillRect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">bitmapContext</span><span class="p">,</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">realDisplayWidth</span><span class="p">,</span> <span class="n">realDisplayHeight</span><span class="p">));</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//Mask</span>
-</span><span class='line'><span class="n">CGImageRef</span> <span class="n">pageImageRef</span> <span class="o">=</span> <span class="n">CGBitmapContextCreateImage</span><span class="p">(</span><span class="n">bitmapContext</span><span class="p">);</span>
-</span><span class='line'><span class="k">const</span> <span class="kt">float</span> <span class="n">colorMasking</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">220</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">};</span>
-</span><span class='line'><span class="n">CGImageRef</span> <span class="n">pageImageMask</span> <span class="o">=</span> <span class="n">CGImageCreateWithMaskingColors</span><span class="p">(</span><span class="n">pageImageRef</span><span class="p">,</span> <span class="n">colorMasking</span><span class="p">);</span>
-</span><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">pageImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageWithCGImage:</span><span class="n">pageImageMask</span><span class="p">];</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">contextToDraw</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">charUnit</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">8</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">colorSpace</span><span class="p">,</span>
+</span><span class='line'>                                      <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这样的实现非常2，内存开销增加了很大。用<code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</code>就好了，函数说明就是<code>Paints a transparent rectangle</code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。<br/>
-同时要注意，要创建透明位图就要在初始化位图上下文时指定CGBitmapInfo为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast</code>，也可以换成<code>kCGImageAlphaPremultipliedFirst</code>，last就是RGBA反之是ARGB，预乘alpha就代表图像是有alpha通道的，不设置这个clearRect后会是黑色。假如一个像素(A，R，G，B)的四个分量都用规一化的数值表示，(A，R，G，B)为(1，1，0，0)时显示红色。当像素为 (0.5,1,0,0)时，预乘的结果就变成(0.5,0.5,0,0)，这表示原来该像素显示的红色的强度为1，而现在显示的红色的强度降了一半。<br/>
-另，<code>颜色深度</code>就是颜色位数，比如RGB一个分量用8位，总共24位，每个像素可以用2的24次方就是16777216中颜色表示，也就是几年前卖手机时候说的1600w色- -！</p>
+<p>在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
 
-<h3>6.toolbar死活不显示</h3>
+<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
 
-<p>navigationController的setToolbarHidden属性没设置默认是TRUE。</p>
-
-<h3>7.Decode Mutable的东西时要注意mutableCopy</h3>
-
-<blockquote><p>Decoding an archive gives you immutable objects regardless of whether they were mutable or immutable when you encoded them.</p></blockquote>
-
-<p>需要<code>[self setMyArray:[[decoder decodeObjectForKey:@"myArray"] mutableCopy];</code><br/>
-还要注意的就是object要copy不然会autorelease <code>You must also copy or retain the string object, otherwise it will be autoreleased:</code>。链接在<a href="http://stackoverflow.com/questions/10391803/nskeyedarchiver-and-nskeyedunarchiver-with-nsmutablearray/10392017#10392017">NSKeyedArchiver and NSKeyedUnarchiver with NSMutableArray</a></p>
-
-<h3>8.程序突然运行不起来</h3>
-
-<p>先记着后面写，可能是因为最开始建工程时候包含storyboard，中途删掉了storyboard改了Main Interface和AppDelegate和plist，但是可能设备里还是有storyboard的。这样删了程序重新跑的时候就错了。很悲剧的时，设置了异常断点，而问题出在main.m里，这个都没报错的，去掉了才说找不到storyboard。<br/>
-试了一下只是简单的在viewDidLoad里改背景颜色，感觉还是怪怪的。直接删了storyboard不改工程配置也能运行，完了删了app重新运行也行，甚至删掉makeKeyAndVisible都能，但是这时候再把Main Interface里的Main删掉，就是黑屏了。</p>
-
-<h3>9.DRDPoint和DRDInkPoint的encode decode</h3>
+<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说的很详细。</p>
 </div>
 </article>
 <!--
