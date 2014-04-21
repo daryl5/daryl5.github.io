@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-21T08:57:55+08:00</updated>
+  <updated>2014-04-21T16:29:19+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -148,6 +148,80 @@ b.总结
 <h3>Item 14: 理解类的对象- Understand What a Class Object Is</h3>
 
 <p>a.OC是<code>动态类型</code>的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。</p>
+
+<h2><strong>4: Protocols and Categories</strong></h2>
+
+<h3>Item 23: 通过委托和数据源协议进行对象间通信</h3>
+
+<p>a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词：</p>
+
+<blockquote><p>A delegate property will always be defined using either the weak attribute to benefit from <code>autonilling</code> or unsafe_unretained if autonilling is not required.</p></blockquote>
+
+<p>b.在interface中声明遵守协议的话，别的类会知道这一行为，一般把“遵守协议”放在类扩展部分，虽然没太多影响。要知道一个对象是否遵守某个协议可以这样：<code>[self conformsToProtocol:@protocol(DRDHandWritingProtocol)]</code><br/>
+c.可以把正在代理的对象也传回给代理，这样方便判断具体是哪个代理对象在调用代理方法。
+```objective-c
+&ndash; (void)networkFetcher:(EOCNetworkFetcher <em>)fetcher didReceiveData:(NSData </em>)data {</p>
+
+<pre><code>if (fetcher == _myFetcherA) {
+    //Handle data
+} else if (fetcher == _myFetcherB) {
+    //Handle data
+}
+</code></pre>
+
+<p>}
+<code>
+d.如果开发API，用代理可以实现一些属性设置，如`- (BOOL)networkFetcher:(EOCNetworkFetcher *)fetcher shouldFollowRedirectToURL:(NSURL *)url;`，甚至这里可以给fetcher传递一个NSDictionary来进行Fetcher一系列属性的设置。  
+e.对`@optional`的代理方法，方法调用者负责通过`[delegate respondsToSelector]`确保程序不会崩溃，unrecognized selector。`@required`的话编译器会确认。如果没设置，默认都是required。  
+f.对dataSource类的delegate，在获取每一个小的data piece的时候都查询一次respondsToSelector是低效的，应该将当前对象对协议的遵守情况缓存下来。如下：
+</code>objective-c
+//有个DataModel或者ViewController是该对象的代理
+//In class extension
+@interface EOCNetworkFetcher() {</p>
+
+<pre><code>struct {
+    unsigned int didReceiveData      : 1;
+    unsigned int didFailWithError    : 1;
+    unsigned int didUpdateProgressTO : 1;
+}_delegateFlags;
+</code></pre>
+
+<p>}</p>
+
+<p>//In delegate Setter
+&ndash; (void)setDelegate:(id<EOCNetworkFetcher>)delegate {</p>
+
+<pre><code>_delegate = delegate;
+_delegateFlags.didReceiveData = [delegate respondsToSelector:@selector(networkFetcher:didReceiveData:)];
+...
+</code></pre>
+
+<p>}</p>
+
+<p>//Query if responds to selector (FRENQUENTLY)
+if (_delegateFlags.didReceiveData) {</p>
+
+<pre><code>[_delegate networkFetcher:self didReceiveData:dataReceived];
+</code></pre>
+
+<p>}
+<code>
+g.协议的“继承”
+</code>objective-c
+@protocol A</p>
+
+<pre><code>-(void) methodA;
+</code></pre>
+
+<p>@end</p>
+
+<p>@protocol B <A></p>
+
+<pre><code>-(void) methodB;
+</code></pre>
+
+<p>@end
+```</p>
 ]]></content>
   </entry>
   

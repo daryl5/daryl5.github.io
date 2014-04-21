@@ -249,6 +249,104 @@ NSString *const EOCStringConstant = @"NotificationName";
 <h3>Item 14: 理解类的对象- Understand What a Class Object Is</h3>
 
 <p>a.OC是<code>动态类型</code>的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。</p>
+
+<h2><strong>4: Protocols and Categories</strong></h2>
+
+<h3>Item 23: 通过委托和数据源协议进行对象间通信</h3>
+
+<p>a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词：</p>
+
+<blockquote><p>A delegate property will always be defined using either the weak attribute to benefit from <code>autonilling</code> or unsafe_unretained if autonilling is not required.</p></blockquote>
+
+<p>b.在interface中声明遵守协议的话，别的类会知道这一行为，一般把“遵守协议”放在类扩展部分，虽然没太多影响。要知道一个对象是否遵守某个协议可以这样：<code>[self conformsToProtocol:@protocol(DRDHandWritingProtocol)]</code><br/>
+c.可以把正在代理的对象也传回给代理，这样方便判断具体是哪个代理对象在调用代理方法。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">networkFetcher:</span><span class="p">(</span><span class="n">EOCNetworkFetcher</span> <span class="o">*</span><span class="p">)</span><span class="nv">fetcher</span> <span class="nf">didReceiveData:</span><span class="p">(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">fetcher</span> <span class="o">==</span> <span class="n">_myFetcherA</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//Handle data</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">fetcher</span> <span class="o">==</span> <span class="n">_myFetcherB</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//Handle data</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>d.如果开发API，用代理可以实现一些属性设置，如<code>- (BOOL)networkFetcher:(EOCNetworkFetcher *)fetcher shouldFollowRedirectToURL:(NSURL *)url;</code>，甚至这里可以给fetcher传递一个NSDictionary来进行Fetcher一系列属性的设置。<br/>
+e.对<code>@optional</code>的代理方法，方法调用者负责通过<code>[delegate respondsToSelector]</code>确保程序不会崩溃，unrecognized selector。<code>@required</code>的话编译器会确认。如果没设置，默认都是required。<br/>
+f.对dataSource类的delegate，在获取每一个小的data piece的时候都查询一次respondsToSelector是低效的，应该将当前对象对协议的遵守情况缓存下来。如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//有个DataModel或者ViewController是该对象的代理</span>
+</span><span class='line'><span class="c1">//In class extension</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">EOCNetworkFetcher</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">didReceiveData</span>      <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">didFailWithError</span>    <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">didUpdateProgressTO</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span><span class="n">_delegateFlags</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//In delegate Setter</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setDelegate:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">EOCNetworkFetcher</span><span class="o">&gt;</span><span class="p">)</span><span class="n">delegate</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_delegateFlags</span><span class="p">.</span><span class="n">didReceiveData</span> <span class="o">=</span> <span class="p">[</span><span class="n">delegate</span> <span class="nl">respondsToSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">networkFetcher:didReceiveData:</span><span class="p">)];</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Query if responds to selector (FRENQUENTLY)</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">_delegateFlags</span><span class="p">.</span><span class="n">didReceiveData</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">_delegate</span> <span class="nl">networkFetcher:</span><span class="n">self</span> <span class="nl">didReceiveData:</span><span class="n">dataReceived</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>g.协议的“继承”</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@protocol</span> <span class="nc">A</span>
+</span><span class='line'>    <span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">methodA</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@protocol</span> <span class="nc">B</span> <span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">methodB</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
 </article>
 <!--
