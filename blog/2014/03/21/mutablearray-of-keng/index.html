@@ -9,7 +9,26 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="所有遇到过的坑们 11.DRDPoint和DRDInkPoint的encode decode 10.iOS7中自定义导航栏、状态栏的样式 Customizing Navigation Bar and Status Bar in iOS 7，这个不错。 &hellip;">
+	<meta name="description" content="所有遇到过的坑们 11.DRDPoint和DRDInkPoint的encode decode 10.iOS7中自定义导航栏、状态栏的样式 设置状态栏： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+//In AppDelegate
+//Config &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -99,8 +118,48 @@
 
 <h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
 
-<p><a href="http://www.appcoda.com/customize-navigation-status-bar-ios-7/">Customizing Navigation Bar and Status Bar in iOS 7</a>，这个不错。<br/>
-不过里面对单独viewController的statusbar设置<code>UIStatusBarStyle</code>没有成功，没搞懂。<a href="http://stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7/17768797#17768797">How to change Status Bar text color in iOS 7.</a>和这个<a href="http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19032879#19032879">preferredStatusBarStyle isn&rsquo;t called</a>可以看看。发现我很蛋疼，老是关注这些意义不大的东西。</p>
+<p>设置状态栏：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//In AppDelegate</span>
+</span><span class='line'><span class="c1">//Config StatusBar appearance</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">setStatusBarStyle:</span><span class="n">UIStatusBarStyleLightContent</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Config UINavigationController appearance</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UINavigationBar</span> <span class="n">appearance</span><span class="p">]</span> <span class="nl">setBarTintColor:</span><span class="n">UIColorFromRGB</span><span class="p">(</span><span class="mh">0x3395E3</span><span class="p">)];</span> <span class="c1">// 51, 149, 227</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UINavigationBar</span> <span class="n">appearance</span><span class="p">]</span> <span class="nl">setTitleTextAttributes:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nl">dictionaryWithObjectsAndKeys:</span>
+</span><span class='line'>                                                      <span class="p">[</span><span class="n">UIColor</span> <span class="nl">colorWithWhite:</span><span class="mf">0.9</span> <span class="nl">alpha:</span><span class="mf">1.0</span><span class="p">],</span>
+</span><span class='line'>                                                      <span class="n">NSForegroundColorAttributeName</span><span class="p">,</span>
+</span><span class='line'>                                                      <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">20.0</span><span class="p">],</span>
+</span><span class='line'>                                                      <span class="n">NSFontAttributeName</span><span class="p">,</span> <span class="nb">nil</span><span class="p">]];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UINavigationBar</span> <span class="n">appearance</span><span class="p">]</span> <span class="nl">setTintColor:</span><span class="p">[</span><span class="n">UIColor</span> <span class="nl">colorWithWhite:</span><span class="mf">0.93</span> <span class="nl">alpha:</span><span class="mf">1.0</span><span class="p">]];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//In ViewController--进入全屏模式，因为主体背景是白色，在AppDelegate设置状态栏是LightContent，全屏了就很瞎眼</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">setStatusBarStyle:</span><span class="n">UIStatusBarStyleDefault</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Leave full screen</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">setStatusBarStyle:</span><span class="n">UIStatusBarStyleLightContent</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://www.appcoda.com/customize-navigation-status-bar-ios-7/">Customizing Navigation Bar and Status Bar in iOS 7</a>，这个不错。不过里面对单独viewController的statusbar设置<code>UIStatusBarStyle</code>没有成功，没搞懂。<a href="http://stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7/17768797#17768797">How to change Status Bar text color in iOS 7.</a>和这个<a href="http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19032879#19032879">preferredStatusBarStyle isn&rsquo;t called</a>可以看看。发现我很蛋疼，老是关注这些意义不大的东西。</p>
 
 <h3>9.UIButton设置tintColor</h3>
 

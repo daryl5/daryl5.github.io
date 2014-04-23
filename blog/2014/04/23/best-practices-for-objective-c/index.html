@@ -1,0 +1,159 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Best Practices & Tips - Daryl's Blog</title>
+	<meta name="author" content="Daryl5">
+
+	
+	<meta name="description" content="Best Practices & Tips 1.The Code Commandments: Best Practices for Objective-C Coding a.在实例变量前加@private[放在类扩展就好] 表明该变量与API无关
+默认是@protected即就是子类可以访问， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!-- 
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+          //$('.profilepic').append("<img src='../images/avatar.jpg" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='../images/avatar.jpg alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+     -->
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+</div>
+<h1><a href="/">Daryl's Blog</a></h1>
+<p class="subtitle">忌眼高手低，忌浮躁。</p>
+<nav id="main-nav"><ul class="main-navigation">
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+    <li><a href="/blog/categories">Categories</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/daryl5" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Best Practices & Tips</h1>
+	<div class="entry-content" itemprop="articleBody"><h2>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h2>
+
+<p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
+
+<ul>
+<li>表明该变量与API无关</li>
+<li>默认是<code>@protected</code>即就是子类可以访问，如果子类不需要那就不要暴露，面向对象的<code>信息隐藏</code>，（其实最好的应该是子类和其他类用到的在.h，私有变量和方法在类扩展）</li>
+</ul>
+
+
+<p><strong>b.为每一个<code>data member</code>创建<code>@property</code>，在.m中都用<code>self.name</code>来访问</strong>[这个有问题]</p>
+
+<ul>
+<li>property会把访问权限加入，如readonly</li>
+<li>property会把内存管理加入，strong&amp;weak</li>
+</ul>
+
+
+<p><strong>c.<code>实例变量</code>就是只给当前类及其子类使用，<code>@property</code>就是外部类也能用</strong><br/>
+之前看到在头文件里interface部分定义实例变量，同时又用@property重新写一遍。对于想要公开给这个类及其子类以外的类的实例变量，那么就为其写一个对应的property。<br/>
+<strong>d.关于<code>readonly</code></strong>
+就是说这个property在外界不能修改，如<code>self.document.displayHeight</code>会产生<code>assign to readonly property</code>。在类的实现文件里可以通过实例变量来修改，如<code>_displayHeight = 600</code>，此外，在实现文件还可以通过<code>self-&gt;_displayHeight = 600</code>来修改，这里之所以用->大概是因为类本身拥有这个实例变量就意味着类的实例有一个指向这个实例变量的指针，而property只是用于公开给外部，在这里没property什么事。
+另外还可以在类扩展里告诉编译器我还需要一个setter，但只是在实现文件里：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//公有可读，私有可写</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">YourClass</span> <span class="p">()</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">eventDomain</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a><br/>
+e.</p>
+</div>
+</article>
+<!--
+
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Daryl5
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>

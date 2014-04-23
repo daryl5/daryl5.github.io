@@ -108,6 +108,76 @@
   
 
 
+<time datetime="2014-04-23T19:19:22+08:00" data-updated="true" itemprop="datePublished">2014-04-23<br>Wed 19:19</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/ios/'>iOS</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/23/best-practices-for-objective-c/" itemprop="url">Best Practices & Tips</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h2>
+
+<p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
+
+<ul>
+<li>表明该变量与API无关</li>
+<li>默认是<code>@protected</code>即就是子类可以访问，如果子类不需要那就不要暴露，面向对象的<code>信息隐藏</code>，（其实最好的应该是子类和其他类用到的在.h，私有变量和方法在类扩展）</li>
+</ul>
+
+
+<p><strong>b.为每一个<code>data member</code>创建<code>@property</code>，在.m中都用<code>self.name</code>来访问</strong>[这个有问题]</p>
+
+<ul>
+<li>property会把访问权限加入，如readonly</li>
+<li>property会把内存管理加入，strong&amp;weak</li>
+</ul>
+
+
+<p><strong>c.<code>实例变量</code>就是只给当前类及其子类使用，<code>@property</code>就是外部类也能用</strong><br/>
+之前看到在头文件里interface部分定义实例变量，同时又用@property重新写一遍。对于想要公开给这个类及其子类以外的类的实例变量，那么就为其写一个对应的property。<br/>
+<strong>d.关于<code>readonly</code></strong>
+就是说这个property在外界不能修改，如<code>self.document.displayHeight</code>会产生<code>assign to readonly property</code>。在类的实现文件里可以通过实例变量来修改，如<code>_displayHeight = 600</code>，此外，在实现文件还可以通过<code>self-&gt;_displayHeight = 600</code>来修改，这里之所以用->大概是因为类本身拥有这个实例变量就意味着类的实例有一个指向这个实例变量的指针，而property只是用于公开给外部，在这里没property什么事。
+另外还可以在类扩展里告诉编译器我还需要一个setter，但只是在实现文件里：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//公有可读，私有可写</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">YourClass</span> <span class="p">()</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">eventDomain</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a><br/>
+e.</p>
+
+		
+		
+	</div>
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
 <time datetime="2014-04-07T13:22:29+08:00" data-updated="true" itemprop="datePublished">2014-04-07<br>Mon 13:22</time></div>
 		<div class="tags">
 
