@@ -176,6 +176,14 @@ NSString *const EOCStringConstant = @"NotificationName";
 
 <h2><strong>2: Objects, Messaging, and the Runtime</strong></h2>
 
+<h3>Item 6: 理解Properties-Understand Properties【需要再看】</h3>
+
+<p>a.自己写了Accessor中的一个，编译器将会synthesize另一个，LazyLoading就是这样的。如果不想让编译器自动synthesize，可以用<code>@dynamitc</code>指令，这样编译器不会生成Accessor和对应的实例变量名，而且编译时候编译器会忽略Accessor还没有被定义但是已经在self.property，编译器会认为Accessor在runtime时会有的。<br/>
+b.<code>weak</code>不会release旧值，也不会retain新值，类似assign，不过这个property所指对象被销毁时，这个property会被nilled out。<br/>
+<code>unsafe_unretained</code>也和assign类似，只是关于object的assign，unretained对应nonowning，unsafe对应不会被nilled out，这一点和weak不一样。<br/>
+<code>copy</code>对应mutable copy，如果不想让对象把传进来的值改变了，应该做一下copy，也就是immutable copy。虽然增加了拷贝操作，但是会更安全。<br/>
+c.关于自定义getter名在BOOL上的应用，为了加is为什么不直接把property命名成isXxx。</p>
+
 <h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
 
 <p>a.一般都是通过<code>继承</code>来给既有类添加数据，但行不通的时候就要用到<code>关联对象</code>了。以UIAlertView为例：</p>

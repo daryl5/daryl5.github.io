@@ -108,6 +108,41 @@
   
 
 
+<time datetime="2014-04-24T21:43:30+08:00" data-updated="true" itemprop="datePublished">2014-04-24<br>Thu 21:43</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/ios/'>iOS</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/" itemprop="url">Introduction to C++ for iOS Developers</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
+写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
+
+		
+		
+	</div>
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
 <time datetime="2014-04-23T19:19:22+08:00" data-updated="true" itemprop="datePublished">2014-04-23<br>Wed 19:19</time></div>
 		<div class="tags">
 
@@ -120,7 +155,18 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/04/23/best-practices-for-objective-c/" itemprop="url">Best Practices & Tips</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h2>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h2>
+		<h3>3.Category也能Conform to a protocol</h3>
+
+<h3>2.对集合中每个对象发送消息</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// remove all subviews</span>
+</span><span class='line'><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">scrollView</span> <span class="n">subviews</span><span class="p">]</span> <span class="nl">makeObjectsPerformSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h3>
 
 <p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
 

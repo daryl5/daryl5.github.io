@@ -9,26 +9,14 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="所有遇到过的坑们 11.DRDPoint和DRDInkPoint的encode decode 10.iOS7中自定义导航栏、状态栏的样式 设置状态栏： 1
+	<meta name="description" content="所有遇到过的坑们 12.DRDPoint和DRDInkPoint的encode decode 11.连按删除按钮时候下标越界 在- (void)deleteDataUnit中： 1
 2
 3
 4
 5
 6
 7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-//In AppDelegate
-//Config &hellip;">
+NSMutableArray *tempArray = self. &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -114,7 +102,38 @@
 	<div class="entry-content" itemprop="articleBody"><!--more-->
 
 
-<h3>11.DRDPoint和DRDInkPoint的encode decode</h3>
+<h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
+
+<h3>11.连按删除按钮时候下标越界</h3>
+
+<p>在<code>- (void)deleteDataUnit</code>中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">tempArray</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//删除</span>
+</span><span class='line'><span class="p">[</span><span class="n">tempArray</span> <span class="nl">removeObjectAtIndex:</span><span class="n">cursorIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//触发KVO去绘制</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="o">=</span> <span class="n">tempArray</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在<code>- (UIImage *)generatePageImageWithPageIndex:(int)pageIndex</code>中就越界了。</p>
+
+<p><strong>原因</strong>是tempArray和dataUnitArray指的同一块内存，比如原本长度12，删除一个变为11，在后台线程中绘制这个11长度的数组的时候，又按了一下删除，这时候已经触发了KVO，又多了一个绘制线程，之前那个绘制线程在绘制11长度，但是现在的长度是10，所以按的快的时候就会越界，按的慢等每一次绘制结束就没事。</p>
+
+<p><strong>解决办法</strong>是给tempArray赋值的时候进行一下mutable copy，这样每一个绘制线程就用的不同的拷贝，不会导致越界。</p>
+
+<p><strong>更好的解决办法</strong>：类似的情形下，数据改变了就应该停止之前的绘制线程，直接进入新的绘制。打印了一下当前线程，按的快了最多同时开了6个线程在绘制。</p>
+
+<p><a href="http://stackoverflow.com/questions/12660706/nsoperation-cancelalloperations-does-not-stop-the-operation">[NSOperation cancelAllOperations]; does not stop the operation</a>，这个链接里面提到了利用<code>NSOperationQueue</code>的<code>cancelAllOperations</code>来实现“有新数据则停止处理旧数据，从而直接转入对新数据的处理”，实际使用中的确起到了这样的效果，但是跟帖子中例子不同，我的函数里有很多<code>对象</code>，而一个RunLoop就会开一个autoreleasepool，在runloop里我没有去手动释放内存而直接返回，然后内存占用飙升了。懒得再去改进了，只求用户不要太变态。</p>
 
 <h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
 

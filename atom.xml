@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-23T22:58:46+08:00</updated>
+  <updated>2014-04-24T22:21:56+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,11 +14,32 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Introduction to C++ for iOS Developers]]></title>
+    <link href="http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/"/>
+    <updated>2014-04-24T21:43:30+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers</id>
+    <content type="html"><![CDATA[<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
+写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Best Practices & Tips]]></title>
     <link href="http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c/"/>
     <updated>2014-04-23T19:19:22+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c</id>
-    <content type="html"><![CDATA[<h2>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h2>
+    <content type="html"><![CDATA[<h3>3.Category也能Conform to a protocol</h3>
+
+<h3>2.对集合中每个对象发送消息</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// remove all subviews</span>
+</span><span class='line'><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">scrollView</span> <span class="n">subviews</span><span class="p">]</span> <span class="nl">makeObjectsPerformSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h3>
 
 <p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
 
@@ -146,6 +167,14 @@ NSString *const EOCStringConstant = @"NotificationName";
 .m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。</p>
 
 <h2><strong>2: Objects, Messaging, and the Runtime</strong></h2>
+
+<h3>Item 6: 理解Properties-Understand Properties【需要再看】</h3>
+
+<p>a.自己写了Accessor中的一个，编译器将会synthesize另一个，LazyLoading就是这样的。如果不想让编译器自动synthesize，可以用<code>@dynamitc</code>指令，这样编译器不会生成Accessor和对应的实例变量名，而且编译时候编译器会忽略Accessor还没有被定义但是已经在self.property，编译器会认为Accessor在runtime时会有的。<br/>
+b.<code>weak</code>不会release旧值，也不会retain新值，类似assign，不过这个property所指对象被销毁时，这个property会被nilled out。<br/>
+<code>unsafe_unretained</code>也和assign类似，只是关于object的assign，unretained对应nonowning，unsafe对应不会被nilled out，这一点和weak不一样。<br/>
+<code>copy</code>对应mutable copy，如果不想让对象把传进来的值改变了，应该做一下copy，也就是immutable copy。虽然增加了拷贝操作，但是会更安全。<br/>
+c.关于自定义getter名在BOOL上的应用，为了加is为什么不直接把property命名成isXxx。</p>
 
 <h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
 
@@ -746,7 +775,38 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <content type="html"><![CDATA[<!--more-->
 
 
-<h3>11.DRDPoint和DRDInkPoint的encode decode</h3>
+<h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
+
+<h3>11.连按删除按钮时候下标越界</h3>
+
+<p>在<code>- (void)deleteDataUnit</code>中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">tempArray</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//删除</span>
+</span><span class='line'><span class="p">[</span><span class="n">tempArray</span> <span class="nl">removeObjectAtIndex:</span><span class="n">cursorIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//触发KVO去绘制</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="o">=</span> <span class="n">tempArray</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在<code>- (UIImage *)generatePageImageWithPageIndex:(int)pageIndex</code>中就越界了。</p>
+
+<p><strong>原因</strong>是tempArray和dataUnitArray指的同一块内存，比如原本长度12，删除一个变为11，在后台线程中绘制这个11长度的数组的时候，又按了一下删除，这时候已经触发了KVO，又多了一个绘制线程，之前那个绘制线程在绘制11长度，但是现在的长度是10，所以按的快的时候就会越界，按的慢等每一次绘制结束就没事。</p>
+
+<p><strong>解决办法</strong>是给tempArray赋值的时候进行一下mutable copy，这样每一个绘制线程就用的不同的拷贝，不会导致越界。</p>
+
+<p><strong>更好的解决办法</strong>：类似的情形下，数据改变了就应该停止之前的绘制线程，直接进入新的绘制。打印了一下当前线程，按的快了最多同时开了6个线程在绘制。</p>
+
+<p><a href="http://stackoverflow.com/questions/12660706/nsoperation-cancelalloperations-does-not-stop-the-operation">[NSOperation cancelAllOperations]; does not stop the operation</a>，这个链接里面提到了利用<code>NSOperationQueue</code>的<code>cancelAllOperations</code>来实现“有新数据则停止处理旧数据，从而直接转入对新数据的处理”，实际使用中的确起到了这样的效果，但是跟帖子中例子不同，我的函数里有很多<code>对象</code>，而一个RunLoop就会开一个autoreleasepool，在runloop里我没有去手动释放内存而直接返回，然后内存占用飙升了。懒得再去改进了，只求用户不要太变态。</p>
 
 <h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
 
