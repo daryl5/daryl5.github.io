@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-25T22:35:37+08:00</updated>
+  <updated>2014-04-25T22:37:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -20,6 +20,9 @@
     <id>http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers</id>
     <content type="html"><![CDATA[<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
 写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
+
+<!--more-->
+
 
 <h3>Getting Started: A Brief History of Languages</h3>
 
