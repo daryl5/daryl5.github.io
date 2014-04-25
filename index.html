@@ -123,6 +123,361 @@
 		<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
 写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
 
+<h3>Getting Started: A Brief History of Languages</h3>
+
+<p>C++曾经叫做<code>"C with Classes"</code>，OC其实也是在C上做了类这一扩展，两者的区别在于：C++的很多行为发生在编译期而OC更多在运行时期。所以像<code>Method Swizzling</code>这种东西C++是不可能有的。C++也没有<code>Introspection</code>和<code>Reflection methods</code>，不可能知道一个对象属于哪个类。</p>
+
+<h3>C++ Classes</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// MyClass.h</span>
+</span><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">MyClass</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// MyClass.m</span>
+</span><span class='line'><span class="cp">#import “MyClass.h”</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">MyClass</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="c1">// MyClass.h</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyClass</span> <span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// MyClass.cpp</span>
+</span><span class='line'><span class="cp">#include “MyClass.h”</span>
+</span><span class='line'><span class="cm">/* Nothing else in here */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在OC中所有的类都集成自NSObject，如果删掉会编译报错<code>Class 'Test' defined without specifying a base class</code>。<br/>
+OC给C引入了#import来保证一个文件只能被包含一次，C++无对应机制。</p>
+
+<h3>Class Member Variables and Functions</h3>
+
+<p>1.C++里叫<code>成员变量&amp;成员函数</code>，OC里叫<code>实例变量&amp;实例方法</code>。C++中没有<code>method-方法</code>这个术语。在OC中，method就是通过消息派送来调用的东西，而函数是静态的C方式的函数调用如abs(intValue)。<br/>
+2.C++中成员变量和方法默认是<code>Private</code>的，OC中没有绝对的private。
+3.C++使用类：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="c1">//注意这里没有星号，m是存在栈上的，在Memory Management部分可以看到，OC里所有对象都必须加星号声明，使之存在堆</span>
+</span><span class='line'><span class="c1">//存在栈上的所以不用new</span>
+</span><span class='line'><span class="n">MyClass</span> <span class="n">m</span><span class="p">;</span>
+</span><span class='line'><span class="n">m</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'><span class="n">m</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'><span class="n">m</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Implementing Class Member Functions</h3>
+
+<p>1.<code>MyClass::foo() {}</code>这里的<code>::</code>就是表示foo函数是作为MyClass的一部分实现的。<br/>
+2.在头文件中直接实现成员函数就是<code>让编译器去尝试内联</code>。内联就是说当调用该函数时，不会跳到一个新的函数块，而是把整个函数的代码都在编译时候内联在了调用处。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="c1">// MyClass.h</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyClass</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Do something</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Namespaces</h3>
+
+<p>1.比如<code>::</code>就是对命名空间的一种指定方式，用来告诉编译器<code>应该去哪里找这个foo函数</code>。<br/>
+2.命名空间的使用。OC无命名空间，只有设定工程的<code>类名前缀</code>。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="k">namespace</span> <span class="n">MyNamespace</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span> <span class="err">…</span> <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="n">LibraryNamespace</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span> <span class="err">…</span> <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">MyNamespace</span><span class="o">::</span><span class="n">Person</span> <span class="n">pOne</span><span class="p">;</span>
+</span><span class='line'><span class="n">LibraryNamespace</span><span class="o">::</span><span class="n">Person</span> <span class="n">pTwo</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Memory Management</h3>
+
+<p>1.栈和堆<br/>
+a.栈固定大小；当指定函数运行时，数据将会入栈，函数运行完同样数量的数据将会出栈。因此随着程序运行，对栈容量的需求不会持续增长。
+b.堆也是一块用于运行程序的内存，不过大小不固定；随着程序运行，占用堆将会增多；程序会把在函数外还会使用的东西放在堆上（比如函数调用传指针，用来当做参数的指针在栈里，而指针所指内容在外部需要用到，因此指针内容在堆上）；此外比较大的数据也会在堆上因为栈很小。<br/>
+2.C++和OC对堆栈使用的区别</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="kt">int</span> <span class="n">stackInt</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">//用的栈空间，函数返回时存储数字&#39;5&#39;的内存会被自动释放</span>
+</span><span class='line'><span class="c1">//heapInt用堆空间，需要手动释放</span>
+</span><span class='line'><span class="c1">//是不是应该说存储5的内存是分配在堆上的而不是heapInt，heapInt和stackInt应该在符号表什么的吧</span>
+</span><span class='line'><span class="kt">int</span> <span class="o">*</span><span class="n">heapInt</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+</span><span class='line'><span class="o">*</span><span class="n">heapInt</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="n">free</span><span class="p">(</span><span class="n">heapInt</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在OC中尝试分配到栈上<code>NSString stackString;</code>将会有编译错误<code>interface type cannot be statically allocated</code>。OC需要所有object都在堆上这样RC就能控制所有对象的生存与否。<br/>
+C++中对象也可以在栈上，如<code>MyPerson person</code>vs<code>MyPerson person = new MyPerson</code>，参考Implementing Class Member Functions部分和下面这一部分。</p>
+
+<h3>C++ new and delete</h3>
+
+<p>C++引入new和delete来创建&amp;摧毁堆上的对象</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="n">Person</span> <span class="o">*</span><span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="p">();</span> <span class="c1">//对应OC里的alloc init</span>
+</span><span class='line'><span class="k">delete</span> <span class="n">person</span><span class="p">;</span> <span class="c1">//OC里没有delete，这一操作由运行时在对象的引用计数为0时自动完成</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//标量也行</span>
+</span><span class='line'><span class="kt">int</span> <span class="o">*</span><span class="n">x</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">();</span>
+</span><span class='line'><span class="o">*</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="k">delete</span> <span class="n">x</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Accessing Members of Stack and Heap Objects</h3>
+
+<p>1.C++访问栈里对象的成员变量或调用成员函数要用点，堆里的用->。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="n">Person</span> <span class="n">stackPerson</span><span class="p">;</span>
+</span><span class='line'><span class="n">stackPerson</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="err">“</span><span class="n">Bob</span> <span class="n">Smith</span><span class="err">”</span><span class="p">;</span> <span class="c1">///&lt; Setting a member variable</span>
+</span><span class='line'><span class="n">stackPerson</span><span class="p">.</span><span class="n">doSomething</span><span class="p">();</span> <span class="c1">///&lt; Calling a member function</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Person</span> <span class="o">*</span><span class="n">heapPerson</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="p">();</span>
+</span><span class='line'><span class="n">heapPerson</span><span class="o">-&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="err">“</span><span class="n">Bob</span> <span class="n">Smith</span><span class="err">”</span><span class="p">;</span> <span class="c1">///&lt; Setting a member variable</span>
+</span><span class='line'><span class="n">heapPerson</span><span class="o">-&gt;</span><span class="n">doSomething</span><span class="p">();</span> <span class="c1">///&lt; Calling a member function</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>OC里面对property的访问用消息发送和点操作符都行（点操作符会被转为消息发送，应该是在编译阶段），对非property的实例变量直接访问或者用->都行（无property则不会响应这一消息所以点操作符不行）。<br/>
+2.this和self对应，用来在类成员函数（实例方法）内部访问当前对象。<br/>
+3.OC里给nil发送任何消息都ok，C++里对NULL对象去调用函数会崩溃（nullObject->doSomething();）。</p>
+
+<h3>References</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="n">changeValue</span><span class="p">(</span><span class="n">Foo</span> <span class="n">foo</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">foo</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span> <span class="c1">//注意这个声明方式</span>
+</span><span class='line'><span class="n">foo</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">changeValue</span><span class="p">(</span><span class="n">foo</span><span class="p">);</span> <span class="c1">//foo.x还是1，因为C++会做一个foo的拷贝作为参数并不是想的</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面是<code>传值</code>，<code>传址</code>和<code>传引用</code>都会真正改变foo.x，如下</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="c1">//传址</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">changeValue</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">foo</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">foo</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//传引用。对上述例子直接加&amp;就好了</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">changeValue</span><span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Inheritance</h3>
+
+<p>1.普通继承</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Employee</span> : <span class="nc">Person</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//public说明Person中所有public的成员变量在Employee仍然是public</span>
+</span><span class='line'><span class="c1">//这块可以看看文章-http://www.learncpp.com/cpp-tutorial/115-inheritance-and-access-specifiers/</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Employee</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Person</span> <span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.多继承<br/>
+OC也可以实现“多继承”，不过如下play和manage方法都必须实现，对C++只需要在base class中实现就行了，子类自动继承其实现。<br/>
+当两个base class都实现了就要消除歧义；OC用协议的话PlayerManager必须自己去实现foo，就没有这个问题。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="k">class</span> <span class="nc">Player</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">play</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Manager</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="n">manage</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PlayerManager</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Player</span><span class="p">,</span> <span class="k">public</span> <span class="n">Manager</span> <span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Player和Manager都有foo函数</span>
+</span><span class='line'><span class="n">PlayerManager</span> <span class="n">p</span><span class="p">;</span>
+</span><span class='line'><span class="n">p</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span>          <span class="c1">///&lt; Error! Which foo?</span>
+</span><span class='line'><span class="n">p</span><span class="p">.</span><span class="n">Player</span><span class="o">::</span><span class="n">foo</span><span class="p">();</span>  <span class="c1">///&lt; Call foo from Player</span>
+</span><span class='line'><span class="n">p</span><span class="p">.</span><span class="n">Manager</span><span class="o">::</span><span class="n">foo</span><span class="p">();</span> <span class="c1">///&lt; Call foo from Manager</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@protocol</span> <span class="nc">Player</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">play</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@protocol</span> <span class="nc">Manager</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">manage</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Player</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Manager</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">Manager</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">PlayerManager</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">Player</span><span class="p">,</span> <span class="n">Manager</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 		
 		
 	</div>
@@ -155,57 +510,9 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/04/23/best-practices-for-objective-c/" itemprop="url">Best Practices & Tips</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h3>3.Category也能Conform to a protocol</h3>
-
-<h3>2.对集合中每个对象发送消息</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// remove all subviews</span>
-</span><span class='line'><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">scrollView</span> <span class="n">subviews</span><span class="p">]</span> <span class="nl">makeObjectsPerformSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h3>
-
-<p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
-
-<ul>
-<li>表明该变量与API无关</li>
-<li>默认是<code>@protected</code>即就是子类可以访问，如果子类不需要那就不要暴露，面向对象的<code>信息隐藏</code>，（其实最好的应该是子类和其他类用到的在.h，私有变量和方法在类扩展）</li>
-</ul>
-
-
-<p><strong>b.为每一个<code>data member</code>创建<code>@property</code>，在.m中都用<code>self.name</code>来访问</strong>[这个有问题]</p>
-
-<ul>
-<li>property会把访问权限加入，如readonly</li>
-<li>property会把内存管理加入，strong&amp;weak</li>
-</ul>
-
-
-<p><strong>c.<code>实例变量</code>就是只给当前类及其子类使用，<code>@property</code>就是外部类也能用</strong><br/>
-之前看到在头文件里interface部分定义实例变量，同时又用@property重新写一遍。对于想要公开给这个类及其子类以外的类的实例变量，那么就为其写一个对应的property。<br/>
-<strong>d.关于<code>readonly</code></strong>
-就是说这个property在外界不能修改，如<code>self.document.displayHeight</code>会产生<code>assign to readonly property</code>。在类的实现文件里可以通过实例变量来修改，如<code>_displayHeight = 600</code>，此外，在实现文件还可以通过<code>self-&gt;_displayHeight = 600</code>来修改，这里之所以用->大概是因为类本身拥有这个实例变量就意味着类的实例有一个指向这个实例变量的指针，而property只是用于公开给外部，在这里没property什么事。
-另外还可以在类扩展里告诉编译器我还需要一个setter，但只是在实现文件里：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//公有可读，私有可写</span>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">YourClass</span> <span class="p">()</span>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">eventDomain</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a><br/>
-e.</p>
-
 		
 		
+		<a href="/blog/2014/04/23/best-practices-for-objective-c/" class="more-link">阅读全文 &rarr;</a>
 	</div>
 </article>
 

@@ -9,10 +9,21 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="Best Practices & Tips 3.Category也能Conform to a protocol 2.对集合中每个对象发送消息 1
+	<meta name="description" content="Best Practices & Tips 4.用block实现代理 关于block的大致介绍，Objective-C中的Block这篇博文写的挺好。其中提到的一点需要注意，如下： 1
 2
-// remove all subviews
-[[self.scrollView subviews] &hellip;">
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+int price = 1.99; float &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +106,106 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Best Practices & Tips</h1>
-	<div class="entry-content" itemprop="articleBody"><h3>3.Category也能Conform to a protocol</h3>
+	<div class="entry-content" itemprop="articleBody"><!--more-->
+
+
+<h3>4.用block实现代理</h3>
+
+<p>关于block的大致介绍，<a href="http://onevcat.com/2011/11/objective-c%E4%B8%AD%E7%9A%84block/">Objective-C中的Block</a>这篇博文写的挺好。其中提到的一点需要注意，如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">int</span> <span class="n">price</span> <span class="o">=</span> <span class="mf">1.99</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">float</span> <span class="p">(</span><span class="o">^</span><span class="n">finalPrice</span><span class="p">)(</span><span class="kt">int</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">int</span> <span class="n">quantity</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">//Price is accessible here</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">quantiy</span> <span class="o">*</span> <span class="n">price</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">orderQuantity</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//Ordering 10 units, final price is: $19.90</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Ordering %d units, final price is: $%2.2f&quot;</span><span class="p">,</span> <span class="n">orderQuantity</span><span class="p">,</span> <span class="n">finalPrice</span><span class="p">(</span><span class="n">orderQuantity</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">price</span> <span class="o">=</span> <span class="mf">.99</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//Ordering 10 units, final price is: $19.90</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Ordering %d units, final price is: $%2.2f&quot;</span><span class="p">,</span> <span class="n">orderQuantity</span><span class="p">,</span> <span class="n">finalPrice</span><span class="p">(</span><span class="n">orderQuantity</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>可以理解为在block内的price是readonly的，只在定义block时能够被赋值（补充说明，实际上是因为price是value type，block内的price是在申明block时复制了一份到block内，block外面的price无论怎么变化都和block内的price无关了。如果是reference type的话，外部的变化实际上是会影响block内的）。</p></blockquote>
+
+<p>解决办法有两种：<br/>
+1.将局部变量声明为__block，表示外部变化将会在block内进行同样操作;<br/>
+2.使用实例变量。关于这点有引文：</p>
+
+<blockquote><p>这个比较没什么好说的，实例内的变量横行于整个实例内..可谓霸道无敌…=_=
+block外的对象和基本数据一样，也可以作为block的参数。而让人开心的是，block将自动retain传递进来的参数，而不需担心在block执行之前局部对象变量已经被释放的问题。这里就不深究这个问题了，只要严格遵循Apple的thread safe来写，block的内存管理并不存在问题。（更新，ARC的引入再次简化了这个问题，完全不用担心内存管理的问题了）</p></blockquote>
+
+<p>这里有个问题就是：因为block会自动retain传进来的参数，所以会出现<a href="http://stackoverflow.com/questions/14556605/capturing-self-strongly-in-this-block-is-likely-to-lead-to-a-retain-cycle">capturing self strongly in this block is likely to lead to a retain cycle</a>的问题，即就是传进去<code>self.xxx</code>之后，会retain self，即构成了循环引用。解决办法是定义一个<code>__weak</code>的self然后在block中使用。</p>
+
+<p><strong>回到正题，block代替protocol</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//In DRDHandWriting.h</span>
+</span><span class='line'><span class="k">typedef</span> <span class="nf">void</span><span class="p">(</span><span class="o">^</span><span class="n">didFinishWriting</span><span class="p">)(</span><span class="n">NSMutableArray</span> <span class="o">*</span><span class="p">);</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">didFinishWriting</span> <span class="n">didFinishWritingBlock</span><span class="p">;</span><span class="c1">//注意这里是copy</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//In DRDHandWriting.m</span>
+</span><span class='line'><span class="c1">//Submit charUnitArray to Document</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">didFinishWritingBlock</span><span class="p">(</span><span class="n">segmentedCharUnitArray</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//In DRDManuscriptController::loadHandWritingView</span>
+</span><span class='line'><span class="n">handWritingView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">DRDHandWriting</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">handWritingRect</span><span class="p">];</span>
+</span><span class='line'><span class="n">__weak</span> <span class="n">DRDManuscriptController</span> <span class="o">*</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//这里的参数只是被代理对象需要返回给代理的数据，具体就是手写视图需要返回切分好的字符给controller</span>
+</span><span class='line'><span class="c1">//另一种情形就是多个AlertView的代理，这里就可以传回当前alertView</span>
+</span><span class='line'><span class="p">[</span><span class="n">handWritingView</span> <span class="nl">setDidFinishWritingBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">segmentedArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">document</span> <span class="nl">addOrInsertCharUnitArray:</span><span class="n">segmentedArray</span><span class="p">];</span>
+</span><span class='line'><span class="p">}];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>关于上例中block的copy，有<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html">官方文档</a>：</p>
+
+<blockquote><p>Note: You should specify copy as the property attribute, because a block needs to be copied to keep track of its captured state outside of the original scope. This isn’t something you need to worry about when using Automatic Reference Counting, as it will happen automatically, but it’s best practice for the property attribute to show the resultant behavior. For more information, see Blocks Programming Topics.</p></blockquote>
+
+<p>block在创建的时候是分配在栈上的，如果<code>retain</code>（栈上的东西不能retain），在调用block的时候程序就会崩溃，实际上ARC下测试了一下retain，只是代码编辑阶段即给出警告<code>Retain'ed block property does not copy the block - use copy attribute instead</code>并且程序正常运行。而如果是<code>copy</code>，将会把这个block拷贝到堆里，同时retain这个block所引用的所有东西。block在堆上的时候进行copy就没事，不会再拷贝一遍，只是相当于retain。这段摘自<a href="http://blog.refractalize.org/post/10476042560/copy-vs-retain-for-objective-c-blocks">Copy vs retain for Objective-C blocks</a>。</p>
+
+<p><strong>结论：</strong><br/>
+自己实验了一下上面那个改变price输出总价不变的例子，block在创建的时候是分配在栈上的。<br/>
+1.如果block里用到了局部变量，那么就会拷贝一份：比如<code>int a = 5</code>就会拷贝一个int变量其值为5；如果是<code>int *ptr = 5</code>就会拷贝ptr这个指针，这样改变*ptr的值，block里也会跟着变。<br/>
+2.如果用到了实例变量，那么不管是value type还是指针型的，都不会出现外部更新而block内部没跟着变的情况，猜想是因为block引用实例变量其实就是对self指针的弱引用，用到实例变量时候用指针去读的。<br/>
+3.上面<code>capturing self strongly in this block is likely to lead to a retain cycle</code>这一问题，是因为用到了实例变量。两种情况：如果是property那么隐含<code>self.propertyXXX</code>；如果是非property的实例变量，隐含<code>self-&gt;iVar</code>，都有self。因为是用block实现代理，那么需要传block给被代理对象，被代理对象copy block，同时运行时会copy block到堆上并retain block里所有的东西，这就相当于被代理对象里声明了一个<code>@property (strong, nonatomic) id&lt;XXXProtocol&gt; delegate</code>，所以就造成了循环引用。上面那个SO的链接讲得很清楚。<br/>
+4.最后，什么时候用block什么时候用delegation，<a href="http://stablekernel.com/blog/blocks-or-delegation/">Blocks or Delegation</a>讲了，实在不想看了，先马克- -！</p>
+
+<h3>3.Category也能Conform to a protocol</h3>
 
 <h3>2.对集合中每个对象发送消息</h3>
 
@@ -141,8 +251,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a><br/>
-e.</p>
+<p>这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a></p>
 </div>
 </article>
 <!--
