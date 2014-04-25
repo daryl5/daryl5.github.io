@@ -191,18 +191,6 @@
 	<div class="entry-content" itemprop="articleBody">
 		<p>《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：<a href="http://www.galloway.me.uk/">Matt Galloway</a></p>
 
-<h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
-
-<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
-
-<p>a.如下引文，试了一下互相import，没有报错- -！</p>
-
-<blockquote><p>The use of #import rather than #include doesn&rsquo;t end in an infinite loop but does mean that one of ther classes won&rsquo;t compile correctly.</p></blockquote>
-
-<p>b.协议相关<br/>
-一些代理相关的协议，可以把协议头文件在.m文件里再引入，把代理<code>id&lt;XXXProtocol&gt; delegate</code>定义放在类扩展里。
-也可以考虑单独创建一个头文件，里面只放协议定义。</p>
-
 
 		
 		<a href="/blog/2014/04/07/reading-effective-objective-c-2-dot-0/" class="more-link">阅读全文 &rarr;</a>
@@ -237,8 +225,6 @@
 	<h1 class="title" itemprop="name"><a href="/blog/2014/04/02/use-alfred-with-octopress/" itemprop="url">Octopress & Alfred Workflow</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p><strong><a href="http://www.alfredapp.com/">Alfred</a>真是神器！</strong>自己做了两个workflow来简化Octopress发表博文和修改博文的流程，实现的很简单。</p>
-
-<p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code></p>
 
 
 		
@@ -275,14 +261,6 @@
 	<div class="entry-content" itemprop="articleBody">
 		<p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
 
-<h3>1. 继承UIDocument并重写方法</h3>
-
-<p>需要重写<code>loadFromContents:ofType:error</code>方法来读，重写<code>contentsForType:error</code>方法来写。</p>
-
-<h3>2. 输入输出格式</h3>
-
-<p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。FileWrapper内部是Key-Value形式的存储，文件名是key，文件存在本地的archive内容（或是archive文件名）是value，所以会有：</p>
-
 
 		
 		<a href="/blog/2014/04/01/how-to-use-uidocument/" class="more-link">阅读全文 &rarr;</a>
@@ -317,41 +295,6 @@
 	<h1 class="title" itemprop="name"><a href="/blog/2014/03/30/reading-inkpad-source-code/" itemprop="url">读Inkpad源代码</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。</p>
-
-<h3>0. 内联函数的使用</h3>
-
-<p>内联函数只是给编译器的提示，最终能不能内联还要看编译器。</p>
-
-<h4>(1)相同点</h4>
-
-<p><code>static inline double radians (double degrees) { return degrees * M_PI/180; }</code>；都是在与处理阶段对代码块进行替换。</p>
-
-<h4>(2)不同点</h4>
-
-<p>内联函数是值传递，宏定义是简单替换。内联函数有类型检查，此外<code>省去了很多函数调用汇编代码如：call和ret等</code>。<br/>
-<code>#define MAX(a, b) a&gt;b?a:b</code>如果<code>MAX( num1, num2 )</code>就没问题，但是如果是<code>MAX( 17+32, 25+21)</code>，展开后是<code>17+32&gt;25+21?17+32:25+21</code>。甚至<code>#define A 2+3</code>，然后<code>c = 4 * A</code>都会成为<code>4 * 2 + 3</code>。比较安全的写法是<code>#define MAX( (a), (b) ) (a)&gt;(b)?(a)b)</code>，但是这样还是有问题，<code>MAX(i++,j++)</code>完了每个都会加2了。
-宏定义执行快是因为没有<code>函数调用</code>的开销，但是如果宏用的多文件就会变很大，执行文件太大可能导致执行时换页频繁（略夸张）。</p>
-
-<h3>1. 一些简洁的写法</h3>
-
-<ul>
-<li><p><code>CGRectGetWidth</code>，以前总是写成<code>self.frame.size.width</code>。此外还有<code>CGRectGetMidX</code>，直接得到矩形中心点的X坐标。</p>
-
-<pre><code>  CGPointMake(CGRectGetWidth(frame) / 2, CGRectGetHeight(frame) / 2);
-</code></pre></li>
-<li><p><code>[NSDictionary objectForKey]</code>，可以直接<code>dictionary[key]</code>。</p></li>
-<li><p><code>BOOL isolate</code>转NSString，<code>@(isolate)</code>。NSArray的类似写法：</p>
-
-<pre><code>  NSArray *items = @[actionItem_, gearItem_, albumItem_, zoomToFitItem_];
-</code></pre></li>
-</ul>
-
-
-<h3>2. Best Practice</h3>
-
-<h4>(1) “帮助”、“关于”视图</h4>
-
-<p>应用的<strong><code>帮助</code></strong>, <strong><code>关于</code></strong>等信息可以做成html页面。建立本地文件夹，在其中放置html、图片、css等，然后直接<code>self.view = webview;</code>即可。</p>
 
 
 		

@@ -94,6 +94,9 @@
 	<h1 class="title" itemprop="name">UIDocument的使用</h1>
 	<div class="entry-content" itemprop="articleBody"><p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
 
+<!--more-->
+
+
 <h3>1. 继承UIDocument并重写方法</h3>
 
 <p>需要重写<code>loadFromContents:ofType:error</code>方法来读，重写<code>contentsForType:error</code>方法来写。</p>

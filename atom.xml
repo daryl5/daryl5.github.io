@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-25T22:37:22+08:00</updated>
+  <updated>2014-04-25T22:39:56+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -542,6 +542,9 @@ block外的对象和基本数据一样，也可以作为block的参数。而让�
     <id>http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0</id>
     <content type="html"><![CDATA[<p>《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：<a href="http://www.galloway.me.uk/">Matt Galloway</a></p>
 
+<!--more-->
+
+
 <h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
 
 <h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
@@ -813,12 +816,11 @@ f.对dataSource类的delegate，在获取每一个小的data piece的时候都�
     <id>http://daryl5.github.io/blog/2014/04/02/use-alfred-with-octopress</id>
     <content type="html"><![CDATA[<p><strong><a href="http://www.alfredapp.com/">Alfred</a>真是神器！</strong>自己做了两个workflow来简化Octopress发表博文和修改博文的流程，实现的很简单。</p>
 
-<p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code></p>
-
 <!--more-->
 
 
-<p><img src="http://daryl5.github.io/blogimage/2014/pb.png" alt="pb" /></p>
+<p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code>
+<img src="http://daryl5.github.io/blogimage/2014/pb.png" alt="pb" /></p>
 
 <p><code>修改博文</code>用的是：Templates-Files and Apps-File filter from keyword and open。根据关键词显示相关文件，回车用xcode打开，打开终端运行<code>rake preview</code>。命令是<code>mb（modify blog）</code></p>
 
@@ -836,6 +838,9 @@ f.对dataSource类的delegate，在获取每一个小的data piece的时候都�
     <updated>2014-04-01T21:42:32+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument</id>
     <content type="html"><![CDATA[<p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
+
+<!--more-->
+
 
 <h3>1. 继承UIDocument并重写方法</h3>
 
@@ -945,6 +950,9 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <updated>2014-03-30T19:55:11+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。</p>
+
+<!--more-->
+
 
 <h3>0. 内联函数的使用</h3>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-25T22:37:22+08:00</updated>
+  <updated>2014-04-25T22:39:56+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -394,6 +394,9 @@ __weak DRDManuscriptController <em>weakSelf = self;
     <id>http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0</id>
     <content type="html"><![CDATA[<p>《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：<a href="http://www.galloway.me.uk/">Matt Galloway</a></p>
 
+<!--more-->
+
+
 <h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
 
 <h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
@@ -614,6 +617,9 @@ g.协议的“继承”
     <id>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument</id>
     <content type="html"><![CDATA[<p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
 
+<!--more-->
+
+
 <h3>1. 继承UIDocument并重写方法</h3>
 
 <p>需要重写<code>loadFromContents:ofType:error</code>方法来读，重写<code>contentsForType:error</code>方法来写。</p>
@@ -710,6 +716,9 @@ self.contentModel.content = str;</p>
     <updated>2014-03-30T19:55:11+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。</p>
+
+<!--more-->
+
 
 <h3>0. 内联函数的使用</h3>
 
