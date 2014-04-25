@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-25T22:39:56+08:00</updated>
+  <updated>2014-04-25T22:42:25+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,261 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction to C++ for iOS Developers]]></title>
-    <link href="http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/"/>
-    <updated>2014-04-24T21:43:30+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers</id>
-    <content type="html"><![CDATA[<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
-写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
-
-<!--more-->
-
-
-<h3>Getting Started: A Brief History of Languages</h3>
-
-<p>C++曾经叫做<code>"C with Classes"</code>，OC其实也是在C上做了类这一扩展，两者的区别在于：C++的很多行为发生在编译期而OC更多在运行时期。所以像<code>Method Swizzling</code>这种东西C++是不可能有的。C++也没有<code>Introspection</code>和<code>Reflection methods</code>，不可能知道一个对象属于哪个类。</p>
-
-<h3>C++ Classes</h3>
-
-<p>```objective-c
-// MyClass.h</p>
-
-<h1>import &lt;Foundation/Foundation.h></h1>
-
-<p>@interface MyClass : NSObject
-@end</p>
-
-<p>// MyClass.m</p>
-
-<h1>import “MyClass.h”</h1>
-
-<p>@implementation MyClass
-@end
-<code>
-</code>c++
-// MyClass.h
-class MyClass {
-};</p>
-
-<p>// MyClass.cpp</p>
-
-<h1>include “MyClass.h”</h1>
-
-<p>/<em> Nothing else in here </em>/
-<code>``
-在OC中所有的类都集成自NSObject，如果删掉会编译报错</code>Class &lsquo;Test&rsquo; defined without specifying a base class`。<br/>
-OC给C引入了#import来保证一个文件只能被包含一次，C++无对应机制。</p>
-
-<h3>Class Member Variables and Functions</h3>
-
-<p>1.C++里叫<code>成员变量&amp;成员函数</code>，OC里叫<code>实例变量&amp;实例方法</code>。C++中没有<code>method-方法</code>这个术语。在OC中，method就是通过消息派送来调用的东西，而函数是静态的C方式的函数调用如abs(intValue)。<br/>
-2.C++中成员变量和方法默认是<code>Private</code>的，OC中没有绝对的private。
-3.C++使用类：
-<code>c++
-//注意这里没有星号，m是存在栈上的，在Memory Management部分可以看到，OC里所有对象都必须加星号声明，使之存在堆
-//存在栈上的所以不用new
-MyClass m;
-m.x = 10;
-m.y = 20;
-m.foo();
-</code></p>
-
-<h3>Implementing Class Member Functions</h3>
-
-<p>1.<code>MyClass::foo() {}</code>这里的<code>::</code>就是表示foo函数是作为MyClass的一部分实现的。<br/>
-2.在头文件中直接实现成员函数就是<code>让编译器去尝试内联</code>。内联就是说当调用该函数时，不会跳到一个新的函数块，而是把整个函数的代码都在编译时候内联在了调用处。
-```c++
-// MyClass.h
-class MyClass {</p>
-
-<pre><code>int x;
-int y;
-void foo() {
-    // Do something
-}
-</code></pre>
-
-<p>};
-```</p>
-
-<h3>Namespaces</h3>
-
-<p>1.比如<code>::</code>就是对命名空间的一种指定方式，用来告诉编译器<code>应该去哪里找这个foo函数</code>。<br/>
-2.命名空间的使用。OC无命名空间，只有设定工程的<code>类名前缀</code>。
-```c++
-namespace MyNamespace {</p>
-
-<pre><code>class Person { … };
-</code></pre>
-
-<p>}</p>
-
-<p>namespace LibraryNamespace {</p>
-
-<pre><code>class Person { … };
-</code></pre>
-
-<p>}</p>
-
-<p>MyNamespace::Person pOne;
-LibraryNamespace::Person pTwo;
-```</p>
-
-<h3>Memory Management</h3>
-
-<p>1.栈和堆<br/>
-a.栈固定大小；当指定函数运行时，数据将会入栈，函数运行完同样数量的数据将会出栈。因此随着程序运行，对栈容量的需求不会持续增长。
-b.堆也是一块用于运行程序的内存，不过大小不固定；随着程序运行，占用堆将会增多；程序会把在函数外还会使用的东西放在堆上（比如函数调用传指针，用来当做参数的指针在栈里，而指针所指内容在外部需要用到，因此指针内容在堆上）；此外比较大的数据也会在堆上因为栈很小。<br/>
-2.C++和OC对堆栈使用的区别
-<code>c++
-int stackInt = 5; //用的栈空间，函数返回时存储数字'5'的内存会被自动释放
-//heapInt用堆空间，需要手动释放
-//是不是应该说存储5的内存是分配在堆上的而不是heapInt，heapInt和stackInt应该在符号表什么的吧
-int *heapInt = malloc(sizeof(int));
-*heapInt = 5;
-free(heapInt);
-</code>
-在OC中尝试分配到栈上<code>NSString stackString;</code>将会有编译错误<code>interface type cannot be statically allocated</code>。OC需要所有object都在堆上这样RC就能控制所有对象的生存与否。<br/>
-C++中对象也可以在栈上，如<code>MyPerson person</code>vs<code>MyPerson person = new MyPerson</code>，参考Implementing Class Member Functions部分和下面这一部分。</p>
-
-<h3>C++ new and delete</h3>
-
-<p>C++引入new和delete来创建&amp;摧毁堆上的对象
-```c++
-Person *person = new Person(); //对应OC里的alloc init
-delete person; //OC里没有delete，这一操作由运行时在对象的引用计数为0时自动完成</p>
-
-<p>//标量也行
-int <em>x = new int();
-</em>x = 5;
-delete x;
-```</p>
-
-<h3>Accessing Members of Stack and Heap Objects</h3>
-
-<p>1.C++访问栈里对象的成员变量或调用成员函数要用点，堆里的用->。
-```c++
-Person stackPerson;
-stackPerson.name = “Bob Smith”; ///&lt; Setting a member variable
-stackPerson.doSomething(); ///&lt; Calling a member function</p>
-
-<p>Person *heapPerson = new Person();
-heapPerson->name = “Bob Smith”; ///&lt; Setting a member variable
-heapPerson->doSomething(); ///&lt; Calling a member function
-```
-OC里面对property的访问用消息发送和点操作符都行（点操作符会被转为消息发送，应该是在编译阶段），对非property的实例变量直接访问或者用->都行（无property则不会响应这一消息所以点操作符不行）。<br/>
-2.this和self对应，用来在类成员函数（实例方法）内部访问当前对象。<br/>
-3.OC里给nil发送任何消息都ok，C++里对NULL对象去调用函数会崩溃（nullObject->doSomething();）。</p>
-
-<h3>References</h3>
-
-<p>```c++
-class Foo {
-  public:</p>
-
-<pre><code>int x;
-</code></pre>
-
-<p>};</p>
-
-<p>void changeValue(Foo foo) {</p>
-
-<pre><code>foo.x = 5;
-</code></pre>
-
-<p>}</p>
-
-<p>Foo foo; //注意这个声明方式
-foo.x = 1;
-changeValue(foo); //foo.x还是1，因为C++会做一个foo的拷贝作为参数并不是想的
-<code>
-上面是`传值`，`传址`和`传引用`都会真正改变foo.x，如下
-</code>c++
-//传址
-void changeValue(Foo *foo) {</p>
-
-<pre><code>foo-&gt;x = 5;
-</code></pre>
-
-<p>}</p>
-
-<p>//传引用。对上述例子直接加&amp;就好了
-void changeValue(int &amp;x) {</p>
-
-<pre><code>x = 5;
-</code></pre>
-
-<p>}
-```</p>
-
-<h3>Inheritance</h3>
-
-<p>1.普通继承
-```objective-c
-@interface Person : NSObject
-@end</p>
-
-<p>@interface Employee : Person
-@end
-<code>
-</code>c++
-class Person {
-};</p>
-
-<p>//public说明Person中所有public的成员变量在Employee仍然是public
-//这块可以看看文章-<a href="http://www.learncpp.com/cpp-tutorial/115-inheritance-and-access-specifiers/">http://www.learncpp.com/cpp-tutorial/115-inheritance-and-access-specifiers/</a>
-class Employee : public Person {
-};
-<code>
-2.多继承  
-OC也可以实现“多继承”，不过如下play和manage方法都必须实现，对C++只需要在base class中实现就行了，子类自动继承其实现。  
-当两个base class都实现了就要消除歧义；OC用协议的话PlayerManager必须自己去实现foo，就没有这个问题。
-</code>c++
-class Player {</p>
-
-<pre><code>void play();
-</code></pre>
-
-<p>};</p>
-
-<p>class Manager {</p>
-
-<pre><code>void manage();
-</code></pre>
-
-<p>};</p>
-
-<p>class PlayerManager : public Player, public Manager {
-};</p>
-
-<p>//Player和Manager都有foo函数
-PlayerManager p;
-p.foo();          ///&lt; Error! Which foo?
-p.Player::foo();  ///&lt; Call foo from Player
-p.Manager::foo(); ///&lt; Call foo from Manager
-<code>
-</code>objective-c
-@protocol Player
-&ndash; (void)play;
-@end</p>
-
-<p>@protocol Manager
-&ndash; (void)manage;
-@end</p>
-
-<p>@interface Player : NSObject <Player>
-@end</p>
-
-<p>@interface Manager : NSObject <Manager>
-@end</p>
-
-<p>@interface PlayerManager : NSObject &lt;Player, Manager>
-@end
-```</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Best Practices & Tips]]></title>
@@ -924,6 +669,208 @@ for (NSString *key in keyArray) {
 <h3>5. 子类不能重写touchesBegan但要在其发生同时完成处理</h3>
 
 <p><code>FingerTackerView</code>重写<code>touchesBegan</code>等等方法，然后在其内部进行一些操作后调用<code>[self methodForSubclassOverwritten]</code>，这个方法可以置空。<code>HandWritingView</code>，<code>GestureEditorView</code>等继承自<code>FingerTrackerView</code>的类里重写<code>[self methodForSubclassOverwritten]</code>，这样就能在采集点的同时，对点的处理根据当前选择功能（即所处的视图）来由对应的子类来处理。子类不会出现<code>touchesBegan</code>等，但是可以通过重写方法来实现手势运动时处理。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[所有遇到过的坑们]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/"/>
+    <updated>2014-03-21T12:22:22+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
+
+<h3>11.连按删除按钮时候下标越界</h3>
+
+<p>在<code>- (void)deleteDataUnit</code>中：
+```objective-c
+NSMutableArray *tempArray = self.dataUnitArray;</p>
+
+<p>//删除
+[tempArray removeObjectAtIndex:cursorIndex &ndash; 1];</p>
+
+<p>//触发KVO去绘制
+self.dataUnitArray = tempArray;
+<code>``
+然后在</code>&ndash; (UIImage *)generatePageImageWithPageIndex:(int)pageIndex`中就越界了。</p>
+
+<p><strong>原因</strong>是tempArray和dataUnitArray指的同一块内存，比如原本长度12，删除一个变为11，在后台线程中绘制这个11长度的数组的时候，又按了一下删除，这时候已经触发了KVO，又多了一个绘制线程，之前那个绘制线程在绘制11长度，但是现在的长度是10，所以按的快的时候就会越界，按的慢等每一次绘制结束就没事。</p>
+
+<p><strong>解决办法</strong>是给tempArray赋值的时候进行一下mutable copy，这样每一个绘制线程就用的不同的拷贝，不会导致越界。</p>
+
+<p><strong>更好的解决办法</strong>：类似的情形下，数据改变了就应该停止之前的绘制线程，直接进入新的绘制。打印了一下当前线程，按的快了最多同时开了6个线程在绘制。</p>
+
+<p><a href="http://stackoverflow.com/questions/12660706/nsoperation-cancelalloperations-does-not-stop-the-operation">[NSOperation cancelAllOperations]; does not stop the operation</a>，这个链接里面提到了利用<code>NSOperationQueue</code>的<code>cancelAllOperations</code>来实现“有新数据则停止处理旧数据，从而直接转入对新数据的处理”，实际使用中的确起到了这样的效果，但是跟帖子中例子不同，我的函数里有很多<code>对象</code>，而一个RunLoop就会开一个autoreleasepool，在runloop里我没有去手动释放内存而直接返回，然后内存占用飙升了。懒得再去改进了，只求用户不要太变态。</p>
+
+<h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
+
+<p>设置状态栏：
+```objective-c
+//In AppDelegate
+//Config StatusBar appearance
+[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];</p>
+
+<p>//Config UINavigationController appearance
+[[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x3395E3)]; // 51, 149, 227
+[[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:</p>
+
+<pre><code>                                                  [UIColor colorWithWhite:0.9 alpha:1.0],
+                                                  NSForegroundColorAttributeName,
+                                                  [UIFont systemFontOfSize:20.0],
+                                                  NSFontAttributeName, nil]];
+</code></pre>
+
+<p>[[UINavigationBar appearance] setTintColor:[UIColor colorWithWhite:0.93 alpha:1.0]];</p>
+
+<p>//In ViewController&mdash;进入全屏模式，因为主体背景是白色，在AppDelegate设置状态栏是LightContent，全屏了就很瞎眼
+[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</p>
+
+<p>//Leave full screen
+[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+<code>``
+[Customizing Navigation Bar and Status Bar in iOS 7](http://www.appcoda.com/customize-navigation-status-bar-ios-7/)，这个不错。不过里面对单独viewController的statusbar设置</code>UIStatusBarStyle`没有成功，没搞懂。<a href="http://stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7/17768797#17768797">How to change Status Bar text color in iOS 7.</a>和这个<a href="http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19032879#19032879">preferredStatusBarStyle isn&rsquo;t called</a>可以看看。发现我很蛋疼，老是关注这些意义不大的东西。</p>
+
+<h3>9.UIButton设置tintColor</h3>
+
+<p><code>tintColor</code>属性并不是所有button都有的，只有<code>[UIButton buttonWithType:UIButtonTypeSystem]</code>才能设置。如果是init或者initWithFrame，设置了不会显示。</p>
+
+<h3>8.在主线程更新UI-闪烁光标的实现</h3>
+
+<p>在KVO里要调用drawCursorWithRect画光标，而且这个函数里会启动timer来实现光标闪烁，如果直接调用会不闪烁，然后过一会儿闪一次。记着所有跟UI相关的东西都放在主线程执行。这里还有就是NSValue的<code>valueWithCGRect</code>和<code>CGRectValue</code>。还有就是<code>runloop</code>相关的东西，后面看看。
+```objective-c
+if ([keyPath isEqual:@&ldquo;cursorStartPoint&rdquo;]) {</p>
+
+<pre><code>CGPoint cursorStartPoint = self.document.cursorStartPoint;
+CGRect cursorRect = CGRectMake(cursorStartPoint.x, cursorStartPoint.y + kCursorOffsetY, kCursorWidth, kCursorHeight);
+NSValue *cursorRectValue = [NSValue valueWithCGRect:cursorRect];
+[self performSelectorOnMainThread:@selector(drawCursorWithRect:) withObject:cursorRectValue waitUntilDone:NO];
+</code></pre>
+
+<p>}
+<code>
+另外一个问题是，当有新的手写字符时光标要移动，直接改变cursorLayer的frame属性，会有移动过程的动画，看[CALayer animates with frame change?](http://stackoverflow.com/questions/12103142/calayer-animates-with-frame-change)。去掉这个动画的方法是：
+</code>objective-c
+[CATransaction begin];
+//或者[CATransaction setAnimationDuration:0];
+//或者[CATransaction setDisableActions:YES];
+[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+[myView.myCALayer.frame = (CGRect){ { 10, 10 }, { 100, 100 } ];
+[CATransaction commit];
+```</p>
+
+<h3>7.程序突然运行不起来</h3>
+
+<p>先记着后面写，可能是因为最开始建工程时候包含storyboard，中途删掉了storyboard改了Main Interface和AppDelegate和plist，但是可能设备里还是有storyboard的。这样删了程序重新跑的时候就错了。很悲剧的时，设置了异常断点，而问题出在main.m里，这个都没报错的，去掉了才说找不到storyboard。<br/>
+试了一下只是简单的在viewDidLoad里改背景颜色，感觉还是怪怪的。直接删了storyboard不改工程配置也能运行，完了删了app重新运行也行，甚至删掉makeKeyAndVisible都能，但是这时候再把Main Interface里的Main删掉，就是黑屏了。</p>
+
+<h3>6.Decode Mutable的东西时要注意mutableCopy</h3>
+
+<blockquote><p>Decoding an archive gives you immutable objects regardless of whether they were mutable or immutable when you encoded them.</p></blockquote>
+
+<p>需要<code>[self setMyArray:[[decoder decodeObjectForKey:@"myArray"] mutableCopy];</code><br/>
+还要注意的就是object要copy不然会autorelease <code>You must also copy or retain the string object, otherwise it will be autoreleased:</code>。链接在<a href="http://stackoverflow.com/questions/10391803/nskeyedarchiver-and-nskeyedunarchiver-with-nsmutablearray/10392017#10392017">NSKeyedArchiver and NSKeyedUnarchiver with NSMutableArray</a></p>
+
+<h3>5.toolbar死活不显示</h3>
+
+<p>navigationController的setToolbarHidden属性没设置默认是TRUE。</p>
+
+<h3>4.CGBitmapContext画透明图的实现</h3>
+
+<p>之前是先用一个特定的颜色填充，然后画内容，画完之后再把之前那个颜色mask掉。
+```objective-c
+//Use a &ldquo;strange or unique&rdquo; color fill the context add mask it after drawing
+UIColor *fillColor = [UIColor colorWithRed:220.0/255.0 green:198.0/255.0 blue:225.0/255.0 alpha:1.0];
+CGContextSetFillColorWithColor(self.bitmapContext, fillColor.CGColor);
+CGContextFillRect(self.bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</p>
+
+<p>//Mask
+CGImageRef pageImageRef = CGBitmapContextCreateImage(bitmapContext);
+const float colorMasking[8] = {220, 220, 198, 198, 225, 225, 0, 255};
+CGImageRef pageImageMask = CGImageCreateWithMaskingColors(pageImageRef, colorMasking);
+UIImage *pageImage = [UIImage imageWithCGImage:pageImageMask];
+<code>``
+这样的实现非常2，内存开销增加了很大。用</code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));<code>就好了，函数说明就是</code>Paints a transparent rectangle<code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。  
+同时要注意，要创建透明位图就要在初始化位图上下文时指定CGBitmapInfo为</code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast<code>，也可以换成</code>kCGImageAlphaPremultipliedFirst<code>，last就是RGBA反之是ARGB，预乘alpha就代表图像是有alpha通道的，不设置这个clearRect后会是黑色。假如一个像素(A，R，G，B)的四个分量都用规一化的数值表示，(A，R，G，B)为(1，1，0，0)时显示红色。当像素为 (0.5,1,0,0)时，预乘的结果就变成(0.5,0.5,0,0)，这表示原来该像素显示的红色的强度为1，而现在显示的红色的强度降了一半。  
+另，</code>颜色深度`就是颜色位数，比如RGB一个分量用8位，总共24位，每个像素可以用2的24次方就是16777216中颜色表示，也就是几年前卖手机时候说的1600w色- -！</p>
+
+<h3>3.使用CGBitmapContext并行绘图时报错</h3>
+
+<p>用如下代码进行简单的并行绘制每个字符，结果出现<code>CGContextAddLineToPoint: no current point</code>的错误，就是说在<code>CGContextAddLineToPoint</code>之前并没有一个<code>CGContextMoveToPoint</code>的操作。<br/>
+想了一下下面代码有问题，并行绘图的代码里会有这两个操作，待绘制字符多的时候并行程度高，就可能在绘制单个字符的代码中一个的<code>CGContextStrokePath</code>刚执行完，<strong>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().</strong> context中move到的point已经释放，而另一个正好要执行<code>CGContextAddLineToPoint</code>，于是就<code>no current point</code>了。下面的引文来自<a href="http://lists.apple.com/archives/quartz-dev/2011/Feb/msg00030.html">这里</a></p>
+
+<blockquote><p>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().ClosePath() isn&rsquo;t there to balance BeginPath() — it modifies the current path by adding a line segment from the current point to the beginning of the current subpath (in such a way that there&rsquo;s a linejoin at that point rather than a pair of line ends).</p></blockquote>
+
+<p>并行绘制最终没想到一个好的并行办法，因为context必须用同一个。最后的解决办法是，能保留上次绘制的context就保留，在其基础上接着绘制- -！
+```objective-c
+//Draw characters concurrently
+NSIndexSet *indexSetToDraw = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, characterNum)];
+[self.dataUnitArray enumerateObjectsAtIndexes:indexSetToDraw</p>
+
+<pre><code>                                  options:NSEnumerationConcurrent
+                               usingBlock:^(DRDCharUnit *charUnitToDraw, NSUInteger idx, BOOL *stop) {
+                                   currentCharUnit = charUnitToDraw;
+                                   originPoint = dataUnitUpperLeftPoints[idx - startIndex];
+                                   [self drawCharacter:currentCharUnit withOrigin:originPoint inContext:bitmapContext];
+                               }];
+</code></pre>
+
+<p>```
+<a href="http://stackoverflow.com/questions/9150665/trouble-drawing-coregraphics-lines-in-drawrect-method">Trouble drawing CoreGraphics lines in drawRect() method</a> 里的回答:You have to place CGContextStrokePath(context); outside the for loop. Otherwise it will create a fresh path on every run through the loop and that fails.
+这个人的问题在于for循环最后都strokePath了，而for循环开头都没有moveToPoint，于是错误发生。<br/>
+<a href="http://stackoverflow.com/questions/9799682/cgcontextaddlinetopoint-no-current-point">CGContextAddLineToPoint: no current point</a> 还有一个回答：You must first create a path with CGContextBeginPath before you can start adding points and lines to it. 然后有一个针对这个答案的评论：Not true. A CGContext always has a current path (possibly an empty one) which you can add elements to. You need CGContextBeginPath only when you want to discard the current path and start with a new empty path.</p>
+
+<h3>2.创建支持Retina的CGBitmapContext</h3>
+
+<p>原理是创建两倍长两倍宽的位图，同时ScaleCTM使系统绘图时进行坐标转换。代码如下，摘自<a href="http://stackoverflow.com/questions/10867767/how-to-create-a-cgbitmapcontext-which-works-for-retina-display-and-not-wasting-s">这里</a>：</p>
+
+<blockquote><p>A key factor is that, CGContextScaleCTM(context, scaleFactor, scaleFactor); is used to adjust the coordinate system, so that any drawing by Core Graphics, such as CGContextMoveToPoint, etc, will automatically work, no matter it is standard resolution or the Retina resolution.</p></blockquote>
+
+<p>```objective-c
+//The sample is to create a 768 x 768 point region.<br/>
+//On The New iPad, it will be 1536 x 1536 pixel.<br/>
+//On iPad 2, it is 768 x 768 pixel.
+float scaleFactor = [[UIScreen mainScreen] scale];</p>
+
+<p>CGSize size = CGSizeMake(768, 768);</p>
+
+<p>CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</p>
+
+<p>CGContextRef context = CGBitmapContextCreate(NULL,</p>
+
+<pre><code>                       size.width * scaleFactor, size.height * scaleFactor, 
+                       8, size.width * scaleFactor * 4, colorSpace, 
+                       kCGImageAlphaPremultipliedFirst);
+</code></pre>
+
+<p>CGContextScaleCTM(context, scaleFactor, scaleFactor);
+```</p>
+
+<h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
+
+<p>创建位图上下文时出现的错误：</p>
+
+<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
+
+<p>代码如下：
+```objective-c
+contextToDraw = CGBitmapContextCreate(NULL,</p>
+
+<pre><code>                                  charUnit.width * scale,
+                                  charUnit.height * scale,
+                                  8,
+                                  0,
+                                  colorSpace,
+                                  kCGBitmapByteOrderDefault);
+</code></pre>
+
+<p>```
+在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
+
+<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
+
+<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说的很详细。</p>
 ]]></content>
   </entry>
   
