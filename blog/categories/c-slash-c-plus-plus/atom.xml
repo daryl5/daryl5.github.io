@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C/C++ | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/c-slash-c-plus-plus/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-27T23:11:52+08:00</updated>
+  <updated>2014-04-28T22:02:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -19,18 +19,19 @@
     <updated>2014-04-24T21:43:30+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers</id>
     <content type="html"><![CDATA[<p>摘自<a href="http://www.raywenderlich.com/62989/introduction-c-ios-developers-part-1">Introduction to C++ for iOS Developers</a>，这篇文章第二部分在<a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2">这里</a>。<br/>
-写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。</p>
+写了太久OC再去看C++，最好的方式当然是比较着来学习，所以说这篇博文真的太赞了。先挖坑，明天填。如果要学可以去<a href="http://www.learncpp.com">Learn C++</a>。</p>
 
 <!--more-->
 
 
-<h3>Getting Started: A Brief History of Languages</h3>
+<h3>1.Getting Started: A Brief History of Languages</h3>
 
 <p>C++曾经叫做<code>"C with Classes"</code>，OC其实也是在C上做了类这一扩展，两者的区别在于：C++的很多行为发生在编译期而OC更多在运行时期。所以像<code>Method Swizzling</code>这种东西C++是不可能有的。C++也没有<code>Introspection</code>和<code>Reflection methods</code>，不可能知道一个对象属于哪个类。</p>
 
-<h3>C++ Classes</h3>
+<h3>2.C++ Classes</h3>
 
-<p>```objective-c
+<p>OC的类
+```objective-c
 // MyClass.h</p>
 
 <h1>import &lt;Foundation/Foundation.h></h1>
@@ -45,6 +46,7 @@
 <p>@implementation MyClass
 @end
 <code>
+C++的类
 </code>c++
 // MyClass.h
 class MyClass {
@@ -56,10 +58,9 @@ class MyClass {
 
 <p>/<em> Nothing else in here </em>/
 <code>``
-在OC中所有的类都集成自NSObject，如果删掉会编译报错</code>Class &lsquo;Test&rsquo; defined without specifying a base class`。<br/>
-OC给C引入了#import来保证一个文件只能被包含一次，C++无对应机制。</p>
+在OC中所有的类都集成自</code>NSObject<code>，如果删掉会编译报错</code>Class &lsquo;Test&rsquo; defined without specifying a base class<code>。OC给C引入了</code>#import`来保证一个文件只能被包含一次，C++无对应机制。</p>
 
-<h3>Class Member Variables and Functions</h3>
+<h3>3.Class Member Variables and Functions</h3>
 
 <p>1.C++里叫<code>成员变量&amp;成员函数</code>，OC里叫<code>实例变量&amp;实例方法</code>。C++中没有<code>method</code>这个术语。在OC中，method就是通过消息派送来调用的东西，而函数是静态的C方式的函数调用如myFunction(intValue)。<br/>
 2.C++中成员变量和方法默认是<code>Private</code>的，OC中没有绝对的private。<br/>
@@ -73,7 +74,7 @@ m.y = 20;
 m.foo();
 </code></p>
 
-<h3>Implementing Class Member Functions</h3>
+<h3>4.Implementing Class Member Functions</h3>
 
 <p>1.<code>MyClass::foo() {}</code>这里的<code>::</code>就是表示foo函数是作为MyClass的一部分实现的。<br/>
 2.在头文件中直接实现成员函数就是<code>让编译器去尝试内联</code>。内联就是说当调用该函数时，不会跳到一个新的函数块，而是把整个函数的代码都在编译时候内联在了调用处。
@@ -91,7 +92,7 @@ void foo() {
 <p>};
 ```</p>
 
-<h3>Namespaces</h3>
+<h3>5.Namespaces</h3>
 
 <p>1.比如<code>::</code>就是对命名空间的一种指定方式，用来告诉编译器<code>应该去哪里找这个foo函数</code>。<br/>
 2.C++命名空间的使用。OC无命名空间，只有设定工程的<code>类名前缀</code>。
@@ -114,10 +115,9 @@ namespace MyNamespace {</p>
 LibraryNamespace::Person pTwo;
 ```</p>
 
-<h3>Memory Management</h3>
+<h3>6.Memory Management</h3>
 
-<p>1.栈和堆<br/>
-a.栈固定大小；当指定函数运行时，数据将会入栈，函数运行完同样数量的数据将会出栈。因此随着程序运行，对栈容量的需求不会持续增长。<br/>
+<p>a.栈固定大小；当指定函数运行时，数据将会入栈，函数运行完同样数量的数据将会出栈。因此随着程序运行，对栈容量的需求不会持续增长。<br/>
 b.堆也是一块用于运行程序的内存，不过大小不固定；随着程序运行，占用堆将会增多；程序会把在函数外还会使用的东西放在堆上（比如函数调用传指针，用来当做参数的指针在栈里，而指针所指内容在外部需要用到，因此指针内容在堆上）；此外比较大的数据也会在堆上因为栈很小。
 2.C++和OC对堆栈使用的区别
 <code>c++
@@ -131,7 +131,7 @@ free(heapInt);
 在OC中尝试分配到栈上<code>NSString stackString;</code>将会有编译错误<code>interface type cannot be statically allocated</code>。OC需要所有object都在堆上这样RC就能控制所有对象的生存与否。<br/>
 C++中对象也可以在栈上，如<code>MyPerson person</code>vs<code>MyPerson *person = new MyPerson()</code>，参考Implementing Class Member Functions部分和下面这一部分。</p>
 
-<h3>C++ new and delete</h3>
+<h3>7.C++ new and delete</h3>
 
 <p>C++引入new和delete来创建&amp;摧毁堆上的对象
 ```c++
@@ -144,7 +144,7 @@ int <em>x = new int();
 delete x;
 ```</p>
 
-<h3>Accessing Members of Stack and Heap Objects</h3>
+<h3>8.Accessing Members of Stack and Heap Objects</h3>
 
 <p>1.C++访问栈里对象的成员变量或调用成员函数要用点，堆里的用->。
 ```c++
@@ -160,7 +160,7 @@ OC里面对property的访问用消息发送和点操作符都行（点操作符�
 2.this和self对应，用来在类成员函数（实例方法）内部访问当前对象。<br/>
 3.OC里给nil发送任何消息都ok，C++里对NULL对象去调用函数会崩溃（nullObject->doSomething();）。</p>
 
-<h3>References</h3>
+<h3>9.References</h3>
 
 <p>```c++
 class Foo {
@@ -201,7 +201,7 @@ void changeValue(int &amp;x) {</p>
 <p>}
 ```</p>
 
-<h3>Inheritance</h3>
+<h3>10.Inheritance</h3>
 
 <p>1.普通继承
 ```objective-c
@@ -222,7 +222,8 @@ class Employee : public Person {
 <code>
 2.多继承  
 OC也可以实现“多继承”，不过如下play和manage方法都必须实现，对C++只需要在base class中实现就行了，子类自动继承其实现。  
-当两个base class都实现了就要消除歧义；OC用协议的话PlayerManager必须自己去实现foo，就没有这个问题。
+当两个base class都实现了就要消除歧义；OC用协议的话PlayerManager必须自己去实现foo，就没有这个问题。  
+C++多继承
 </code>c++
 class Player {</p>
 
@@ -247,6 +248,7 @@ p.foo();          ///&lt; Error! Which foo?
 p.Player::foo();  ///&lt; Call foo from Player
 p.Manager::foo(); ///&lt; Call foo from Manager
 <code>
+OC多继承
 </code>objective-c
 @protocol Player
 &ndash; (void)play;
@@ -265,6 +267,319 @@ p.Manager::foo(); ///&lt; Call foo from Manager
 <p>@interface PlayerManager : NSObject &lt;Player, Manager>
 @end
 ```</p>
+
+<h3>11.Polymorphism</h3>
+
+<p>1.“运行时”的OC和“编译时”的C++的一个区别：
+```c++
+class Foo {
+  public:</p>
+
+<pre><code>int value() { return 5; }
+</code></pre>
+
+<p>};</p>
+
+<p>class Bar : public Foo {
+  public:</p>
+
+<pre><code>int value() { return 10; }
+</code></pre>
+
+<p>};</p>
+
+<p>Bar <em>b = new Bar();
+Foo </em>f = (Foo*)b;
+printf(“%i”, f->value());
+// Output = 5
+<code>
+在OC中，把一个子类转换成它的父类是OK的，因为当给对象发送消息时，运行时会去查询该对象所属的类，并调用该类对应的方法。在上例中，就会识别出f其实是一个指向Bar对象的指针，所以会调用Bar::value()然后输出10。
+在C++中，编译器遇到value函数调用，然后发现f是一个指向Foo对象的指针，所以去找Foo::value()。  
+2.Static Binding and Dynamic Binding  
+静态绑定就是编译器在编译时即把哪个函数会被调用这些信息生成到了可执行文件里，所以运行的时候是不可能动态改变调用哪个方法。
+动态绑定就是运行时在运行的时候负责决定哪个方法应该被调用，所以可以在运行的时候动态的给类添加方法或者动态改变方法的实现。  
+不过C++也可以实现动态绑定，需要借助`虚函数`。  
+3.Virtual Functions and the Virtual Table  
+借助虚函数得到“情理之中”的结果，不过增加了查表的开销，如果是静态绑定那么只有函数调用的开销：
+</code>c++
+class Foo {
+  public:</p>
+
+<pre><code>virtual int value() { return 5; }
+</code></pre>
+
+<p>};</p>
+
+<p>class Bar : public Foo {
+  public:</p>
+
+<pre><code>virtual int value() { return 10; }
+</code></pre>
+
+<p>};</p>
+
+<p>Bar <em>b = new Bar();
+Foo </em>f = (Foo*)b;
+printf(“%i”, f->value());
+// Output = 10
+<code>``
+C++中很多设计都很灵活，把一些决定留给开发者去做，所以说其是一个</code>多范式`的语言；OC强制开发者使用严格的模式，特别是当使用Cocoa框架时。</p>
+
+<h3>12.The Inner Workings of Virtual Functions</h3>
+
+<p>如果foo()函数不是虚函数，那么编译器产出的代码将会直接跳到对应类的foo函数处进行函数调用。<br/>
+如果是虚函数，那么会去查<code>v-table</code>，每一个类有一个虚表。对于上例，虽然强制转换了对象，但对象本身的<code>内容不变</code>，所以<code>虚表也不变</code>，进而就能找到正确的函数了。</p>
+
+<h3>13.Constructors and Destructors</h3>
+
+<p>1.普通构造器：
+```c++
+class Foo {
+  private:</p>
+
+<pre><code>int x;
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Foo() {
+    x = 0;
+}
+
+Foo(int x) {
+    this-&gt;x = x;
+}
+</code></pre>
+
+<p>};
+<code>
+文艺构造器：
+</code>c++
+class Foo {
+  private:</p>
+
+<pre><code>int x;
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Foo() : x(0) {
+}
+
+Foo(int x) : x(x) {
+}
+</code></pre>
+
+<p>};
+<code>
+如果除了初始化对象的内部状态之外还有别的初始化逻辑或者函数调用，那么可以上面两者混用，也就是在文艺构造器中进一步实现以下函数体。  
+2.当用到`继承`的时候往往需要调用父类的初始化器，如OC中`self = [super init];`，在C++11之前是不能这么做的，不过可以通通去调用父类对应的初始化器：
+</code>c++
+class Foo {
+  private:</p>
+
+<pre><code>int x;
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Foo() : x(0) {
+}
+
+Foo(int x) : x(x) {
+}
+</code></pre>
+
+<p>};</p>
+
+<p>class Bar : public Foo {
+  private:</p>
+
+<pre><code>int y;
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Bar() : Foo(), y(0) {
+}
+
+Bar(int x) : Foo(x), y(0) {
+}
+
+Bar(int x, int y) : Foo(x), y(y) {
+}
+</code></pre>
+
+<p>};
+<code>
+3.OC中一般都有指定初始化器，C++中无对应机制。如果两个初始化器有共同的初始化逻辑，那么就将其提出作为函数然后调用，如下：
+</code>c++
+class Bar : public Foo {
+  private:</p>
+
+<pre><code>int y;
+void commonInit() {
+    // Perform common initialisation
+}
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Bar() : Foo() {
+    this-&gt;commonInit();
+}
+
+Bar(int y) : Foo(), y(y) {
+    this-&gt;commonInit();
+}
+</code></pre>
+
+<p>};
+<code>
+C++11之后终于有了类似指定初始化器的设计，如下：
+</code>c++
+class Bar : public Foo {
+  private:</p>
+
+<pre><code>int y;
+</code></pre>
+
+<p>  public:</p>
+
+<pre><code>Bar() : Foo() {
+    // Perform common initialisation
+}
+
+//如果想通过加上一个y(y)来同时初始化y，那么在Xcode中会出现错误
+//An initializer for a delegating constructor must appear alone
+Bar(int y) : Bar() {
+    this-&gt;y = y;
+}
+</code></pre>
+
+<p>};
+<code>
+4.析构器不需要参数，所以只有一个析构函数。跟上面虚函数的例子一样，析构函数也存在调用问题，如下：
+</code>c++
+class Foo {
+  public:</p>
+
+<pre><code>~Foo() {
+    printf(“Foo destructor\n”);
+}
+</code></pre>
+
+<p>};</p>
+
+<p>class Bar : public Foo {
+  public:</p>
+
+<pre><code>~Bar() {
+    printf(“Bar destructor\n”);
+}
+</code></pre>
+
+<p>};</p>
+
+<p>Bar <em>b = new Bar();
+Foo </em>f = (Foo*)b;
+delete f;
+// Output:
+// Foo destructor
+<code>
+那么跟上面一样，把析构函数做成虚函数即可。但是会发现先调用了子类的析构函数，然后还调用了父类的，这是因为析构函数比较特殊，子类的析构函数运行完了会自动调用父类的，就跟OC在不用ARC时候在`dealloc`函数末尾需要`[super dealloc]`。
+</code>c++
+class Foo {
+  public:</p>
+
+<pre><code>virtual ~Foo() {
+    printf(“Foo destructor\n”);
+}
+</code></pre>
+
+<p>};</p>
+
+<p>class Bar : public Foo {
+  public:</p>
+
+<pre><code>virtual ~Bar() {
+    printf(“Bar destructor\n”);
+}
+</code></pre>
+
+<p>};</p>
+
+<p>Bar <em>b = new Bar();
+Foo </em>f = (Foo*)b;
+delete f;
+// Output:
+// Bar destructor
+// Foo destructor
+```
+那为什么编译器不直接把析构函数作为虚函数来编译？因为虚函数有个查虚表的操作，每次析构对象都会调用，所以只要不继承就用普通析构函数就行。</p>
+
+<h3>14.Operator overloading</h3>
+
+<p>1.一般的运算符操作其实就是函数调用，这是对标量进行运算，要实现对对象的运算，就要借助运算符重载。
+<code>c++
+int x = 5;
+int y = x + 5; //可能是int y = add(x, 5);
+</code>
+2.运算符重载示例：
+```c++
+class DoubleInt {
+private:</p>
+
+<pre><code>int x;
+int y;
+</code></pre>
+
+<p>public:</p>
+
+<pre><code>DoubleInt(int x, int y) : x(x), y(y) {}
+
+//operator+函数，必须有operator关键字，然后加一个运算符
+DoubleInt operator+(const DoubleInt &amp;rhs) {
+    return DoubleInt(x + rhs.x, y + rhs.y);
+}
+
+//跟int型相加
+DoubleInt operator+(const int &amp;rhs) {
+    return DoubleInt(x + rhs, y + rhs);
+}
+</code></pre>
+
+<p>};</p>
+
+<p>DoubleInt a(1, 2);
+DoubleInt b(3, 4);
+DoubleInt c = a + b; //DoubleInt(4, 6)</p>
+
+<p>DoubleInt a(1, 2);
+DoubleInt b = a + 10; //DoubleInt(11, 12)
+```</p>
+
+<h3>15.Templates</h3>
+
+<p>使用模板有一点需要注意：如果多个类用到同一模板，那么一定要把模板的实现放在头文件。因为当编译器看到一个模板函数调用时会为调用类型编译出一个版本来，也就是说编译器需要知道模板函数的实现。因为编译器是一次只能处理一个编译单元, 也就是一次处理一个cpp文件,所以实例化时需要看到该模板的完整定义。这不同于普通的函数, 在使用普通的函数时，编译时只需看到该函数的声明即可编译, 而在链接时由链接器来确定该函数的实体。</p>
+
+<p>扩展：C++标准中提到，一个编译单元<code>translationunit</code>是指一个.cpp文件以及它所include的所有.h文件，.h文件里的代码将会被扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，后者拥有PE[PortableExecutable,即Windows可执行文件]文件格式，并且本身包含的就已经是二进制码，但是，不一定能够执行，因为并不保证其中一定有main函数。当编译器将一个工程里的所有.cpp文件以分离的方式编译完毕后，再由连接器(linker)进行连接成为一个.exe文件。
+```c++
+template <typename T>
+void swap(T &amp;a, T &amp;b) {</p>
+
+<pre><code>T temp = a;
+a = b;
+b = temp;
+</code></pre>
+
+<p>}</p>
+
+<p>int ix = 1, iy = 2;
+swap(ix, iy);
+```</p>
+
+<h3>16.Template Classes</h3>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mac | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/mac/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-27T23:11:52+08:00</updated>
+  <updated>2014-04-28T22:02:22+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -23,7 +23,7 @@
 <!--more-->
 
 
-<p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code>
+<p><code>发博文</code>用的是：Templates-Essentials-Keyword to Terminal Command。新建并用xcode打开空的博文后终端会运行<code>rake preview</code>，这样就直接进入编辑并预览状态。命令是<code>pb（post blog）</code><br/>
 <img src="/blogimage/2014/pb.png" alt="pb" /></p>
 
 <p><code>修改博文</code>用的是：Templates-Files and Apps-File filter from keyword and open。根据关键词显示相关文件，回车用xcode打开，打开终端运行<code>rake preview</code>。命令是<code>mb（modify blog）</code></p>
