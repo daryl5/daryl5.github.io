@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-04-29T11:14:30+08:00</updated>
+  <updated>2014-05-05T22:58:58+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -1387,6 +1387,33 @@ b.<code>weak</code>不会release旧值，也不会retain新值，类似assign，
 <code>copy</code>对应mutable copy，如果不想让对象把传进来的值改变了，应该做一下copy，也就是immutable copy。虽然增加了拷贝操作，但是会更安全。<br/>
 c.关于自定义getter名在BOOL上的应用，为了加is为什么不直接把property命名成isXxx。</p>
 
+<h3>Item 7: Access Instance Variables Primarily Directly When Accessing Them Internally</h3>
+
+<p><strong>a.总结</strong></p>
+
+<ol>
+<li>一般来说，要读实例变量的时候就直接访问，要写实例变量的时候就用property。</li>
+<li>如果在初始化方法（或dealloc）中改变property的值，那么也是直接访问实例变量。因为如果初始化方法也用property，那么父类初始化时候其实会调用子类的初始化方法，可能会产生问题。另外，有时候是必须在初始化方法中使用setter的，比如当实例变量在父类中声明，那子类只能通过setter来访问。</li>
+<li>如果property使用了<code>Lazy Loading</code>，那么需要使用getter来获取，不如可能获得空值。</li>
+</ol>
+
+
+<p><strong>b.<code>直接访问</code>和<code>使用property</code>的区别</strong></p>
+
+<ol>
+<li>直接访问无需<code>method dispatch</code>那么肯定更快；</li>
+<li>直接使用实例变量会绕过property所设置的内存管理策略；</li>
+<li>直接访问实例变量，KVO可能不会触发了；</li>
+<li>使用property可以方便debug，知道谁在什么时候访问了某一实例变量。</li>
+</ol>
+
+
+<h3>Item 8: Understand Object Equality</h3>
+
+<p>a.有的类实现了判断相等的方法，如NSString的<code>isEqualToString:</code>，这个比<code>isEqual:</code>，因为后者还需要查看所比较对象所属的类。</p>
+
+<h1>看不下去了</h1>
+
 <h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
 
 <p>a.一般都是通过<code>继承</code>来给既有类添加数据，但行不通的时候就要用到<code>关联对象</code>了。以UIAlertView为例：</p>
@@ -1992,6 +2019,24 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 
 
 <h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
+
+<h3>13.深拷贝和浅拷贝</h3>
+
+<p>工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接<code>[self.dataUnitArray addObject:object]</code>，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有<code>mutableCopy</code>，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。<br/>
+另外，通过临时变量再赋值触发KVO的方式不好；赋值整个dataUnitArray更不好。后面重构一下。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">tempArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="n">mutableCopy</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">tempArray</span> <span class="nl">addObjectsFromArray:</span><span class="n">charUnitArray</span><span class="p">];</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">dataUnitArray</span> <span class="o">=</span> <span class="n">tempArray</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>12.自定义Accessor</h3>
+
+<p>自己实现了setter和getter后，synthesize就不会起作用了，也就是说<code>没有_propertyName</code>这个实例变量，这种情形下如果在Accessor中还需要直接访问实例变量，那就要手动的添加<code>@sythesize propertyName = _propertyName</code>。</p>
 
 <h3>11.连按删除按钮时候下标越界</h3>
 
