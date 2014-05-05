@@ -6,6 +6,7 @@ comments: true
 categories: iOS 
 ---
 [Inkpad](https://github.com/sprang/Inkpad)是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。
+<!--more-->
 ###0. 内联函数的使用
 内联函数只是给编译器的提示，最终能不能内联还要看编译器。  
 ####(1)相同点
