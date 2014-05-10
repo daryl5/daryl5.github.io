@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-05-05T22:58:58+08:00</updated>
+  <updated>2014-05-10T22:14:02+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[『Objective-C高级编程』笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x/"/>
+    <updated>2014-05-10T19:20:32+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h1>第一章 ARC</h1>
+
+<h2>1.2 内存管理</h2>
+
+<h3>1.2.2 内存管理的思考方式</h3>
+
+<ul>
+<li>自己生成的对象，自己持有（alloc/new/copy/mutableCopy了就也retain了）</li>
+<li>非自己生成的对象，自己也能持有（retain）</li>
+<li>不再需要自己持有的对象时释放（release）</li>
+<li>非自己持有的对象无法释放（没retain/alloc/new/copy/mutableCopy就不能release）</li>
+</ul>
+
+
+<p>1.OC的内存管理方法实际上不在OC语言里，而是包含在Cocoa框架中的。（OC是C的超集，Cocoa是对OC加了内存管理、多媒体、网络通讯等等的类库形成的用来给OS X开发应用的框架，Cocoa Touch是对Cocoa进行移动适配形成的另一套OC的类库）<br/>
+2.Cocoa框架中Foundation框架类库中的NSObject类担负内存管理的职责，内存管理调用的alloc、retain等方法指代的就是NSObject类中的alloc类方法、retain实例方法等。（所有对象继承自NSObject，alloc、retain等内存管理方法在NSObject中实现，这也就是为什么初始化对象时候要先[super init]以及dealloc最末要[super dealloc]）<br/>
+3.<code>[NSObject new</code>和<code>[[NSObject alloc] init]</code>是完全等价的。<br/>
+4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Best Practices & Tips]]></title>
@@ -696,222 +725,6 @@ for (NSString *key in keyArray) {
 <h3>5. 子类不能重写touchesBegan但要在其发生同时完成处理</h3>
 
 <p><code>FingerTackerView</code>重写<code>touchesBegan</code>等等方法，然后在其内部进行一些操作后调用<code>[self methodForSubclassOverwritten]</code>，这个方法可以置空。<code>HandWritingView</code>，<code>GestureEditorView</code>等继承自<code>FingerTrackerView</code>的类里重写<code>[self methodForSubclassOverwritten]</code>，这样就能在采集点的同时，对点的处理根据当前选择功能（即所处的视图）来由对应的子类来处理。子类不会出现<code>touchesBegan</code>等，但是可以通过重写方法来实现手势运动时处理。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[所有遇到过的坑们]]></title>
-    <link href="http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/"/>
-    <updated>2014-03-21T12:22:22+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
-
-<h3>13.深拷贝和浅拷贝</h3>
-
-<p>工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接<code>[self.dataUnitArray addObject:object]</code>，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有<code>mutableCopy</code>，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。<br/>
-另外，通过临时变量再赋值触发KVO的方式不好；赋值整个dataUnitArray更不好。后面重构一下。
-<code>objective-c
-NSMutableArray *tempArray = [self.dataUnitArray mutableCopy];
-[tempArray addObjectsFromArray:charUnitArray];
-self.dataUnitArray = tempArray;
-</code></p>
-
-<h3>12.自定义Accessor</h3>
-
-<p>自己实现了setter和getter后，synthesize就不会起作用了，也就是说<code>没有_propertyName</code>这个实例变量，这种情形下如果在Accessor中还需要直接访问实例变量，那就要手动的添加<code>@sythesize propertyName = _propertyName</code>。</p>
-
-<h3>11.连按删除按钮时候下标越界</h3>
-
-<p>在<code>- (void)deleteDataUnit</code>中：
-```objective-c
-NSMutableArray *tempArray = self.dataUnitArray;</p>
-
-<p>//删除
-[tempArray removeObjectAtIndex:cursorIndex &ndash; 1];</p>
-
-<p>//触发KVO去绘制
-self.dataUnitArray = tempArray;
-<code>``
-然后在</code>&ndash; (UIImage *)generatePageImageWithPageIndex:(int)pageIndex`中就越界了。</p>
-
-<p><strong>原因</strong>是tempArray和dataUnitArray指的同一块内存，比如原本长度12，删除一个变为11，在后台线程中绘制这个11长度的数组的时候，又按了一下删除，这时候已经触发了KVO，又多了一个绘制线程，之前那个绘制线程在绘制11长度，但是现在的长度是10，所以按的快的时候就会越界，按的慢等每一次绘制结束就没事。</p>
-
-<p><strong>解决办法</strong>是给tempArray赋值的时候进行一下mutable copy，这样每一个绘制线程就用的不同的拷贝，不会导致越界。</p>
-
-<p><strong>更好的解决办法</strong>：类似的情形下，数据改变了就应该停止之前的绘制线程，直接进入新的绘制。打印了一下当前线程，按的快了最多同时开了6个线程在绘制。</p>
-
-<p><a href="http://stackoverflow.com/questions/12660706/nsoperation-cancelalloperations-does-not-stop-the-operation">[NSOperation cancelAllOperations]; does not stop the operation</a>，这个链接里面提到了利用<code>NSOperationQueue</code>的<code>cancelAllOperations</code>来实现“有新数据则停止处理旧数据，从而直接转入对新数据的处理”，实际使用中的确起到了这样的效果，但是跟帖子中例子不同，我的函数里有很多<code>对象</code>，而一个RunLoop就会开一个autoreleasepool，在runloop里我没有去手动释放内存而直接返回，然后内存占用飙升了。懒得再去改进了，只求用户不要太变态。</p>
-
-<h3>10.iOS7中自定义导航栏、状态栏的样式</h3>
-
-<p>设置状态栏：
-```objective-c
-//In AppDelegate
-//Config StatusBar appearance
-[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];</p>
-
-<p>//Config UINavigationController appearance
-[[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x3395E3)]; // 51, 149, 227
-[[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:</p>
-
-<pre><code>                                                  [UIColor colorWithWhite:0.9 alpha:1.0],
-                                                  NSForegroundColorAttributeName,
-                                                  [UIFont systemFontOfSize:20.0],
-                                                  NSFontAttributeName, nil]];
-</code></pre>
-
-<p>[[UINavigationBar appearance] setTintColor:[UIColor colorWithWhite:0.93 alpha:1.0]];</p>
-
-<p>//In ViewController&mdash;进入全屏模式，因为主体背景是白色，在AppDelegate设置状态栏是LightContent，全屏了就很瞎眼
-[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</p>
-
-<p>//Leave full screen
-[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-<code>``
-[Customizing Navigation Bar and Status Bar in iOS 7](http://www.appcoda.com/customize-navigation-status-bar-ios-7/)，这个不错。不过里面对单独viewController的statusbar设置</code>UIStatusBarStyle`没有成功，没搞懂。<a href="http://stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7/17768797#17768797">How to change Status Bar text color in iOS 7.</a>和这个<a href="http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19032879#19032879">preferredStatusBarStyle isn&rsquo;t called</a>可以看看。发现我很蛋疼，老是关注这些意义不大的东西。</p>
-
-<h3>9.UIButton设置tintColor</h3>
-
-<p><code>tintColor</code>属性并不是所有button都有的，只有<code>[UIButton buttonWithType:UIButtonTypeSystem]</code>才能设置。如果是init或者initWithFrame，设置了不会显示。</p>
-
-<h3>8.在主线程更新UI-闪烁光标的实现</h3>
-
-<p>在KVO里要调用drawCursorWithRect画光标，而且这个函数里会启动timer来实现光标闪烁，如果直接调用会不闪烁，然后过一会儿闪一次。记着所有跟UI相关的东西都放在主线程执行。这里还有就是NSValue的<code>valueWithCGRect</code>和<code>CGRectValue</code>。还有就是<code>runloop</code>相关的东西，后面看看。
-```objective-c
-if ([keyPath isEqual:@&ldquo;cursorStartPoint&rdquo;]) {</p>
-
-<pre><code>CGPoint cursorStartPoint = self.document.cursorStartPoint;
-CGRect cursorRect = CGRectMake(cursorStartPoint.x, cursorStartPoint.y + kCursorOffsetY, kCursorWidth, kCursorHeight);
-NSValue *cursorRectValue = [NSValue valueWithCGRect:cursorRect];
-[self performSelectorOnMainThread:@selector(drawCursorWithRect:) withObject:cursorRectValue waitUntilDone:NO];
-</code></pre>
-
-<p>}
-<code>
-另外一个问题是，当有新的手写字符时光标要移动，直接改变cursorLayer的frame属性，会有移动过程的动画，看[CALayer animates with frame change?](http://stackoverflow.com/questions/12103142/calayer-animates-with-frame-change)。去掉这个动画的方法是：
-</code>objective-c
-[CATransaction begin];
-//或者[CATransaction setAnimationDuration:0];
-//或者[CATransaction setDisableActions:YES];
-[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-[myView.myCALayer.frame = (CGRect){ { 10, 10 }, { 100, 100 } ];
-[CATransaction commit];
-```</p>
-
-<h3>7.程序突然运行不起来</h3>
-
-<p>先记着后面写，可能是因为最开始建工程时候包含storyboard，中途删掉了storyboard改了Main Interface和AppDelegate和plist，但是可能设备里还是有storyboard的。这样删了程序重新跑的时候就错了。很悲剧的时，设置了异常断点，而问题出在main.m里，这个都没报错的，去掉了才说找不到storyboard。<br/>
-试了一下只是简单的在viewDidLoad里改背景颜色，感觉还是怪怪的。直接删了storyboard不改工程配置也能运行，完了删了app重新运行也行，甚至删掉makeKeyAndVisible都能，但是这时候再把Main Interface里的Main删掉，就是黑屏了。</p>
-
-<h3>6.Decode Mutable的东西时要注意mutableCopy</h3>
-
-<blockquote><p>Decoding an archive gives you immutable objects regardless of whether they were mutable or immutable when you encoded them.</p></blockquote>
-
-<p>需要<code>[self setMyArray:[[decoder decodeObjectForKey:@"myArray"] mutableCopy];</code><br/>
-还要注意的就是object要copy不然会autorelease <code>You must also copy or retain the string object, otherwise it will be autoreleased:</code>。链接在<a href="http://stackoverflow.com/questions/10391803/nskeyedarchiver-and-nskeyedunarchiver-with-nsmutablearray/10392017#10392017">NSKeyedArchiver and NSKeyedUnarchiver with NSMutableArray</a></p>
-
-<h3>5.toolbar死活不显示</h3>
-
-<p>navigationController的setToolbarHidden属性没设置默认是TRUE。</p>
-
-<h3>4.CGBitmapContext画透明图的实现</h3>
-
-<p>之前是先用一个特定的颜色填充，然后画内容，画完之后再把之前那个颜色mask掉。
-```objective-c
-//Use a &ldquo;strange or unique&rdquo; color fill the context add mask it after drawing
-UIColor *fillColor = [UIColor colorWithRed:220.0/255.0 green:198.0/255.0 blue:225.0/255.0 alpha:1.0];
-CGContextSetFillColorWithColor(self.bitmapContext, fillColor.CGColor);
-CGContextFillRect(self.bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));</p>
-
-<p>//Mask
-CGImageRef pageImageRef = CGBitmapContextCreateImage(bitmapContext);
-const float colorMasking[8] = {220, 220, 198, 198, 225, 225, 0, 255};
-CGImageRef pageImageMask = CGImageCreateWithMaskingColors(pageImageRef, colorMasking);
-UIImage *pageImage = [UIImage imageWithCGImage:pageImageMask];
-<code>``
-这样的实现非常2，内存开销增加了很大。用</code>CGContextClearRect(bitmapContext, CGRectMake(0, 0, realDisplayWidth, realDisplayHeight));<code>就好了，函数说明就是</code>Paints a transparent rectangle<code>。实现新功能时候先查查比较好的实现方式或者查文档很重要。  
-同时要注意，要创建透明位图就要在初始化位图上下文时指定CGBitmapInfo为</code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast<code>，也可以换成</code>kCGImageAlphaPremultipliedFirst<code>，last就是RGBA反之是ARGB，预乘alpha就代表图像是有alpha通道的，不设置这个clearRect后会是黑色。假如一个像素(A，R，G，B)的四个分量都用规一化的数值表示，(A，R，G，B)为(1，1，0，0)时显示红色。当像素为 (0.5,1,0,0)时，预乘的结果就变成(0.5,0.5,0,0)，这表示原来该像素显示的红色的强度为1，而现在显示的红色的强度降了一半。  
-另，</code>颜色深度`就是颜色位数，比如RGB一个分量用8位，总共24位，每个像素可以用2的24次方就是16777216中颜色表示，也就是几年前卖手机时候说的1600w色- -！</p>
-
-<h3>3.使用CGBitmapContext并行绘图时报错</h3>
-
-<p>用如下代码进行简单的并行绘制每个字符，结果出现<code>CGContextAddLineToPoint: no current point</code>的错误，就是说在<code>CGContextAddLineToPoint</code>之前并没有一个<code>CGContextMoveToPoint</code>的操作。<br/>
-想了一下下面代码有问题，并行绘图的代码里会有这两个操作，待绘制字符多的时候并行程度高，就可能在绘制单个字符的代码中一个的<code>CGContextStrokePath</code>刚执行完，<strong>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().</strong> context中move到的point已经释放，而另一个正好要执行<code>CGContextAddLineToPoint</code>，于是就<code>no current point</code>了。下面的引文来自<a href="http://lists.apple.com/archives/quartz-dev/2011/Feb/msg00030.html">这里</a></p>
-
-<blockquote><p>Stroking the path resets the context&rsquo;s current path to empty, so there is no currentpoint after you call CGContextStrokePath().ClosePath() isn&rsquo;t there to balance BeginPath() — it modifies the current path by adding a line segment from the current point to the beginning of the current subpath (in such a way that there&rsquo;s a linejoin at that point rather than a pair of line ends).</p></blockquote>
-
-<p>并行绘制最终没想到一个好的并行办法，因为context必须用同一个。最后的解决办法是，能保留上次绘制的context就保留，在其基础上接着绘制- -！
-```objective-c
-//Draw characters concurrently
-NSIndexSet *indexSetToDraw = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, characterNum)];
-[self.dataUnitArray enumerateObjectsAtIndexes:indexSetToDraw</p>
-
-<pre><code>                                  options:NSEnumerationConcurrent
-                               usingBlock:^(DRDCharUnit *charUnitToDraw, NSUInteger idx, BOOL *stop) {
-                                   currentCharUnit = charUnitToDraw;
-                                   originPoint = dataUnitUpperLeftPoints[idx - startIndex];
-                                   [self drawCharacter:currentCharUnit withOrigin:originPoint inContext:bitmapContext];
-                               }];
-</code></pre>
-
-<p>```
-<a href="http://stackoverflow.com/questions/9150665/trouble-drawing-coregraphics-lines-in-drawrect-method">Trouble drawing CoreGraphics lines in drawRect() method</a> 里的回答:You have to place CGContextStrokePath(context); outside the for loop. Otherwise it will create a fresh path on every run through the loop and that fails.
-这个人的问题在于for循环最后都strokePath了，而for循环开头都没有moveToPoint，于是错误发生。<br/>
-<a href="http://stackoverflow.com/questions/9799682/cgcontextaddlinetopoint-no-current-point">CGContextAddLineToPoint: no current point</a> 还有一个回答：You must first create a path with CGContextBeginPath before you can start adding points and lines to it. 然后有一个针对这个答案的评论：Not true. A CGContext always has a current path (possibly an empty one) which you can add elements to. You need CGContextBeginPath only when you want to discard the current path and start with a new empty path.</p>
-
-<h3>2.创建支持Retina的CGBitmapContext</h3>
-
-<p>原理是创建两倍长两倍宽的位图，同时ScaleCTM使系统绘图时进行坐标转换。代码如下，摘自<a href="http://stackoverflow.com/questions/10867767/how-to-create-a-cgbitmapcontext-which-works-for-retina-display-and-not-wasting-s">这里</a>：</p>
-
-<blockquote><p>A key factor is that, CGContextScaleCTM(context, scaleFactor, scaleFactor); is used to adjust the coordinate system, so that any drawing by Core Graphics, such as CGContextMoveToPoint, etc, will automatically work, no matter it is standard resolution or the Retina resolution.</p></blockquote>
-
-<p>```objective-c
-//The sample is to create a 768 x 768 point region.<br/>
-//On The New iPad, it will be 1536 x 1536 pixel.<br/>
-//On iPad 2, it is 768 x 768 pixel.
-float scaleFactor = [[UIScreen mainScreen] scale];</p>
-
-<p>CGSize size = CGSizeMake(768, 768);</p>
-
-<p>CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</p>
-
-<p>CGContextRef context = CGBitmapContextCreate(NULL,</p>
-
-<pre><code>                       size.width * scaleFactor, size.height * scaleFactor, 
-                       8, size.width * scaleFactor * 4, colorSpace, 
-                       kCGImageAlphaPremultipliedFirst);
-</code></pre>
-
-<p>CGContextScaleCTM(context, scaleFactor, scaleFactor);
-```</p>
-
-<h3>1.CGBitmapContextCreate: unsupported parameter combination</h3>
-
-<p>创建位图上下文时出现的错误：</p>
-
-<blockquote><p>CGBitmapContextCreate: unsupported parameter combination: 8 integer bits/component; 32 bits/pixel; 3-component colorspace; kCGImageAlphaNoneSkipFirst; XXX bytes/row.</p></blockquote>
-
-<p>代码如下：
-```objective-c
-contextToDraw = CGBitmapContextCreate(NULL,</p>
-
-<pre><code>                                  charUnit.width * scale,
-                                  charUnit.height * scale,
-                                  8,
-                                  0,
-                                  colorSpace,
-                                  kCGBitmapByteOrderDefault);
-</code></pre>
-
-<p>```
-在iOS7之前的代码中，最后一个CGBitmapInfo是kCGImageAlphaPremultipliedFirst，在iOS7下用这个会有警告</p>
-
-<blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
-
-<p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说的很详细。</p>
 ]]></content>
   </entry>
   

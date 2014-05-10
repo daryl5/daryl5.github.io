@@ -6,7 +6,7 @@
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/</loc>
-        <lastmod>2014-05-05T21:11:20+08:00</lastmod>
+        <lastmod>2014-05-10T22:13:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/</loc>
@@ -35,12 +35,18 @@
         <lastmod>2014-04-29T11:11:35+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x/
+        </loc>
+        <lastmod>2014-05-10T22:13:37+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://daryl5.github.io/about/</loc>
         <lastmod>2014-04-09T21:13:51+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/archives/</loc>
-        <lastmod>2014-05-05T21:11:20+08:00</lastmod>
+        <lastmod>2014-05-10T22:13:37+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/categories/</loc>
@@ -48,7 +54,7 @@
     </url>
     <url>
         <loc>http://daryl5.github.io/</loc>
-        <lastmod>2014-05-05T21:11:20+08:00</lastmod>
+        <lastmod>2014-05-10T22:13:37+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/robots.txt</loc>

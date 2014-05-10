@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-05-05T22:58:58+08:00</updated>
+  <updated>2014-05-10T22:14:02+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[『Objective-C高级编程』笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x/"/>
+    <updated>2014-05-10T19:20:32+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h1>第一章 ARC</h1>
+
+<h2>1.2 内存管理</h2>
+
+<h3>1.2.2 内存管理的思考方式</h3>
+
+<ul>
+<li>自己生成的对象，自己持有（alloc/new/copy/mutableCopy了就也retain了）</li>
+<li>非自己生成的对象，自己也能持有（retain）</li>
+<li>不再需要自己持有的对象时释放（release）</li>
+<li>非自己持有的对象无法释放（没retain/alloc/new/copy/mutableCopy就不能release）</li>
+</ul>
+
+
+<p>1.OC的内存管理方法实际上不在OC语言里，而是包含在Cocoa框架中的。（OC是C的超集，Cocoa是对OC加了内存管理、多媒体、网络通讯等等的类库形成的用来给OS X开发应用的框架，Cocoa Touch是对Cocoa进行移动适配形成的另一套OC的类库）<br/>
+2.Cocoa框架中Foundation框架类库中的NSObject类担负内存管理的职责，内存管理调用的alloc、retain等方法指代的就是NSObject类中的alloc类方法、retain实例方法等。（所有对象继承自NSObject，alloc、retain等内存管理方法在NSObject中实现，这也就是为什么初始化对象时候要先[super init]以及dealloc最末要[super dealloc]）<br/>
+3.<code>[NSObject new</code>和<code>[[NSObject alloc] init]</code>是完全等价的。<br/>
+4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction to C++ for iOS Developers]]></title>
@@ -2018,11 +2047,56 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <content type="html"><![CDATA[<!--more-->
 
 
-<h3>12.DRDPoint和DRDInkPoint的encode decode</h3>
+<h3>18.UIToolbar上</h3>
+
+<p>自己写了一个TransparentToolbar，但在iOS7下按钮老是那个标准蓝色，因为toolbar那个是toolbar的默认tintColor。要用imageWithRenderingMode对按钮图片设置一下总是渲染原图。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Don&#39;t tint</span>
+</span><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">moodImage</span> <span class="o">=</span> <span class="p">[[</span><span class="n">buttonImage</span> <span class="nl">imageWithRenderingMode:</span><span class="n">UIImageRenderingModeAlwaysOriginal</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>17.UIDocument的读取是在后台进程完成的</h3>
+
+<p>尝试读取document然后根据读到的内容显示天气和心情的图片，发现总是默认值，因为设置代码的位置不对。虽然是在读取文件的代码之后，但是因为读取操作在后台进行，所以读出来时候UI已经设置过了。要在<code>openWithCompletionHandler</code>中设置图片。</p>
+
+<h3>16.随机数生成</h3>
+
+<p><code>arc4random() % x</code>取的是0到x-1中间的整数。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nf">getRandomNumberBetween:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">from</span> <span class="nf">to:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">to</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">from</span> <span class="o">+</span> <span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="p">(</span><span class="n">to</span><span class="o">-</span><span class="n">from</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>15.TableView的<code>sectionHeaderHeight</code>属性</h3>
+
+<p>直接用<code>table_.sectionHeaderHeight = 40.0f;</code>设置是无效的，要重写如下代理方法才行。但是<code>table_.sectionFooterHeight = 0;</code>是可以的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span> <span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">heightForHeaderInSection:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mf">40.0f</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>14.自己实现getter和setter后便没有了_iVar</h3>
+
+<p>使用property时候，编译器会自动添加<code>@synthesize property = _property</code>和<code>Accessor</code>，然后访问器里使用<em>property来读取和设置，同时加上内存管理语义。<br/>
+自己实现了getter和setter后编译器就不会有synthesize操作了，当然就不会有</em>property，如果还需要用实例变量，那么自己写synthesize就好。</p>
 
 <h3>13.深拷贝和浅拷贝</h3>
 
-<p>工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接<code>[self.dataUnitArray addObject:object]</code>，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有<code>mutableCopy</code>，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。<br/>
+<p>简单来说这个bug主要是因为定义了临时变量来保存mutableArray但是没有对原变量做mutableCopy。<br/>
+工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接<code>[self.dataUnitArray addObject:object]</code>，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有<code>mutableCopy</code>，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。
 另外，通过临时变量再赋值触发KVO的方式不好；赋值整个dataUnitArray更不好。后面重构一下。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
