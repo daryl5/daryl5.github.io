@@ -9,9 +9,8 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="所有遇到过的坑们 18.UIToolbar上 自己写了一个TransparentToolbar，但在iOS7下按钮老是那个标准蓝色，因为toolbar那个是toolbar的默认tintColor。要用imageWithRenderingMode对按钮图片设置一下总是渲染原图。 1
-2
-//Don &hellip;">
+	<meta name="description" content="所有遇到过的坑们 20.往NSUserDefaults保存UIColor 参考自Saving UIColor to and loading from NSUserDefaults
+NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +95,107 @@
 	<h1 class="title" itemprop="name">所有遇到过的坑们</h1>
 	<div class="entry-content" itemprop="articleBody"><!--more-->
 
+
+<h3>20.往NSUserDefaults保存UIColor</h3>
+
+<p>参考自<a href="http://stackoverflow.com/questions/1275662/saving-uicolor-to-and-loading-from-nsuserdefaults">Saving UIColor to and loading from NSUserDefaults</a><br/>
+NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、NSDictionary，如果尝试把自定义类放入NSArray任何存也是不行的。<br/>
+因为UIColor实现了NSCoding协议的方法，所以下面的代码能行得通。下面代码优缺点，因为同时会把颜色配置信息写入，打印了一下colorData总共102字节，也没太大，就这样了= =！更好的办法是给UIColor做一个Category，来实现NSString和UIColor的互转。<br/>
+写入：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSData</span> <span class="o">*</span><span class="n">colorData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedArchiver</span> <span class="nl">archiveDataWithRootObject:</span><span class="n">color</span><span class="p">];</span>
+</span><span class='line'><span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">setObject:</span><span class="n">colorData</span> <span class="nl">forKey:</span><span class="s">@&quot;myColor&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>读取：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSData</span> <span class="o">*</span><span class="n">colorData</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">objectForKey:</span><span class="s">@&quot;myColor&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">UIColor</span> <span class="o">*</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedUnarchiver</span> <span class="nl">unarchiveObjectWithData:</span><span class="n">colorData</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更进一步的，做成NSUserDefaults的Category。类似存UIColor，对自定义对象只要实现NSCoding任何就可以archive到data任何存：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &quot;NSUserDefaults+UIColor.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">NSUserDefaults</span> <span class="nl">(UIColor)</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">colorForKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">defaultName</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSData</span> <span class="o">*</span><span class="n">colorData</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">objectForKey:</span><span class="n">defaultName</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">colorData</span><span class="o">!=</span><span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)[</span><span class="n">NSKeyedUnarchiver</span> <span class="nl">unarchiveObjectWithData:</span><span class="n">colorData</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setColor:</span><span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">value</span> <span class="nf">forKey:</span><span class="n">defaultName</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSData</span> <span class="o">*</span><span class="n">colorData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedArchiver</span> <span class="nl">archivedDataWithRootObject:</span><span class="n">value</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">self</span> <span class="nl">setObject:</span><span class="n">colorData</span> <span class="nl">forKey:</span><span class="n">defaultName</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>19.获取iOS7默认的蓝色tintColor</h3>
+
+<p>1.如果不改UIWindow的tintColor，那么可以通过UIWindow获取，代码是<code>[[[[UIApplication sharedApplication] delegate] window] tintColor]</code>。如果开发的代码要作为共享库被集成，那么不要用这个。<br/>
+*2.直接用RGB设置，这个颜色是<code>(0,122,255)</code>或者十六进制表示的<code>0x007aff</code>。<br/>
+3.用如下代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//要做成UIColor的Category</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">UIColor</span><span class="o">*</span><span class="p">)</span><span class="nf">defaultSystemTintColor</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="k">static</span> <span class="n">UIColor</span><span class="o">*</span> <span class="n">systemTintColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>      <span class="n">UIView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>      <span class="n">systemTintColor</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">tintColor</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">});</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">systemTintColor</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>*4.有引文</p>
+
+<blockquote><p>In iOS v7.0, all subclasses of UIView derive their behavior for tintColor from the base class. See the discussion of tintColor at the UIView level for more information.</p></blockquote>
+
+<p>所以<code>self.view.tintColor</code>也OK，从各种按钮什么的获取也OK。</p>
 
 <h3>18.UIToolbar上</h3>
 

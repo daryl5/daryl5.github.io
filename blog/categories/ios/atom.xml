@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-05-10T22:42:30+08:00</updated>
+  <updated>2014-05-22T14:41:57+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -39,6 +39,8 @@
 2.Cocoa框架中Foundation框架类库中的NSObject类担负内存管理的职责，内存管理调用的alloc、retain等方法指代的就是NSObject类中的alloc类方法、retain实例方法等。（所有对象继承自NSObject，alloc、retain等内存管理方法在NSObject中实现，这也就是为什么初始化对象时候要先[super init]以及dealloc最末要[super dealloc]）<br/>
 3.<code>[NSObject new</code>和<code>[[NSObject alloc] init]</code>是完全等价的。<br/>
 4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
+
+<h3>1.2.3 alloc/retain/release/dealloc实现</h3>
 ]]></content>
   </entry>
   
