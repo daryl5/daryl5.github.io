@@ -6,9 +6,90 @@ comments: true
 categories: iOS 
 ---
 <!--more-->
-###12.DRDPoint和DRDInkPoint的encode decode
+###20.往NSUserDefaults保存UIColor
+参考自[Saving UIColor to and loading from NSUserDefaults](http://stackoverflow.com/questions/1275662/saving-uicolor-to-and-loading-from-nsuserdefaults)  
+NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、NSDictionary，如果尝试把自定义类放入NSArray任何存也是不行的。  
+因为UIColor实现了NSCoding协议的方法，所以下面的代码能行得通。下面代码优缺点，因为同时会把颜色配置信息写入，打印了一下colorData总共102字节，也没太大，就这样了= =！更好的办法是给UIColor做一个Category，来实现NSString和UIColor的互转。  
+写入：
+```objective-c
+NSData *colorData = [NSKeyedArchiver archiveDataWithRootObject:color];
+[[NSUserDefaults standardUserDefaults] setObject:colorData forKey:@"myColor"];
+```
+读取：
+```objective-c
+NSData *colorData = [[NSUserDefaults standardUserDefaults] objectForKey:@"myColor"];
+UIColor *color = [NSKeyedUnarchiver unarchiveObjectWithData:colorData];
+```
+更进一步的，做成NSUserDefaults的Category。类似存UIColor，对自定义对象只要实现NSCoding任何就可以archive到data任何存：
+```objective-c
+#import "NSUserDefaults+UIColor.h"
+
+@implementation NSUserDefaults (UIColor)
+- (UIColor *)colorForKey:(NSString *)defaultName {
+  NSData *colorData = [self objectForKey:defaultName];
+  if (colorData!=nil) {
+    return (UIColor *)[NSKeyedUnarchiver unarchiveObjectWithData:colorData];
+  } else {
+    return nil;
+  }
+}
+
+- (void)setColor:(UIColor *)value forKey:defaultName {
+  NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:value];
+  [self setObject:colorData forKey:defaultName];
+}
+
+@end
+```
+###19.获取iOS7默认的蓝色tintColor
+1.如果不改UIWindow的tintColor，那么可以通过UIWindow获取，代码是`[[[[UIApplication sharedApplication] delegate] window] tintColor]`。如果开发的代码要作为共享库被集成，那么不要用这个。  
+*2.直接用RGB设置，这个颜色是`(0,122,255)`或者十六进制表示的`0x007aff`。  
+3.用如下代码：
+```objective-c
+//要做成UIColor的Category
++ (UIColor*)defaultSystemTintColor
+{
+   static UIColor* systemTintColor = nil;
+   static dispatch_once_t onceToken;
+   dispatch_once(&onceToken, ^{
+      UIView* view = [[UIView alloc] init];
+      systemTintColor = view.tintColor;
+   });
+   return systemTintColor;
+}
+```
+*4.有引文
+> In iOS v7.0, all subclasses of UIView derive their behavior for tintColor from the base class. See the discussion of tintColor at the UIView level for more information.
+
+所以`self.view.tintColor`也OK，从各种按钮什么的获取也OK。
+###18.UIToolbar上
+自己写了一个TransparentToolbar，但在iOS7下按钮老是那个标准蓝色，因为toolbar那个是toolbar的默认tintColor。要用imageWithRenderingMode对按钮图片设置一下总是渲染原图。
+```objective-c
+//Don't tint
+UIImage *moodImage = [[buttonImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+```
+###17.UIDocument的读取是在后台进程完成的
+尝试读取document然后根据读到的内容显示天气和心情的图片，发现总是默认值，因为设置代码的位置不对。虽然是在读取文件的代码之后，但是因为读取操作在后台进行，所以读出来时候UI已经设置过了。要在`openWithCompletionHandler`中设置图片。
+###16.随机数生成
+`arc4random() % x`取的是0到x-1中间的整数。
+```objective-c
+-(int)getRandomNumberBetween:(int)from to:(int)to {
+    return (int)from + arc4random() % (to-from+1);
+}
+```
+###15.TableView的`sectionHeaderHeight`属性
+直接用`table_.sectionHeaderHeight = 40.0f;`设置是无效的，要重写如下代理方法才行。但是`table_.sectionFooterHeight = 0;`是可以的。
+```objective-c
+- (CGFloat )tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 40.0f;
+}
+```
+###14.自己实现getter和setter后便没有了_iVar
+使用property时候，编译器会自动添加`@synthesize property = _property`和`Accessor`，然后访问器里使用_property来读取和设置，同时加上内存管理语义。  
+自己实现了getter和setter后编译器就不会有synthesize操作了，当然就不会有_property，如果还需要用实例变量，那么自己写synthesize就好。
 ###13.深拷贝和浅拷贝
-工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接`[self.dataUnitArray addObject:object]`，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有`mutableCopy`，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。  
+简单来说这个bug主要是因为定义了临时变量来保存mutableArray但是没有对原变量做mutableCopy。  
+工程中用如下代码触发KVO。考虑到要在dataUnitArray变化时进行绘图，而且要给UIDocument实现undo/redo功能，所以没有直接`[self.dataUnitArray addObject:object]`，而是做一个临时变量然后直接赋值来是dataUnitArray变化进而触发KVO，同时，dataUnitArray的setter也是注册undo/redo行为最方便的地方。一开始有问题，写入字符时候点undo老是没反应，而且tempArray和dataUnitArray长度相等，很简单，一开始没有`mutableCopy`，直接指针赋值给了tempArray接着给tempArray添加也就是直接给dataUnitArray添加。
 另外，通过临时变量再赋值触发KVO的方式不好；赋值整个dataUnitArray更不好。后面重构一下。
 ```objective-c
 NSMutableArray *tempArray = [self.dataUnitArray mutableCopy];
