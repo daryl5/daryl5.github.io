@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-05-29T15:23:15+08:00</updated>
+  <updated>2014-06-07T14:18:04+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,157 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Swift Language Highlights: An Objective-C Developer’s Perspective]]></title>
+    <link href="http://daryl5.github.io/blog/2014/06/06/swift-language-highlights-an-objc-develpers-perspective/"/>
+    <updated>2014-06-06T13:57:06+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/06/06/swift-language-highlights-an-objc-develpers-perspective</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><a href="http://www.raywenderlich.com/73997/swift-language-highlights">原文</a>是RW Tutorials里Matt Galloway写的，跟之前自己写的<a href="http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/">Introduction to C++ for iOS Developers</a>类似，这篇文章是站在Objc开发者的角度来看Swift。这种通过比较两种语言的特性来学习的方法，我认为是最好的。</p>
+
+<h4>1.Types</h4>
+
+<p>a.Swift引入了<a href="http://en.wikipedia.org/wiki/Type_inference">Type Inference</a>，开发者不需要显式指定变量类型，<code>编译器</code>会根据变量被赋的值来推断变量的类型，如下例。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// automatically inferred</span>
+</span><span class='line'><span class="n">var</span> <span class="n">name1</span> <span class="o">=</span> <span class="s">&quot;Matt&quot;</span>
+</span><span class='line'><span class="c1">// explicit typing (optional in this case)</span>
+</span><span class='line'><span class="n">var</span> <span class="nl">name2:</span><span class="n">String</span> <span class="o">=</span> <span class="s">&quot;Matt&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swift还引入了<a href="http://en.wikipedia.org/wiki/Type_safety">Type Safety</a>。在Swift中，大多数情形下编译器明确知道一个对象所属的类型，这使得编译器能够在编译期间做更多的事，比如优化。其他少数情形可以参考C++中的<a href="http://en.wikipedia.org/wiki/Vtable">虚表</a>适用情形。<br/>
+b.Objc是<code>Dynamic Typing</code>的，编译期间不会知道变量类型，<code>运行时</code>负责处理对象类型分析、消息分派等。这使得我们拥有在运行时给一个类动态添加方法等等黑魔法。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">Person</span> <span class="o">*</span><span class="n">matt</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithName:</span><span class="s">@&quot;Matt Galloway&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">matt</span> <span class="n">sayHello</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对上面的代码，编译器会去Person类的头文件去查看是否有sayHello方法，但是只会进行最简单的方法存在确认，由于Objc的动态特性，编译器不知道sayHello方法是否会在运行时改变，甚至不知道sayHello到底有没有实现。这种情形需要手动调用<code>respondsToSelector:</code>来检查。<br/>
+正是因为这种动态类型的特性，编译器能做的优化很少。系统用<code>objc_msgSend</code>来处理方法调度，在这个方法中运行时会根据调用方法的selector去寻找其对应实现并调用。这个过程增加了一些开销。<br/>
+c.下面分析Swifit对于类型的处理，如下例。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">var</span> <span class="n">matt</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="s">&quot;Matt Galloway&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">matt</span><span class="o">.</span><span class="n">sayHello</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编译器明确知道matt是Person类的实例，并知道sayHello方法具体定义在哪儿。那么在编译时就可以优化使得运行时能直接跳到方法实现的地方，而不需要动态调用。在其他特殊情形下，会利用类似C++<a href="http://en.wikipedia.org/wiki/Vtable">虚表</a>的机制来实现，这虽然增加了一些开销但是比<code>Dynamic Dispatch</code>少了很多。</p>
+
+<blockquote><p>总的来说：<br/>
+The compiler is much more helpful in Swift. It will help stop subtle type related bugs from entering your codebase. It will also make your code run faster by enabling smart optimisations.</p></blockquote>
+
+<h4>2.Generics</h4>
+
+<p>Swift引入了<a href="http://en.wikipedia.org/wiki/Generic_programming">泛型</a>，类似C++中的<code>模板</code>。这里有引文：</p>
+
+<blockquote><p> Swift is strict about types, you must declare a function to take parameters of certain types. But sometimes you have some functionality that is the same for multiple different types.</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">struct</span> <span class="n">IntPair</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">let</span> <span class="nl">a:</span> <span class="n">Int</span><span class="o">!</span>
+</span><span class='line'>    <span class="n">let</span> <span class="nl">b:</span> <span class="n">Int</span><span class="o">!</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">init</span><span class="p">(</span><span class="nl">a:</span> <span class="n">Int</span><span class="p">,</span> <span class="nl">b:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">func</span> <span class="n">equal</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Bool</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">let</span> <span class="n">intPair</span> <span class="o">=</span> <span class="n">IntPair</span><span class="p">(</span><span class="nl">a:</span> <span class="mi">5</span><span class="p">,</span> <span class="nl">b:</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class='line'><span class="n">intPair</span><span class="p">.</span><span class="n">a</span> <span class="c1">// 5</span>
+</span><span class='line'><span class="n">intPair</span><span class="p">.</span><span class="n">b</span> <span class="c1">// 10</span>
+</span><span class='line'><span class="n">intPair</span><span class="p">.</span><span class="n">equal</span><span class="p">()</span> <span class="c1">// false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果还需要一个FloatPair的话，就需要用到泛型了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">struct</span> <span class="n">Pair</span><span class="o">&lt;</span><span class="nl">T:</span> <span class="n">Equatable</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">let</span> <span class="nl">a:</span> <span class="n">T</span><span class="o">!</span>
+</span><span class='line'>    <span class="n">let</span> <span class="nl">b:</span> <span class="n">T</span><span class="o">!</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">init</span><span class="p">(</span><span class="nl">a:</span> <span class="n">T</span><span class="p">,</span> <span class="nl">b:</span> <span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">func</span> <span class="n">equal</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Bool</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">let</span> <span class="n">pair</span> <span class="o">=</span> <span class="n">Pair</span><span class="p">(</span><span class="nl">a:</span> <span class="mi">5</span><span class="p">,</span> <span class="nl">b:</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class='line'><span class="n">pair</span><span class="p">.</span><span class="n">a</span> <span class="c1">// 5</span>
+</span><span class='line'><span class="n">pair</span><span class="p">.</span><span class="n">b</span> <span class="c1">// 10</span>
+</span><span class='line'><span class="n">pair</span><span class="p">.</span><span class="n">equal</span><span class="p">()</span> <span class="c1">// false</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">let</span> <span class="n">floatPair</span> <span class="o">=</span> <span class="n">Pair</span><span class="p">(</span><span class="nl">a:</span> <span class="mf">3.14159</span><span class="p">,</span> <span class="nl">b:</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span class='line'><span class="n">floatPair</span><span class="p">.</span><span class="n">a</span> <span class="c1">// 3.14159</span>
+</span><span class='line'><span class="n">floatPair</span><span class="p">.</span><span class="n">b</span> <span class="c1">// 2.0</span>
+</span><span class='line'><span class="n">floatPair</span><span class="p">.</span><span class="n">equal</span><span class="p">()</span> <span class="c1">// false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3.Containers</h4>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[『Objective-C高级编程』笔记]]></title>
