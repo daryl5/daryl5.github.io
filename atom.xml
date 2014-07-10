@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-06-07T14:18:04+08:00</updated>
+  <updated>2014-07-10T14:36:24+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,124 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Make A Swipeable TableviewCell]]></title>
+    <link href="http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell/"/>
+    <updated>2014-06-25T19:59:06+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell</id>
+    <content type="html"><![CDATA[<p>来自RW的博文<a href="http://www.raywenderlich.com/62435/make-swipeable-table-view-cell-actions-without-going-nuts-scroll-views">How To Make A Swipeable Table View Cell With Actions – Without Going Nuts With Scroll Views</a>。</p>
+
+<!--more-->
+
+
+<h3>1.UITableViewCell结构解析</h3>
+
+<p><code>给view添加背景色</code>和<code>recursiveDescription</code>都可以用来解析控件结构。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#ifdef DEBUG</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Cell recursive description:</span><span class="se">\n\n</span><span class="s">%@</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">cell</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">recursiveDescription</span><span class="p">)]);</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iOS7上tableViewCell的结构如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">CellScrollView</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span><span class='line'>        <span class="n">Button</span>                 <span class="n">disclosure</span> <span class="n">button</span>
+</span><span class='line'>            <span class="n">ImageView</span>          <span class="n">button</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">image</span>
+</span><span class='line'>        <span class="n">ContentView</span>
+</span><span class='line'>            <span class="n">Label</span>              <span class="n">cell</span> <span class="n">text</span> <span class="n">label</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除时候结构如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">CellScrollView</span>
+</span><span class='line'>        <span class="n">DeleteConfirmationView</span>
+</span><span class='line'>            <span class="n">Confirmation</span> <span class="n">Button</span>
+</span><span class='line'>                <span class="n">Label</span>          <span class="s">&quot;Delete&quot;</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span><span class='line'>        <span class="n">ContentView</span>
+</span><span class='line'>            <span class="n">Label</span>
+</span><span class='line'>        <span class="c1">//Separator View</span>
+</span><span class='line'>        <span class="n">Button</span>
+</span><span class='line'>            <span class="n">ImageView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iOS8上如下，对比iOS7主要是少了<code>UITableViewCellScrollView</code>，这是个UIScrollView的实例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">ContentView</span>
+</span><span class='line'>        <span class="n">Label</span>                  <span class="n">cell</span> <span class="n">text</span> <span class="n">label</span>
+</span><span class='line'>    <span class="c1">//SeparatorView</span>
+</span><span class='line'>    <span class="n">Button</span>
+</span><span class='line'>        <span class="n">ImageView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>根据官方文档，自定义cell只能在ContentView上添加subview。我们要做的，就是参照苹果实现滑动展示删除按钮的思路，在ContentView上另外实现一套，然后把原本的删除禁掉。</p>
+
+<h3>2.一个Swipeable TableViewCell的必要成分</h3>
+
+<p>由上一部分最后一段可以知道，我们需要一些<code>需要展示的UIButton</code>，然后一个位于这些按钮之上的<code>Container view</code>来显示所有内容，然后需要一个UIScrollView或者<code>UIPanGestureRecognizer</code>来显示或者隐藏按钮，这里我们用后者。最后，<code>需要展示cell内容的views</code>。然后把这些内容都贴到cell的ContentView上。这里有点拗口，对应上面iOS7的cell结构。<br/>
+需要禁掉系统cell的滑动删除：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">canEditRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3.建立自定义cell</h3>
+
+<p>直接在storyboard中编辑prototypecell，然后绑定cell所属类，并在tableview代理中返回相应的类型。这里非常坑，半天显示不出来两个按钮，基础太差代码写的太少了，哎。原因见<a href="http://stackoverflow.com/questions/22352587/xcode-5-1-uitableview-in-uiviewcontroller-custom-tableviewcell-outlets-are-nil">Xcode 5.1 UITableView in UIViewController &ndash; Custom TableViewCell Outlets are nil</a>。具体原因是：</p>
+
+<ol>
+<li>如果在xib或者storyboard中建立cell了，那么直接deque就能获得cell；</li>
+<li>如果要用自定义的cell，那么就要先registerclass，然后重用的时候deque；这时候虽然没有xib，但是运行时也知道如何去建立cell，就用刚注册过的类建立。</li>
+</ol>
+
+
+<p>未完待续&hellip;</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swift Language Highlights: An Objective-C Developer’s Perspective]]></title>
@@ -2199,6 +2317,45 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <updated>2014-03-21T12:22:22+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng</id>
     <content type="html"><![CDATA[<!--more-->
+
+
+<h3>22.设置状态栏颜色</h3>
+
+<p>很常见的问题但是网上的答案都忽略了一点：<code>View controller-based status bar appearance的type一定要是Boolean</code>，一般代码方式修改plist文件，这里会是String，那么状态栏颜色不会改变。<br/>
+具体设置方式如下：</p>
+
+<ol>
+<li>在Targets-Info下添加域<code>View controller-based status bar appearance</code></li>
+<li>选择其type为Boolean，值为NO</li>
+<li>AppDelegate中：</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// Config status bar style</span>
+</span><span class='line'><span class="p">[</span><span class="n">application</span> <span class="nl">setStatusBarStyle:</span><span class="n">UIStatusBarStyleLightContent</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者在Targets-General下面设置<code>Status Bar Style</code>为Light（原本是Default）<br/>
+这里有点坑啊，既然在工程配置界面提供了状态栏设置，但这里设置起作用的前提是要去plist文件里添加一个属性，很奇怪。</p>
+
+<h3>21.iOS7中tint UIImage</h3>
+
+<p>给UIImageView设置tintColor，然后设置其image的渲染模式为<code>UIImageRenderingModeAlwaysTemplate</code>(忽略颜色信息)，可以把各种线图标弄成统一的自己想要的颜色，代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">UIImageView</span><span class="o">*</span> <span class="n">imageView</span> <span class="o">=</span> <span class="err">…</span>
+</span><span class='line'><span class="n">UIImage</span><span class="o">*</span> <span class="n">originalImage</span> <span class="o">=</span> <span class="err">…</span>
+</span><span class='line'><span class="n">UIImage</span><span class="o">*</span> <span class="n">imageForRendering</span> <span class="o">=</span> <span class="p">[</span><span class="n">originalImage</span> <span class="nl">imageWithRenderingMode:</span><span class="n">UIImageRenderingModeAlwaysTemplate</span><span class="p">];</span>
+</span><span class='line'><span class="n">imageView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageForRendering</span><span class="p">;</span>
+</span><span class='line'><span class="n">imageView</span><span class="p">.</span><span class="n">tintColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">redColor</span><span class="p">];</span> <span class="c1">// or any color you want to tint it with</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>20.往NSUserDefaults保存UIColor</h3>

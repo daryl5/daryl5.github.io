@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-06-07T14:18:04+08:00</updated>
+  <updated>2014-07-10T14:36:24+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,100 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Make A Swipeable TableviewCell]]></title>
+    <link href="http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell/"/>
+    <updated>2014-06-25T19:59:06+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell</id>
+    <content type="html"><![CDATA[<p>来自RW的博文<a href="http://www.raywenderlich.com/62435/make-swipeable-table-view-cell-actions-without-going-nuts-scroll-views">How To Make A Swipeable Table View Cell With Actions – Without Going Nuts With Scroll Views</a>。</p>
+
+<!--more-->
+
+
+<h3>1.UITableViewCell结构解析</h3>
+
+<p><code>给view添加背景色</code>和<code>recursiveDescription</code>都可以用来解析控件结构。
+```objective-c</p>
+
+<h1>ifdef DEBUG</h1>
+
+<p>NSLog(@&ldquo;Cell recursive description:\n\n%@\n\n&rdquo;, [cell performSelector:@selector(recursiveDescription)]);</p>
+
+<h1>endif</h1>
+
+<p><code>
+iOS7上tableViewCell的结构如下：
+</code>objective-c
+TableViewCell</p>
+
+<pre><code>CellScrollView
+    //SeparatorView
+    Button                 disclosure button
+        ImageView          button's image
+    ContentView
+        Label              cell text label
+    //SeparatorView
+</code></pre>
+
+<p><code>
+删除时候结构如下：
+</code>objective-c
+TableViewCell</p>
+
+<pre><code>CellScrollView
+    DeleteConfirmationView
+        Confirmation Button
+            Label          "Delete"
+    //SeparatorView
+    ContentView
+        Label
+    //Separator View
+    Button
+        ImageView
+</code></pre>
+
+<p><code>
+iOS8上如下，对比iOS7主要是少了`UITableViewCellScrollView`，这是个UIScrollView的实例：
+</code>objective-c
+TableViewCell</p>
+
+<pre><code>ContentView
+    Label                  cell text label
+//SeparatorView
+Button
+    ImageView
+</code></pre>
+
+<p>```
+根据官方文档，自定义cell只能在ContentView上添加subview。我们要做的，就是参照苹果实现滑动展示删除按钮的思路，在ContentView上另外实现一套，然后把原本的删除禁掉。</p>
+
+<h3>2.一个Swipeable TableViewCell的必要成分</h3>
+
+<p>由上一部分最后一段可以知道，我们需要一些<code>需要展示的UIButton</code>，然后一个位于这些按钮之上的<code>Container view</code>来显示所有内容，然后需要一个UIScrollView或者<code>UIPanGestureRecognizer</code>来显示或者隐藏按钮，这里我们用后者。最后，<code>需要展示cell内容的views</code>。然后把这些内容都贴到cell的ContentView上。这里有点拗口，对应上面iOS7的cell结构。<br/>
+需要禁掉系统cell的滑动删除：
+```objective-c
+&ndash; (BOOL)tableView:(UITableView <em>)tableView canEditRowAtIndexPath:(NSIndexPath </em>)indexPath {</p>
+
+<pre><code>return NO;
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>3.建立自定义cell</h3>
+
+<p>直接在storyboard中编辑prototypecell，然后绑定cell所属类，并在tableview代理中返回相应的类型。这里非常坑，半天显示不出来两个按钮，基础太差代码写的太少了，哎。原因见<a href="http://stackoverflow.com/questions/22352587/xcode-5-1-uitableview-in-uiviewcontroller-custom-tableviewcell-outlets-are-nil">Xcode 5.1 UITableView in UIViewController &ndash; Custom TableViewCell Outlets are nil</a>。具体原因是：</p>
+
+<ol>
+<li>如果在xib或者storyboard中建立cell了，那么直接deque就能获得cell；</li>
+<li>如果要用自定义的cell，那么就要先registerclass，然后重用的时候deque；这时候虽然没有xib，但是运行时也知道如何去建立cell，就用刚注册过的类建立。</li>
+</ol>
+
+
+<p>未完待续&hellip;</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swift Language Highlights: An Objective-C Developer’s Perspective]]></title>
@@ -510,106 +604,6 @@ g.协议的“继承”
 
 <p>@end
 ```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[UIDocument的使用]]></title>
-    <link href="http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument/"/>
-    <updated>2014-04-01T21:42:32+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument</id>
-    <content type="html"><![CDATA[<p>读<a href="https://github.com/sprang/Inkpad">Inkpad</a>源码时看到使用了<a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIDocument_Class/UIDocument/UIDocument.html#//apple_ref/c/tdef/UIDocumentState">UIDocument</a>，然后搜到了Ray Wenderlich的博文：<a href="http://www.raywenderlich.com/12779/icloud-and-uidocument-beyond-the-basics-part-1">iCloud and UIDocument: Beyond the Basics</a>，整理了一下大致用法。</p>
-
-<!--more-->
-
-
-<h3>1. 继承UIDocument并重写方法</h3>
-
-<p>需要重写<code>loadFromContents:ofType:error</code>方法来读，重写<code>contentsForType:error</code>方法来写。</p>
-
-<h3>2. 输入输出格式</h3>
-
-<p>UIDocument支持两种类，<code>NSData</code>适用于文档只是一个单一文档，<code>NSFileWrapper</code>相当于文件夹，适用于文档包含多个想要单独加载的文件，比如矢量图绘制App要显示一个缩略图，这个需要单独提前加载。FileWrapper内部是Key-Value形式的存储，文件名是key，文件存在本地的archive内容（或是archive文件名）是value，所以会有：</p>
-
-<!--more-->
-
-
-<pre><code>//从文件名（如xxxx.title，不是xxxx.note）得到FileWrapper
-NSFileWrapper *fileWrapper = [self.fileWrapper.fileWrappers objectForKey:preferredFilename];
-
-//从FileWrapper得到文件内容
-NSData *data = [fileWrapper regularFileContents];
-NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-</code></pre>
-
-<h3>3. iCloud</h3>
-
-<p>Apple规定，应用的所有documents要么在沙盒，要么在iCloud本地文件夹，用户不能选择某一文件来让其单独的存储在iCloud。</p>
-
-<blockquote><p>All documents of an application are stored either in the local sandbox or in an iCloud container directory. A user should not be able to select individual documents for storage in iCloud.</p></blockquote>
-
-<!--more-->
-
-
-<h3>4. 关于undo/redo</h3>
-
-<p>UIDocument有undo/redo支持，访问器是注册undo动作最合适的地方，所以document类里，对需要添加undo/redo功能的数据要重写访问器。对不需要undo/redo功能的数据，直接给document用property添加一个model就好。</p>
-
-<h3>5. 整体的实现结构</h3>
-
-<p>以记事本为例，title和content两个model，其中都只包含一个NSString。主视图直接在title，detailViewController再加载content。</p>
-
-<blockquote><p><code>TitleModel</code>和<code>ContentModel</code>都实现<code>NSCoding</code>协议方法，这里可以考虑把<code>VersionNumber</code>encode进去以便后期支持文件格式扩展。
-<strong>NoteDocument.h</strong></p>
-
-<blockquote><p><code>@property (nonatomic, strong) TitleModel *titleModel;
-//这里对ContentModel中的内容实现访问器，原因第4条有，方便undo/redo</code>
-<code>- (NSString *)contentString;</code><br/>
-<code>- (void)setContentString:(NSString *)str;</code></p></blockquote>
-
-<p><strong>NoteDocument.m</strong></p>
-
-<blockquote><ul>
-<li>类扩展里定义<code>contentModel</code>和<code>fileWrapper</code>(读文件时候用)，<code>titleModel</code>直接放在头文件是因为It’s OK if the user accesses the metadata directly though, as it’s not something the app will modify. Instead, the metadata will be automatically updated when the user sets the photo.</li>
-<li>重写<code>loadFromContents</code>和<code>contentsForType</code>，loadFromContents里面self.wrapper = (NSFileWrapper *)contents;给wrapper赋值，contentsForType里面把两个model encode进wrapper</li>
-<li>重写<code>titleModel</code>和<code>contentModel</code>两个getter实现Lazy Loading，需要的时候再decode；如果文件不存在则把model初始化为nil</li>
-<li>实现ContentModel的content的Accessor来实现undo/redo，在Setter里面执行如下代码块：
-```objective-c
-if ([self.contentModel.content isEqual:str]) {
-  return;
-}</li>
-</ul>
-</blockquote></blockquote>
-
-<p>NSString *oldContent = self.contentModel.content;
-self.contentModel.content = str;</p>
-
-<p>[self.undoManager setActionName:@&ldquo;Content Change&rdquo;];
-[self.undoManager registerUndoWithTarget:self selector:@selector(setContentString:) object:oldContent];
-```</p>
-
-<h2>其他</h2>
-
-<h3>1. 设备旋转支持</h3>
-
-<p>好多大厂的App居然也能支持反过来操作，真是不可理解。代码摘自引用博文实现的工程。
-```objective-c
-&ndash; (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{</p>
-
-<pre><code>return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-</code></pre>
-
-<p>}
-```</p>
-
-<h3>2. Undo/Redo</h3>
-
-<p><a href="http://blog.163.com/chenchen..1986/blog/static/760631462013222314817/">这里</a>的例子简单有效。</p>
-
-<h3>3. 自己画的大致思路，实际实现没这么做。</h3>
-
-<p><img src="/blogimage/2014/useuidocument.jpg" alt="useuidocument" /></p>
 ]]></content>
   </entry>
   

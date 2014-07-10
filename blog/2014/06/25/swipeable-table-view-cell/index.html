@@ -1,0 +1,231 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Make A Swipeable TableviewCell - Daryl's Blog</title>
+	<meta name="author" content="Daryl5">
+
+	
+	<meta name="description" content="Make a Swipeable TableviewCell 来自RW的博文How To Make A Swipeable Table View Cell With Actions – Without Going Nuts With Scroll Views。 1. &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!-- 
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+          //$('.profilepic').append("<img src='../images/avatar.jpg" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='../images/avatar.jpg alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+     -->
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+</div>
+<h1><a href="/">Daryl's Blog</a></h1>
+<p class="subtitle">忌眼高手低，忌浮躁。</p>
+<nav id="main-nav"><ul class="main-navigation">
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+    <li><a href="/blog/categories">Categories</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/daryl5" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Make a Swipeable TableviewCell</h1>
+	<div class="entry-content" itemprop="articleBody"><p>来自RW的博文<a href="http://www.raywenderlich.com/62435/make-swipeable-table-view-cell-actions-without-going-nuts-scroll-views">How To Make A Swipeable Table View Cell With Actions – Without Going Nuts With Scroll Views</a>。</p>
+
+<!--more-->
+
+
+<h3>1.UITableViewCell结构解析</h3>
+
+<p><code>给view添加背景色</code>和<code>recursiveDescription</code>都可以用来解析控件结构。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#ifdef DEBUG</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Cell recursive description:</span><span class="se">\n\n</span><span class="s">%@</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">cell</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">recursiveDescription</span><span class="p">)]);</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iOS7上tableViewCell的结构如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">CellScrollView</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span><span class='line'>        <span class="n">Button</span>                 <span class="n">disclosure</span> <span class="n">button</span>
+</span><span class='line'>            <span class="n">ImageView</span>          <span class="n">button</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">image</span>
+</span><span class='line'>        <span class="n">ContentView</span>
+</span><span class='line'>            <span class="n">Label</span>              <span class="n">cell</span> <span class="n">text</span> <span class="n">label</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除时候结构如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">CellScrollView</span>
+</span><span class='line'>        <span class="n">DeleteConfirmationView</span>
+</span><span class='line'>            <span class="n">Confirmation</span> <span class="n">Button</span>
+</span><span class='line'>                <span class="n">Label</span>          <span class="s">&quot;Delete&quot;</span>
+</span><span class='line'>        <span class="c1">//SeparatorView</span>
+</span><span class='line'>        <span class="n">ContentView</span>
+</span><span class='line'>            <span class="n">Label</span>
+</span><span class='line'>        <span class="c1">//Separator View</span>
+</span><span class='line'>        <span class="n">Button</span>
+</span><span class='line'>            <span class="n">ImageView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iOS8上如下，对比iOS7主要是少了<code>UITableViewCellScrollView</code>，这是个UIScrollView的实例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">TableViewCell</span>
+</span><span class='line'>    <span class="n">ContentView</span>
+</span><span class='line'>        <span class="n">Label</span>                  <span class="n">cell</span> <span class="n">text</span> <span class="n">label</span>
+</span><span class='line'>    <span class="c1">//SeparatorView</span>
+</span><span class='line'>    <span class="n">Button</span>
+</span><span class='line'>        <span class="n">ImageView</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>根据官方文档，自定义cell只能在ContentView上添加subview。我们要做的，就是参照苹果实现滑动展示删除按钮的思路，在ContentView上另外实现一套，然后把原本的删除禁掉。</p>
+
+<h3>2.一个Swipeable TableViewCell的必要成分</h3>
+
+<p>由上一部分最后一段可以知道，我们需要一些<code>需要展示的UIButton</code>，然后一个位于这些按钮之上的<code>Container view</code>来显示所有内容，然后需要一个UIScrollView或者<code>UIPanGestureRecognizer</code>来显示或者隐藏按钮，这里我们用后者。最后，<code>需要展示cell内容的views</code>。然后把这些内容都贴到cell的ContentView上。这里有点拗口，对应上面iOS7的cell结构。<br/>
+需要禁掉系统cell的滑动删除：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">canEditRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3.建立自定义cell</h3>
+
+<p>直接在storyboard中编辑prototypecell，然后绑定cell所属类，并在tableview代理中返回相应的类型。这里非常坑，半天显示不出来两个按钮，基础太差代码写的太少了，哎。原因见<a href="http://stackoverflow.com/questions/22352587/xcode-5-1-uitableview-in-uiviewcontroller-custom-tableviewcell-outlets-are-nil">Xcode 5.1 UITableView in UIViewController &ndash; Custom TableViewCell Outlets are nil</a>。具体原因是：</p>
+
+<ol>
+<li>如果在xib或者storyboard中建立cell了，那么直接deque就能获得cell；</li>
+<li>如果要用自定义的cell，那么就要先registerclass，然后重用的时候deque；这时候虽然没有xib，但是运行时也知道如何去建立cell，就用刚注册过的类建立。</li>
+</ol>
+
+
+<p>未完待续&hellip;</p>
+</div>
+</article>
+<!--
+
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Daryl5
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>

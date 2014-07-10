@@ -9,8 +9,8 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="所有遇到过的坑们 20.往NSUserDefaults保存UIColor 参考自Saving UIColor to and loading from NSUserDefaults
-NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、 &hellip;">
+	<meta name="description" content="所有遇到过的坑们 22.设置状态栏颜色 很常见的问题但是网上的答案都忽略了一点：View controller-based status bar appearance的type一定要是Boolean，一般代码方式修改plist文件，这里会是String，那么状态栏颜色不会改变。
+具体设置方式如下 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -94,6 +94,45 @@ NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、 &hellip;">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">所有遇到过的坑们</h1>
 	<div class="entry-content" itemprop="articleBody"><!--more-->
+
+
+<h3>22.设置状态栏颜色</h3>
+
+<p>很常见的问题但是网上的答案都忽略了一点：<code>View controller-based status bar appearance的type一定要是Boolean</code>，一般代码方式修改plist文件，这里会是String，那么状态栏颜色不会改变。<br/>
+具体设置方式如下：</p>
+
+<ol>
+<li>在Targets-Info下添加域<code>View controller-based status bar appearance</code></li>
+<li>选择其type为Boolean，值为NO</li>
+<li>AppDelegate中：</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// Config status bar style</span>
+</span><span class='line'><span class="p">[</span><span class="n">application</span> <span class="nl">setStatusBarStyle:</span><span class="n">UIStatusBarStyleLightContent</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者在Targets-General下面设置<code>Status Bar Style</code>为Light（原本是Default）<br/>
+这里有点坑啊，既然在工程配置界面提供了状态栏设置，但这里设置起作用的前提是要去plist文件里添加一个属性，很奇怪。</p>
+
+<h3>21.iOS7中tint UIImage</h3>
+
+<p>给UIImageView设置tintColor，然后设置其image的渲染模式为<code>UIImageRenderingModeAlwaysTemplate</code>(忽略颜色信息)，可以把各种线图标弄成统一的自己想要的颜色，代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">UIImageView</span><span class="o">*</span> <span class="n">imageView</span> <span class="o">=</span> <span class="err">…</span>
+</span><span class='line'><span class="n">UIImage</span><span class="o">*</span> <span class="n">originalImage</span> <span class="o">=</span> <span class="err">…</span>
+</span><span class='line'><span class="n">UIImage</span><span class="o">*</span> <span class="n">imageForRendering</span> <span class="o">=</span> <span class="p">[</span><span class="n">originalImage</span> <span class="nl">imageWithRenderingMode:</span><span class="n">UIImageRenderingModeAlwaysTemplate</span><span class="p">];</span>
+</span><span class='line'><span class="n">imageView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageForRendering</span><span class="p">;</span>
+</span><span class='line'><span class="n">imageView</span><span class="p">.</span><span class="n">tintColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">redColor</span><span class="p">];</span> <span class="c1">// or any color you want to tint it with</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>20.往NSUserDefaults保存UIColor</h3>
