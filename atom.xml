@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-07-10T14:48:12+08:00</updated>
+  <updated>2014-07-10T22:51:39+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[WORDS-TO-MYSELF]]></title>
+    <link href="http://daryl5.github.io/blog/2014/07/10/words-to-myself/"/>
+    <updated>2014-07-10T22:42:24+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/07/10/words-to-myself</id>
+    <content type="html"><![CDATA[<h4>1. 不想干正经事儿、浮躁的时候，就休息一下然后尝试去工作二十分钟，就一定会进入状态的。</h4>
+
+<h4>2. 学到知识的感觉最能让人踏实，现在水没关系，在进步就好。比如今天就弄明白了instancetype。</h4>
+
+<h4>3. 明确当下该干什么，只埋头苦干而不想想其实挺2的。</h4>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[关于产品官方微博运营的想法]]></title>
@@ -2087,14 +2100,91 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[读Inkpad源代码]]></title>
-    <link href="http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/"/>
+    <title type="html"><![CDATA[读开源项目总结]]></title>
+    <link href="http://daryl5.github.io/blog/2014/03/30/reading-source-code/"/>
     <updated>2014-03-30T19:55:11+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App，这篇博文记录阅读其源代码时的收获。</p>
+    <id>http://daryl5.github.io/blog/2014/03/30/reading-source-code</id>
+    <content type="html"><![CDATA[<!--more-->
 
-<!--more-->
 
+<h1><a href="https://github.com/dasdom/DDHTimerControl">DDHTimerControl</a>是一个倒计时控件，做的很好看。</h1>
+
+<h3>1.关于loadView和viewDidLoad</h3>
+
+<p><a href="http://www.dreamingwish.com/frontui/article/default/correct-online-information-error-loadview-viewdidload-viewdidunload.html">这里</a>说的很清楚。</p>
+
+<blockquote><p>loadView方法的默认实现是这样：先寻找有关可用的nib文件的信息，根据这个信息来加载nib文件，如果没有有关nib文件的信息，默认实现会创建一个空白的UIView对象，然后让这个对象成为controller的主view。 <br/>
+所以，重载这个函数时，你也应该这么做。并把子类的view赋给view属性(property)（你create的view必须是唯一的实例，并且不被其他任何controller共享），而且你重载的这个函数不应该调用super。
+如果你要进行进一步初始化你的views，你应该在viewDidLoad函数中去做。在iOS 3.0以及更高版本中，你应该重载viewDidUnload函数来释放任何对view的引用或者它里面的内容（子view等等）。</p></blockquote>
+
+<h3>2.一个关于Setter的好的习惯</h3>
+
+<p>自己重写了一个property的setter，然后别的地方有调用setXxx，那么最好在头文件中也声明一下setter，虽然不声明也没错，但是嘛。。。</p>
+
+<h3>3.instancetype</h3>
+
+<p><a href="http://blog.eddie.com.tw/2013/12/16/id-and-instancetype/">这里</a>说的很清楚。</p>
+
+<blockquote><p>其實 instancetype 就只是個關鍵字(keyword)，它告訴編譯器回傳型態，讓編譯器可以在編譯階段就有足夠的資訊可以來判斷你寫的程式碼是不是有問題。只能用作返回值，id却可以随便用。</p></blockquote>
+
+<p>具体例子：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">Animal</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nf">createAnimal</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Animal</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nf">createAnimal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">return</span> <span class="p">[[</span><span class="n">self</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Fox</span> : <span class="nc">Animal</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">say</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Fox</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">say</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;what does the fox say!?&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//编译能过，因为createAnimal回传类型是id，编译器不能在编译阶段infer出它的真实类型，</span>
+</span><span class='line'><span class="c1">//所以只好先放过，然后在运行时候就会unrecognized selector sent to instance。</span>
+</span><span class='line'><span class="c1">//可以通过respondToSelector来检查，更简单的方法是createAnimal返回instancetype</span>
+</span><span class='line'><span class="p">[[</span><span class="n">Animal</span> <span class="n">createAnimal</span><span class="p">]</span> <span class="n">say</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App。</h1>
 
 <h3>0. 内联函数的使用</h3>
 
