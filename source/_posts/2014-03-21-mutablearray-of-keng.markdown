@@ -6,6 +6,28 @@ comments: true
 categories: iOS 
 ---
 <!--more-->
+###22.设置状态栏颜色
+很常见的问题但是网上的答案都忽略了一点：`View controller-based status bar appearance的type一定要是Boolean`，一般代码方式修改plist文件，这里会是String，那么状态栏颜色不会改变。  
+具体设置方式如下：  
+
+1. 在Targets-Info下添加域`View controller-based status bar appearance`
+2. 选择其type为Boolean，值为NO
+3. AppDelegate中：
+```objective-c
+// Config status bar style
+[application setStatusBarStyle:UIStatusBarStyleLightContent];
+```
+或者在Targets-General下面设置`Status Bar Style`为Light（原本是Default）  
+这里有点坑啊，既然在工程配置界面提供了状态栏设置，但这里设置起作用的前提是要去plist文件里添加一个属性，很奇怪。
+###21.iOS7中tint UIImage
+给UIImageView设置tintColor，然后设置其image的渲染模式为`UIImageRenderingModeAlwaysTemplate`(忽略颜色信息)，可以把各种线图标弄成统一的自己想要的颜色，代码如下：
+```objective-c
+UIImageView* imageView = …
+UIImage* originalImage = …
+UIImage* imageForRendering = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+imageView.image = imageForRendering;
+imageView.tintColor = [UIColor redColor]; // or any color you want to tint it with
+```
 ###20.往NSUserDefaults保存UIColor
 参考自[Saving UIColor to and loading from NSUserDefaults](http://stackoverflow.com/questions/1275662/saving-uicolor-to-and-loading-from-nsuserdefaults)  
 NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、NSDictionary，如果尝试把自定义类放入NSArray任何存也是不行的。  
