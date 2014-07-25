@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-07-10T22:51:39+08:00</updated>
+  <updated>2014-07-25T12:28:31+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -20,9 +20,11 @@
     <id>http://daryl5.github.io/blog/2014/07/10/words-to-myself</id>
     <content type="html"><![CDATA[<h4>1. 不想干正经事儿、浮躁的时候，就休息一下然后尝试去工作二十分钟，就一定会进入状态的。</h4>
 
-<h4>2. 学到知识的感觉最能让人踏实，现在水没关系，在进步就好。比如今天就弄明白了instancetype。</h4>
+<h4>2. 学到知识的感觉最能让人踏实，现在水没关系，在进步就好。</h4>
 
 <h4>3. 明确当下该干什么，只埋头苦干而不想想其实挺2的。</h4>
+
+<p>发现一个很有意思的现象，看一个问题时，我需要达到的了解程度是5，感觉挺有难度。但是，正好有一个解读程度为10的资料，硬着头皮读下去，虽然没懂，但是了解程度至少到6了- -！</p>
 ]]></content>
   </entry>
   
@@ -369,12 +371,12 @@ The compiler is much more helpful in Swift. It will help stop subtle type relate
 
 <h2>1.2 内存管理</h2>
 
-<h3>1.2.2 内存管理的思考方式</h3>
+<h4>1.2.2 ARC进行内存管理的思考方式</h4>
 
 <ul>
 <li>自己生成的对象，自己持有（alloc/new/copy/mutableCopy了就也retain了）</li>
 <li>非自己生成的对象，自己也能持有（retain）</li>
-<li>不再需要自己持有的对象时释放（release）</li>
+<li>自己不再需要持有的对象时释放（release）</li>
 <li>非自己持有的对象无法释放（没retain/alloc/new/copy/mutableCopy就不能release）</li>
 </ul>
 
@@ -382,9 +384,54 @@ The compiler is much more helpful in Swift. It will help stop subtle type relate
 <p>1.OC的内存管理方法实际上不在OC语言里，而是包含在Cocoa框架中的。（OC是C的超集，Cocoa是对OC加了内存管理、多媒体、网络通讯等等的类库形成的用来给OS X开发应用的框架，Cocoa Touch是对Cocoa进行移动适配形成的另一套OC的类库）<br/>
 2.Cocoa框架中Foundation框架类库中的NSObject类担负内存管理的职责，内存管理调用的alloc、retain等方法指代的就是NSObject类中的alloc类方法、retain实例方法等。（所有对象继承自NSObject，alloc、retain等内存管理方法在NSObject中实现，这也就是为什么初始化对象时候要先[super init]以及dealloc最末要[super dealloc]）<br/>
 3.<code>[NSObject new</code>和<code>[[NSObject alloc] init]</code>是完全等价的。<br/>
-4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
+4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>(有<code>[obj autorelease]</code>)，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
 
-<h3>1.2.3 alloc/retain/release/dealloc实现</h3>
+<h4>1.2.3 alloc/retain/release/dealloc实现</h4>
+
+<p>1.NSZone是为了防止内存碎片化而引入的结构。如果分配几块内存依次是小大小大小大，这样释放所有的“小”之后就形成了碎片，所以要有一大一小两种<code>区域</code>，小的去小的大的去大的。<br/>
+<strong>现在的运行时的内存管理已经很高效，使用NSZone反而可能会降低效率或使源代码复杂，所以运行时都会忽略NSZone</strong>。<br/>
+2.GNUstep是Cocoa框架的互换框架，两者实现不一定相同不过行为是一样的，这一节主要通过读GNUstep中<code>NSObject.m</code>中alloc、retain等方法的源代码来深入了解内存管理。<br/>
+3.GNUstep使用<code>内存块头部管理引用计数</code>，苹果使用<code>引用计数表</code>管理引用计数。</p>
+
+<h4>1.2.5 autorelease</h4>
+
+<p>1.和C语言的<code>局部变量(Automatic Variable)</code>类似，如在函数内定义的int，除了函数就废掉了。autorelease的作用范围是NSAutoreleasePool，在<code>[pool drain]</code>时每个调用过autorelease的对象都会调用release。
+2.只要不drain pool，生成的对象就不会被释放，内存就越来越少，所以在for循环里如果有很多autorelease对象那就定义一个NSAutoreleasePool来降低内存峰值。
+3.Cocoa框架也有很多类方法会返回autorelease的对象。如<code>[NSMutableArray arrayWithCapacity:1]</code>等效于<code>[[[NSMutableArray alloc] initWithCapacity:1] autorelease]</code>。</p>
+
+<h3>1.2.6 autorelease的实现</h3>
+
+<p>1.本质就是<code>调用NSAutoreleasePool的addObject方法</code>。
+2.NSAutoreleasePool的管理应该用的是栈。</p>
+
+<h2>1.3 ARC规则</h2>
+
+<h4>1.3.3 所有权修饰符</h4>
+
+<p>1.ARC有效时，一共有4种修饰符：</p>
+
+<ol type="a">
+<li>__strong</li>
+<li>__weak</li>
+<li>__unsafe__unretained</li>
+<li>__autoreleasing</li>
+</ol>
+
+
+<p>2.所有id和对象都必须加上所有权修饰符，默认是__strong，也就是说:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//这两个等效</span>
+</span><span class='line'><span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="kt">id</span> <span class="n">__strong</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.所谓强/弱引用实际就是<code>指针对一块内存（或者说一个对象）的引用</code>。<br/>
+强引用就是，别人可以release，但是运行时不能销毁这个对象，因为我还强引用着呢。其实就是给retainCounter加了1，所以对象不会被销毁，除非自己再去调用release。<br/>
+弱引用就是我在用但是我没给引用计数加1，别人release了我也就用不了了。</p>
 ]]></content>
   </entry>
   
@@ -2182,6 +2229,16 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 </span><span class='line'><span class="c1">//可以通过respondToSelector来检查，更简单的方法是createAnimal返回instancetype</span>
 </span><span class='line'><span class="p">[[</span><span class="n">Animal</span> <span class="n">createAnimal</span><span class="p">]</span> <span class="n">say</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4.在类扩展里的<code>实例变量</code>和<code>property</code></h3>
+
+<p>以往总是会写花括号然后写实例变量，用property一样实现“私有”，其好处有以下：</p>
+
+<ol>
+<li>可以重写getter，实现lazyloading</li>
+<li>property对于实例变量可以设定权限</li>
+</ol>
 
 
 <h1><a href="https://github.com/sprang/Inkpad">Inkpad</a>是一个开源的基于OpenGLES的画矢量图的App。</h1>
