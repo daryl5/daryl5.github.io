@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-07-25T12:30:43+08:00</updated>
+  <updated>2014-07-30T09:23:18+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -249,8 +249,8 @@ floatPair.equal() // false
 
 <h3>1.2.6 autorelease的实现</h3>
 
-<p>1.本质就是<code>调用NSAutoreleasePool的addObject方法</code>。
-2.NSAutoreleasePool的管理应该用的是栈。</p>
+<p>1.本质就是<code>调用NSAutoreleasePool的addObject方法</code>。<br/>
+2.NSAutoreleasePool的管理应该用的是栈，一个pool是就是栈中的一个项目。</p>
 
 <h2>1.3 ARC规则</h2>
 
@@ -266,7 +266,7 @@ floatPair.equal() // false
 </ol>
 
 
-<p>2.所有id和对象都必须加上所有权修饰符，默认是__strong，也就是说:
+<p>2.所有id和对象都必须加上所有权修饰符，默认是<em>_strong，也就是说:
 <code>objective-c
 //这两个等效
 id obj = [[NSObject alloc] init];
@@ -274,7 +274,18 @@ id __strong obj = [[NSObject alloc] init];
 </code>
 3.所谓强/弱引用实际就是<code>指针对一块内存（或者说一个对象）的引用</code>。<br/>
 强引用就是，别人可以release，但是运行时不能销毁这个对象，因为我还强引用着呢。其实就是给retainCounter加了1，所以对象不会被销毁，除非自己再去调用release。<br/>
-弱引用就是我在用但是我没给引用计数加1，别人release了我也就用不了了。</p>
+弱引用就是我在用但是我没给引用计数加1，别人release了我也就用不了了。<br/>
+4.简单总结<br/>
+<code>ARC实现方式</code><br/>
+GNUstep中每个对象头部都存储着自身的引用计数；<br/>
+Apple用runtime统一存储所有对象的引用计数，用的是哈希表，以对象地址作为key，引用计数值和真正的内存地址作为值。有一个好处，即使因为故障导致对象所在内存被破坏，但只要引用计数表还在，就能确认内存块位置（这里真的没太懂，可以参考下面__weak的部分，存储指针的地址）。<br/>
+<code>__autoreleasing</code><br/>
+用该关键词修饰的变量会被注册到autoreleasepool；<br/>
+当方法名不是alloc/new/copy/mutablecopy时候，如果要返回object，这个object会被注册到autoreleasepool；<br/>
+访问_</em>weak修饰的变量时，该变量会被注册到autoreleasepool，以确保不会因为原有对象被释放而非法访问，因为只要pool还在，该对象都是有效的。<br/>
+<code>__weak</code><br/>
+也称智能指针，因为当对象被release时候指针会被置nil。<br/>
+实现原理是：本质也是<code>哈希表</code>，把对象地址作为key，然后把指向对象的指针的地址（可能有多个指针都指着）作为value。这样当release对象的时候就在weak表中找到所有指向该对象的指针的地址，进而将所有指针都设置为nil。然后还会在weak表中删除该键值对。</p>
 ]]></content>
   </entry>
   
@@ -575,7 +586,7 @@ b.总结
 
 <h3>Item 23: 通过委托和数据源协议进行对象间通信</h3>
 
-<p>a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词：</p>
+<p>a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词(尼玛，就是自动设置空的意思，对应weak)：</p>
 
 <blockquote><p>A delegate property will always be defined using either the weak attribute to benefit from <code>autonilling</code> or unsafe_unretained if autonilling is not required.</p></blockquote>
 
