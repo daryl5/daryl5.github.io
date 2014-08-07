@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-07-30T09:23:18+08:00</updated>
+  <updated>2014-08-07T21:26:50+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[学习Node.js]]></title>
+    <link href="http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js/"/>
+    <updated>2014-08-07T19:26:41+08:00</updated>
+    <id>http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h2>Node.js的Hello World</h2>
+
+<p>```javascript
+var http = require(&lsquo;http&rsquo;);</p>
+
+<p>//当有http请求发送过来时，就会调用此回调函数
+http.createServer(function (req, res) {</p>
+
+<pre><code>res.writeHead(200, {'Content-Type': 'text/plain'});
+res.end('Hello World\n');
+</code></pre>
+
+<p>}).listen(80, &ldquo;127.0.0.1&rdquo;);
+```</p>
+
+<h2>Node.js是什么</h2>
+
+<p>在Chrome V8引擎上进行扩展从而生成的一个<code>Javascript运行环境/引擎</code>。一般JS都运行在客户端，Node.js使得JS可以在服务器端运行。</p>
+
+<h2>Node.js的特点</h2>
+
+<p><code>1.事件驱动、异步编程</code><br/>
+在传统的网络编程中会用到回调函数，比如当socket资源达到某一状态时注册的回调函数就会执行。以Node.js中的Net模块为例，net.Socket对象就有connect、data、end等事件，开发者可以根据自己的业务逻辑注册响应的回调函数到这些事件。在代码中这些事件看上去是顺次注册的，但是它们并<code>不依赖自身出现的顺序</code>，而是在相应事件发生时触发。<br/>
+这两个特点得益于Node.js采用的语言是<code>Javascript</code>，Javascript的<code>匿名函数</code>和<code>闭包</code>特性非常适合事件驱动、异步编程。<br/>
+<code>2.高性能</code><br/>
+选择C++和V8而不选择Ruby或其他虚拟机就是出于性能考虑。<br/>
+事实上Node.js是以<code>单进程、单线程</code>模式运行的，事件驱动机制是Node.js通过对内部单线程高效率的维护时间循环队列来实现，没有多线程的资源占用和上下文切换。面对大规模http请求，Node.js凭借事件驱动搞定一切。实验表明Node.js的事件驱动机制和单进程单线程模式导致CPU占用很高。现在已经有一些支持多进程的模块。</p>
+
+<h2>参考文献</h2>
+
+<p><a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a><br/>
+这个系列的文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Make A Swipeable TableviewCell]]></title>
@@ -405,256 +448,6 @@ __weak DRDManuscriptController <em>weakSelf = self;
 @end
 </code>
 这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[『Effective Objective-C 2.0』笔记]]></title>
-    <link href="http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0/"/>
-    <updated>2014-04-07T13:22:29+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0</id>
-    <content type="html"><![CDATA[<p>《Effective Objective-C 2.0：52 Specific Ways to Improve Your iOS and OS X Programs》 作者：<a href="http://www.galloway.me.uk/">Matt Galloway</a></p>
-
-<!--more-->
-
-
-<h2><strong>1: Accustoming Yourself to Objective-C</strong></h2>
-
-<h3>Item 2: 缩减头文件&mdash;Minimize Importing Headers in Headers</h3>
-
-<p>a.如下引文，试了一下互相import，没有报错- -！</p>
-
-<blockquote><p>The use of #import rather than #include doesn&rsquo;t end in an infinite loop but does mean that one of ther classes won&rsquo;t compile correctly.</p></blockquote>
-
-<p>b.协议相关<br/>
-一些代理相关的协议，可以把协议头文件在.m文件里再引入，把代理<code>id&lt;XXXProtocol&gt; delegate</code>定义放在类扩展里。
-也可以考虑单独创建一个头文件，里面只放协议定义。</p>
-
-<!--more-->
-
-
-<h3>Item 3: 使用字面量语法而不是其等价方法&mdash;Prefer Literal Syntax over the Equivalent Methods</h3>
-
-<p>a.字面量使用</p>
-
-<pre><code>NSString *str           = @"Test String";
-NSNumber *boolValue     = @YES;
-NSNumber *charValue     = @'a';
-NSNumber *expressionVal = @(x * y);//int x &amp; float y
-
-NSArray *animals        = @[@"cat", @"dog"];
-NSString *dog           = animails[1];//下标直接访问
-
-NSDictionary *person    = @{@"firstName" : @"Matt", @"age" : @28};
-NSString *firstName     = person[@"firstName"];//key值直接访问value
-
-//Assign value or replace
-mutableArray[1] = @"dog";
-mutableDictionary[@"lastName"] = @"Galloway";
-</code></pre>
-
-<p>b.好处<br/>
-如果NSArray用3个object来初始化，第二个是nil，那么arrayWithObjects将会返回一个只包含object1的array，而字面量初始化会报错。<strong>“报错”比“少了个数”更安全。</strong>
-对于NSDictonary，初始化会在遇到nil时候停止，dictionaryWithObjectsAndKeys可能会少了某一个value；字面量更安全。<br/>
-c.缺点<br/>
-字面量语法只能用于Foundation框架的一些类，对于自定义的类没法这样定义（显然）。<br/>
-对于mutable对象的定义，需要进行mutableCopy。增加了额外的方法调用和对象创建</p>
-
-<pre><code>NSMutableArray *mutable = [@[@1, @2, @3] mutableCopy];
-</code></pre>
-
-<h3>Item 4: 使用类型化常量而不是预处理指令#define&mdash;Prefer Typed Constants to Preprocessor #define</h3>
-
-<p>a.#define的缺点<br/>
-预处理指令<code>#define ANIMATION_DURATION 0.3</code>只是在预处理阶段进行<code>替换</code>，它没有包含类型信息。（如果定义在头文件，所有包含该头文件的文件也都会进行替换。）<br/>
-b.类型化常量的使用（static const）<br/>
-用上编译器让常量有类型信息：<code>static const NSTimerInterval kAnimationDuration = 0.3;</code>
-常量命名规范：</p>
-
-<blockquote><p>The usual convertion for constants is to prefix with lettr k for constants that are local to a translation unit(implementation file). For constants that are exposed outside of a class, it is usual to prefix with the class name.<br/>
-在.m中定义，对于这个translation unit是局部变量的话用k作前缀；如果要暴露给外界，用类名开头，如EOCViewClassAnimationDuration。</p></blockquote>
-
-<p><code>static</code>关键词说明这个变量对于当前translation unit是局部的，如果没定义为static，编译器将会为其创建一个external symbol，如果另一translation unit声明了一个同名变量，链接器将会报错；<code>const</code>关键词说明不能被修改。</p>
-
-<blockquote><p>A translation unit is the input the compiler receives to generate one object file. In OC, this usually means that there is one translation unit per class: every .m file.</p></blockquote>
-
-<p>SO的一个问题：<a href="http://stackoverflow.com/questions/11382502/how-different-static-variable-declarations-in-objective-c">How different static variable declarations in Objective-C?</a><br/>
-c.类型化常量的使用（extern）<br/>
-跟<code>NSNotification</code>相关，通知名应该这样处理：</p>
-
-<pre><code>// In .h
-// extern--"Trust me, there's a variable called EOCStringConstant declared in another file"
-// EOC是类名
-extern NSString *const EOCStringConstant;
-
-// In .m
-//反着读：EOCStringConstantis a const pointer point to NSString
-NSString *const EOCStringConstant = @"NotificationName";
-//如果不是对象那这里是const NSTimeInterval EOCAnimated...
-</code></pre>
-
-<p>d.总结<br/>
-类型化常量有类型- -！
-类型化常量借助编译器来确保常量的一致性（const），预处理指令#define可以在别的地方重定义。<br/>
-.m的局部变量如动画时间等用k开头放在.m文件里用static；通知名等用类名+通知名，.m里声明+定义，.h里extern，如UIApplication类里声明+定义的UIApplicationDidEnterBackGroundNotifation。</p>
-
-<h2><strong>2: Objects, Messaging, and the Runtime</strong></h2>
-
-<h3>Item 6: 理解Properties-Understand Properties【需要再看】</h3>
-
-<p>a.自己写了Accessor中的一个，编译器将会synthesize另一个，LazyLoading就是这样的。如果不想让编译器自动synthesize，可以用<code>@dynamitc</code>指令，这样编译器不会生成Accessor和对应的实例变量名，而且编译时候编译器会忽略Accessor还没有被定义但是已经在self.property，编译器会认为Accessor在runtime时会有的。<br/>
-b.<code>weak</code>不会release旧值，也不会retain新值，类似assign，不过这个property所指对象被销毁时，这个property会被nilled out。<br/>
-<code>unsafe_unretained</code>也和assign类似，只是关于object的assign，unretained对应nonowning，unsafe对应不会被nilled out，这一点和weak不一样。<br/>
-<code>copy</code>对应mutable copy，如果不想让对象把传进来的值改变了，应该做一下copy，也就是immutable copy。虽然增加了拷贝操作，但是会更安全。<br/>
-c.关于自定义getter名在BOOL上的应用，为了加is为什么不直接把property命名成isXxx。</p>
-
-<h3>Item 7: Access Instance Variables Primarily Directly When Accessing Them Internally</h3>
-
-<p><strong>a.总结</strong></p>
-
-<ol>
-<li>一般来说，要读实例变量的时候就直接访问，要写实例变量的时候就用property。</li>
-<li>如果在初始化方法（或dealloc）中改变property的值，那么也是直接访问实例变量。因为如果初始化方法也用property，那么父类初始化时候其实会调用子类的初始化方法，可能会产生问题。另外，有时候是必须在初始化方法中使用setter的，比如当实例变量在父类中声明，那子类只能通过setter来访问。</li>
-<li>如果property使用了<code>Lazy Loading</code>，那么需要使用getter来获取，不如可能获得空值。</li>
-</ol>
-
-
-<p><strong>b.<code>直接访问</code>和<code>使用property</code>的区别</strong></p>
-
-<ol>
-<li>直接访问无需<code>method dispatch</code>那么肯定更快；</li>
-<li>直接使用实例变量会绕过property所设置的内存管理策略；</li>
-<li>直接访问实例变量，KVO可能不会触发了；</li>
-<li>使用property可以方便debug，知道谁在什么时候访问了某一实例变量。</li>
-</ol>
-
-
-<h3>Item 8: Understand Object Equality</h3>
-
-<p>a.有的类实现了判断相等的方法，如NSString的<code>isEqualToString:</code>，这个比<code>isEqual:</code>，因为后者还需要查看所比较对象所属的类。</p>
-
-<h1>看不下去了</h1>
-
-<h3>Item 10: 在既有类中适用关联对象存放自定义数据-Use Associated Objects to Attach Custom Data to Existing Classed</h3>
-
-<p>a.一般都是通过<code>继承</code>来给既有类添加数据，但行不通的时候就要用到<code>关联对象</code>了。以UIAlertView为例：</p>
-
-<ul>
-<li>一般的实现中buttonIndex和其action的对应，即button的定义和其响应方法的声明不在一个地方，这样可读性不好；</li>
-<li><p>如果同一个类里有多个alertView，那么在代理方法中还要判断是哪一个，然后再判断buttonIndex；
-```objective-c
-static const void *EOCMyAlertViewKey = &ldquo;EOCMyAlertViewKey&rdquo;;</p></li>
-<li><p>(void)askUserAQuestion {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@&ldquo;Question&rdquo;
-                                                  message:@&ldquo;What do you want to do?&rdquo;
-                                                 delegate:self
-                                        cancelButtonTitle:@&ldquo;Cancel&rdquo;
-                                        otherButtonTitles:@&ldquo;Continue&rdquo;, nil];</p>
-
-<p>  void(^block)(NSInteger) = ^(NSInteger buttonIndex) {
-      if (buttonIndex == 0) {
-          [self doCancel];
-      } else {
-          [self doContinue];
-      }
-  };</p>
-
-<p>  objc_setAssociatedObject(alert, EOCMyAlertViewKey, block, OBJC_ASSOCIATION_COPY);</p>
-
-<p>  [alert show];
-}</p></li>
-</ul>
-
-
-<p>// UIAlertViewDelegate protocol method
-&ndash; (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {</p>
-
-<pre><code>void (^block)(NSInteger) = objc_getAssociatedObject(alertView, EOCMyAlertViewKey);
-block(buttonIndex);
-</code></pre>
-
-<p>}
-<code>``
-b.总结  
-关联对象就是把两个object链接在一起了；关联对象只有在其他方法都不可行的时候才使用，因为很容易造成</code>Retain Cycle`；上例中还可以通过继承AlertView并附加这个block对象来实现，如果类中alertView要多次用到，更建议继承而不是关联对象。</p>
-
-<h3>Item 14: 理解类的对象- Understand What a Class Object Is</h3>
-
-<p>a.OC是<code>动态类型</code>的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。</p>
-
-<h2><strong>4: Protocols and Categories</strong></h2>
-
-<h3>Item 23: 通过委托和数据源协议进行对象间通信</h3>
-
-<p>a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词(尼玛，就是自动设置空的意思，对应weak)：</p>
-
-<blockquote><p>A delegate property will always be defined using either the weak attribute to benefit from <code>autonilling</code> or unsafe_unretained if autonilling is not required.</p></blockquote>
-
-<p>b.在interface中声明遵守协议的话，别的类会知道这一行为，一般把“遵守协议”放在类扩展部分，虽然没太多影响。要知道一个对象是否遵守某个协议可以这样：<code>[self conformsToProtocol:@protocol(DRDHandWritingProtocol)]</code><br/>
-c.可以把正在代理的对象也传回给代理，这样方便判断具体是哪个代理对象在调用代理方法。
-```objective-c
-&ndash; (void)networkFetcher:(EOCNetworkFetcher <em>)fetcher didReceiveData:(NSData </em>)data {</p>
-
-<pre><code>if (fetcher == _myFetcherA) {
-    //Handle data
-} else if (fetcher == _myFetcherB) {
-    //Handle data
-}
-</code></pre>
-
-<p>}
-<code>
-d.如果开发API，用代理可以实现一些属性设置，如`- (BOOL)networkFetcher:(EOCNetworkFetcher *)fetcher shouldFollowRedirectToURL:(NSURL *)url;`，甚至这里可以给fetcher传递一个NSDictionary来进行Fetcher一系列属性的设置。  
-e.对`@optional`的代理方法，方法调用者负责通过`[delegate respondsToSelector]`确保程序不会崩溃，unrecognized selector。`@required`的话编译器会确认。如果没设置，默认都是required。  
-f.对dataSource类的delegate，在获取每一个小的data piece的时候都查询一次respondsToSelector是低效的，应该将当前对象对协议的遵守情况缓存下来。如下：
-</code>objective-c
-//有个DataModel或者ViewController是该对象的代理
-//In class extension
-@interface EOCNetworkFetcher() {</p>
-
-<pre><code>struct {
-    unsigned int didReceiveData      : 1;
-    unsigned int didFailWithError    : 1;
-    unsigned int didUpdateProgressTO : 1;
-}_delegateFlags;
-</code></pre>
-
-<p>}</p>
-
-<p>//In delegate Setter
-&ndash; (void)setDelegate:(id<EOCNetworkFetcher>)delegate {</p>
-
-<pre><code>_delegate = delegate;
-_delegateFlags.didReceiveData = [delegate respondsToSelector:@selector(networkFetcher:didReceiveData:)];
-...
-</code></pre>
-
-<p>}</p>
-
-<p>//Query if responds to selector (FRENQUENTLY)
-if (_delegateFlags.didReceiveData) {</p>
-
-<pre><code>[_delegate networkFetcher:self didReceiveData:dataReceived];
-</code></pre>
-
-<p>}
-<code>
-g.协议的“继承”
-</code>objective-c
-@protocol A</p>
-
-<pre><code>-(void) methodA;
-</code></pre>
-
-<p>@end</p>
-
-<p>@protocol B <A></p>
-
-<pre><code>-(void) methodB;
-</code></pre>
-
-<p>@end
-```</p>
 ]]></content>
   </entry>
   
