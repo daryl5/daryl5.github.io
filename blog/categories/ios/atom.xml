@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-08-07T21:26:50+08:00</updated>
+  <updated>2014-08-08T21:12:43+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[学习Node.js]]></title>
+    <title type="html"><![CDATA[使用Node.js开发RESTful WebService]]></title>
     <link href="http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js/"/>
     <updated>2014-08-07T19:26:41+08:00</updated>
     <id>http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js</id>
@@ -49,10 +49,132 @@ res.end('Hello World\n');
 选择C++和V8而不选择Ruby或其他虚拟机就是出于性能考虑。<br/>
 事实上Node.js是以<code>单进程、单线程</code>模式运行的，事件驱动机制是Node.js通过对内部单线程高效率的维护时间循环队列来实现，没有多线程的资源占用和上下文切换。面对大规模http请求，Node.js凭借事件驱动搞定一切。实验表明Node.js的事件驱动机制和单进程单线程模式导致CPU占用很高。现在已经有一些支持多进程的模块。</p>
 
+<h2>使用Express</h2>
+
+<p><a href="http://expressjs.com/">Express</a>是基于Node.js的web开发框架，它被作为Node.js的一个module导入项目。下面借助Express来实现简单的REST API，这个主题的内容来自<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">这里</a>。什么是<code>REST API</code>？可以看<a href="https://en.wikipedia.org/wiki/Representational_state_transfer#RESTful_web_APIs">维基</a>。简单来说是由GET, PUT, POST和DELETE四种类型的方法组成。<br/>
+<code>1.集成Express到项目</code><br/>
+修改<code>package.json</code>然后使用<code>npm install</code>来集成。
+```javascript
+{</p>
+
+<pre><code>"name": "first-express-app",
+"description": "a fine piece of express art",
+"version": "0.0.1",
+"dependencies": {
+    "express": "3.x"
+}
+</code></pre>
+
+<p>}
+<code>
+上例中会有警告，没有README之类的，添加private为true就没有警告了。  
+`2.Express版的Hello World`  
+</code>javascript
+var express = require(&lsquo;express&rsquo;);
+var app = express(); //app是Express server的一个实例</p>
+
+<p>app.get(&lsquo;/&rsquo;, function(req, res) {</p>
+
+<pre><code>res.type('text/plain');
+res.send('Hello World from Express');
+</code></pre>
+
+<p>});</p>
+
+<p>//使用process.env.PORT就是说如果设置了PORT环境变量那就会用设置的端口，否则就是自己设定的3000
+app.listen(process.env.PORT || 3000);</p>
+
+<p>console.log(&lsquo;Server is running&hellip;&rsquo;);
+<code>
+然后`node filename.js`并在浏览器访问`http://localhost:3000`即可。  
+`3.添加route实现新的API`  
+route可以译作路由，就是访问网站时站点名后加的参数等等，用于实现在网站内跳转。在上面的代码中添加代码
+</code>javascript
+var quotes = [
+{ author : &lsquo;Audrey Hepburn&rsquo;, text : &ldquo;Nothing is impossible, the word itself says &lsquo;I&rsquo;m possible&rsquo;!&rdquo;},
+{ author : &lsquo;Walt Disney&rsquo;, text : &ldquo;You may not realize it when it happens,</p>
+
+<pre><code>        but a kick in the teeth may be the best thing in the world for you"},
+</code></pre>
+
+<p>{ author : &lsquo;Unknown&rsquo;, text : &ldquo;Even the greatest was once a beginner. Don&rsquo;t be afraid to take that first step.&rdquo;},
+{ author : &lsquo;Neale Donald Walsch&rsquo;, text : &ldquo;You are afraid to die, and you&rsquo;re afraid to live. What a way to exist.&rdquo;}
+];</p>
+
+<p>//bodyParser中间件，可以parse请求的body，然后把body传给request的body property
+//用于解析POST请求的内容
+app.use(express.bodyParser());</p>
+
+<p>app.get(&lsquo;/&rsquo;, function(req, res) {</p>
+
+<pre><code>res.json(quotes);
+</code></pre>
+
+<p>});</p>
+
+<p>app.get(&lsquo;/quote/random&rsquo;, function(req, res) {</p>
+
+<pre><code>var id = Math.floor(Math.random() * quotes.length);
+var q = quotes[id];
+res.json(q);
+</code></pre>
+
+<p>});</p>
+
+<p>//支持传入参数
+//<a href="http://localhost:3000/quote/2">http://localhost:3000/quote/2</a>
+app.get(&lsquo;/quote/:id&rsquo;, function(req, res) {</p>
+
+<pre><code>if(quotes.length &lt;= req.params.id || req.params.id &lt; 0) {
+    res.statusCode = 404;
+    return res.send('Error 404: No quote found');
+}
+
+var q = quotes[req.params.id];
+res.json(q);
+</code></pre>
+
+<p>});</p>
+
+<p>//curl -v -H &ldquo;Accept: application/json&rdquo; -H &ldquo;Content-type: application/json&rdquo; -X<br/>
+//POST -d &lsquo;{&ldquo;author&rdquo;: &ldquo;daryl&rdquo;, &ldquo;text&rdquo;: &ldquo;daryls post&rdquo;}&rsquo; <a href="http://localhost:3000/quote/">http://localhost:3000/quote/</a>
+app.post(&lsquo;/quote&rsquo;, function(req, res) {</p>
+
+<pre><code>if(!req.body.hasOwnProperty('author') || !req.body.hasOwnProperty('text')) {
+    res.statusCode = 400;
+    return res.send('Error 400: Post syntax incorrect.');
+}
+
+var newQuote = {
+    author : req.body.author,
+    text : req.body.text
+}; 
+
+quotes.push(newQuote);
+res.json(true);
+</code></pre>
+
+<p>});</p>
+
+<p>//curl -I -X DELETE <a href="http://localhost:3000/quote/7">http://localhost:3000/quote/7</a>
+app.delete(&lsquo;/quote/:id&rsquo;, function(req, res) {</p>
+
+<pre><code>if(quotes.length &lt;= req.params.id) {
+    res.statusCode = 404;
+    return res.send('Error 404: No quote found');
+}
+
+quotes.splice(req.params.id, 1);
+    res.json(true);
+</code></pre>
+
+<p>});
+```</p>
+
 <h2>参考文献</h2>
 
-<p><a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a><br/>
-这个系列的文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a></p>
+<p>1.<a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a>  系列文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a><br/>
+2.<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">NODE.JS AND EXPRESS &ndash; CREATING A REST API</a></p>
 ]]></content>
   </entry>
   

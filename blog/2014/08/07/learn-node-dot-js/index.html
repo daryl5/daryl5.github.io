@@ -5,11 +5,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>学习Node.js - Daryl's Blog</title>
+	<title>使用Node.js开发RESTful WebService - Daryl's Blog</title>
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="学习Node.js Node.js的Hello World 1
+	<meta name="description" content="使用Node.js开发RESTful WebService Node.js的Hello World 1
 2
 3
 4
@@ -17,7 +17,7 @@
 6
 7
 var http = require(&#39;http&#39;); //当有http请求发送过来时，就会调用此回调函数
-http.createServer(function (req, res) { &hellip;">
+http.createServer( &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -99,7 +99,7 @@ http.createServer(function (req, res) { &hellip;">
 			
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">学习Node.js</h1>
+	<h1 class="title" itemprop="name">使用Node.js开发RESTful WebService</h1>
 	<div class="entry-content" itemprop="articleBody"><!--more-->
 
 
@@ -135,10 +135,194 @@ http.createServer(function (req, res) { &hellip;">
 选择C++和V8而不选择Ruby或其他虚拟机就是出于性能考虑。<br/>
 事实上Node.js是以<code>单进程、单线程</code>模式运行的，事件驱动机制是Node.js通过对内部单线程高效率的维护时间循环队列来实现，没有多线程的资源占用和上下文切换。面对大规模http请求，Node.js凭借事件驱动搞定一切。实验表明Node.js的事件驱动机制和单进程单线程模式导致CPU占用很高。现在已经有一些支持多进程的模块。</p>
 
+<h2>使用Express</h2>
+
+<p><a href="http://expressjs.com/">Express</a>是基于Node.js的web开发框架，它被作为Node.js的一个module导入项目。下面借助Express来实现简单的REST API，这个主题的内容来自<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">这里</a>。什么是<code>REST API</code>？可以看<a href="https://en.wikipedia.org/wiki/Representational_state_transfer#RESTful_web_APIs">维基</a>。简单来说是由GET, PUT, POST和DELETE四种类型的方法组成。<br/>
+<code>1.集成Express到项目</code><br/>
+修改<code>package.json</code>然后使用<code>npm install</code>来集成。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;first-express-app&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;a fine piece of express art&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s2">&quot;express&quot;</span><span class="o">:</span> <span class="s2">&quot;3.x&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上例中会有警告，没有README之类的，添加private为true就没有警告了。<br/>
+<code>2.Express版的Hello World</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span> <span class="c1">//app是Express server的一个实例</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span><span class="s1">&#39;text/plain&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello World from Express&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//使用process.env.PORT就是说如果设置了PORT环境变量那就会用设置的端口，否则就是自己设定的3000</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mi">3000</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server is running...&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后<code>node filename.js</code>并在浏览器访问<code>http://localhost:3000</code>即可。<br/>
+<code>3.添加route实现新的API</code><br/>
+route可以译作路由，就是访问网站时站点名后加的参数等等，用于实现在网站内跳转。在上面的代码中添加代码</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">quotes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'><span class="p">{</span> <span class="nx">author</span> <span class="o">:</span> <span class="s1">&#39;Audrey Hepburn&#39;</span><span class="p">,</span> <span class="nx">text</span> <span class="o">:</span> <span class="s2">&quot;Nothing is impossible, the word itself says &#39;I&#39;m possible&#39;!&quot;</span><span class="p">},</span>
+</span><span class='line'><span class="p">{</span> <span class="nx">author</span> <span class="o">:</span> <span class="s1">&#39;Walt Disney&#39;</span><span class="p">,</span> <span class="nx">text</span> <span class="o">:</span> <span class="s2">&quot;You may not realize it when it happens,  </span>
+</span><span class='line'><span class="s2">            but a kick in the teeth may be the best thing in the world for you&quot;</span><span class="p">},</span>
+</span><span class='line'><span class="p">{</span> <span class="nx">author</span> <span class="o">:</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">,</span> <span class="nx">text</span> <span class="o">:</span> <span class="s2">&quot;Even the greatest was once a beginner. Don&#39;t be afraid to take that first step.&quot;</span><span class="p">},</span>
+</span><span class='line'><span class="p">{</span> <span class="nx">author</span> <span class="o">:</span> <span class="s1">&#39;Neale Donald Walsch&#39;</span><span class="p">,</span> <span class="nx">text</span> <span class="o">:</span> <span class="s2">&quot;You are afraid to die, and you&#39;re afraid to live. What a way to exist.&quot;</span><span class="p">}</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//bodyParser中间件，可以parse请求的body，然后把body传给request的body property</span>
+</span><span class='line'><span class="c1">//用于解析POST请求的内容</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">bodyParser</span><span class="p">());</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">quotes</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/quote/random&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">quotes</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">q</span> <span class="o">=</span> <span class="nx">quotes</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">q</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//支持传入参数</span>
+</span><span class='line'><span class="c1">//http://localhost:3000/quote/2</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/quote/:id&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">quotes</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="o">||</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">=</span> <span class="mi">404</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Error 404: No quote found&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">q</span> <span class="o">=</span> <span class="nx">quotes</span><span class="p">[</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">];</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">q</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//curl -v -H &quot;Accept: application/json&quot; -H &quot;Content-type: application/json&quot; -X  </span>
+</span><span class='line'><span class="c1">//POST -d &#39;{&quot;author&quot;: &quot;daryl&quot;, &quot;text&quot;: &quot;daryls post&quot;}&#39; http://localhost:3000/quote/</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/quote&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;author&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Error 400: Post syntax incorrect.&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">newQuote</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">author</span> <span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">author</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">text</span> <span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">text</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">quotes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newQuote</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//curl -I -X DELETE http://localhost:3000/quote/7</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s1">&#39;/quote/:id&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">quotes</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">=</span> <span class="mi">404</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Error 404: No quote found&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">quotes</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>参考文献</h2>
 
-<p><a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a><br/>
-这个系列的文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a></p>
+<p>1.<a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a>  系列文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a><br/>
+2.<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">NODE.JS AND EXPRESS &ndash; CREATING A REST API</a></p>
 </div>
 </article>
 <!--
