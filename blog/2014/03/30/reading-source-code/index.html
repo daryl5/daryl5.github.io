@@ -9,7 +9,7 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="读开源项目总结 DDHTimerControl是一个倒计时控件，做的很好看。 1.关于loadView和viewDidLoad 这里说的很清楚。 loadView方法的默认实现是这样：先寻找有关可用的nib文件的信息，根据这个信息来加载nib文件，如果没有有关nib文件的信息， &hellip;">
+	<meta name="description" content="读开源项目总结 懒人笔记是一个很适合新手学习的项目，调用了讯飞语音识别库、友盟App统计和微信的分享库。功能很简单，实现的也很干净明晰。 1.隐藏键盘 写新笔记界面有一个UITextField和一个UITextView，为了区分让哪一个resignFirstResponder， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,42 @@
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">读开源项目总结</h1>
 	<div class="entry-content" itemprop="articleBody"><!--more-->
+
+
+<h1><a href="https://github.com/liaojinxing/Voice2Note">懒人笔记</a>是一个很适合新手学习的项目，调用了讯飞语音识别库、友盟App统计和微信的分享库。功能很简单，实现的也很干净明晰。</h1>
+
+<h3>1.隐藏键盘</h3>
+
+<p>写新笔记界面有一个UITextField和一个UITextView，为了区分让哪一个resignFirstResponder，原作者添加了一个BOOL类型的_isEditingTitle，实际上用下面的代码即可保证界面上全部可能用到键盘的控件全部都resign了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">sendAction:</span><span class="k">@selector</span><span class="p">(</span><span class="n">resignFirstResponder</span><span class="p">)</span> <span class="nl">to:</span><span class="nb">nil</span> <span class="nl">from:</span><span class="nb">nil</span> <span class="nl">forEvent:</span><span class="nb">nil</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其原理是<code>响应者链</code>，具体可以看<a href="http://www.cocoanetics.com/2012/09/the-amazing-responder-chain/">The Amazing Responder Chain</a>。</p>
+
+<h3>2.根据cell的文本内容来获取cell的高度</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">heightWithString:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="nf">width:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">attributes</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span> <span class="nl">NSFontAttributeName:</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">boldSystemFontOfSize:</span><span class="mi">17</span><span class="p">]</span> <span class="p">};</span>
+</span><span class='line'>    <span class="n">CGSize</span> <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="nl">boundingRectWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">kMaxTitleHeight</span><span class="p">)</span>
+</span><span class='line'>                        <span class="nl">options:</span><span class="n">NSStringDrawingUsesLineFragmentOrigin</span>
+</span><span class='line'>                        <span class="nl">attributes:</span><span class="n">attributes</span>
+</span><span class='line'>                        <span class="nl">context:</span><span class="nb">nil</span><span class="p">].</span><span class="n">size</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ceilf</span><span class="p">(</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h1><a href="https://github.com/dasdom/DDHTimerControl">DDHTimerControl</a>是一个倒计时控件，做的很好看。</h1>

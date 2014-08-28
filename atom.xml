@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2014-08-08T21:12:43+08:00</updated>
+  <updated>2014-08-28T15:38:35+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -2396,6 +2396,42 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <content type="html"><![CDATA[<!--more-->
 
 
+<h1><a href="https://github.com/liaojinxing/Voice2Note">懒人笔记</a>是一个很适合新手学习的项目，调用了讯飞语音识别库、友盟App统计和微信的分享库。功能很简单，实现的也很干净明晰。</h1>
+
+<h3>1.隐藏键盘</h3>
+
+<p>写新笔记界面有一个UITextField和一个UITextView，为了区分让哪一个resignFirstResponder，原作者添加了一个BOOL类型的_isEditingTitle，实际上用下面的代码即可保证界面上全部可能用到键盘的控件全部都resign了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[[</span><span class="n">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">sendAction:</span><span class="k">@selector</span><span class="p">(</span><span class="n">resignFirstResponder</span><span class="p">)</span> <span class="nl">to:</span><span class="nb">nil</span> <span class="nl">from:</span><span class="nb">nil</span> <span class="nl">forEvent:</span><span class="nb">nil</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其原理是<code>响应者链</code>，具体可以看<a href="http://www.cocoanetics.com/2012/09/the-amazing-responder-chain/">The Amazing Responder Chain</a>。</p>
+
+<h3>2.根据cell的文本内容来获取cell的高度</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">heightWithString:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="nf">width:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">attributes</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span> <span class="nl">NSFontAttributeName:</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">boldSystemFontOfSize:</span><span class="mi">17</span><span class="p">]</span> <span class="p">};</span>
+</span><span class='line'>    <span class="n">CGSize</span> <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="nl">boundingRectWithSize:</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">kMaxTitleHeight</span><span class="p">)</span>
+</span><span class='line'>                        <span class="nl">options:</span><span class="n">NSStringDrawingUsesLineFragmentOrigin</span>
+</span><span class='line'>                        <span class="nl">attributes:</span><span class="n">attributes</span>
+</span><span class='line'>                        <span class="nl">context:</span><span class="nb">nil</span><span class="p">].</span><span class="n">size</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ceilf</span><span class="p">(</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h1><a href="https://github.com/dasdom/DDHTimerControl">DDHTimerControl</a>是一个倒计时控件，做的很好看。</h1>
 
 <h3>1.关于loadView和viewDidLoad</h3>
@@ -2769,6 +2805,45 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
     <id>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng</id>
     <content type="html"><![CDATA[<!--more-->
 
+
+<h3>23.OpenGLES绘制时候实现透明背景</h3>
+
+<p>手写视图设置Alpah为0.5，这是之前的实现方式，缺点是笔迹的颜色会因为这个Alpha值而变淡，很不好看。所以需要一个方法让整个视图除了笔迹的部分，其他部分都透明。
+<a href="http://stackoverflow.com/questions/3193607/is-it-possible-to-make-an-opengl-es-layer-transparent#">Is it possible to make an OpenGL ES layer transparent?</a>实测有效，代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//initialize your CAEAGLLayer, set the opaque property to NO (or FALSE).</span>
+</span><span class='line'><span class="c1">//这个默认是不透明的</span>
+</span><span class='line'><span class="n">eaglLayer</span><span class="p">.</span><span class="n">opaque</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//make sure your drawableProperties uses a color format that supports transparency (kEAGLColorFormatRGBA8 does,</span>
+</span><span class='line'><span class="c1">//but kEAGLColorFormatRGB565 does not).</span>
+</span><span class='line'><span class="c1">//这里就是设置绘制使用的颜色制式，可以看到后者就没有Alpah通道，而我之前使用的就是这个</span>
+</span><span class='line'><span class="n">eaglLayer</span><span class="p">.</span><span class="n">drawableProperties</span> <span class="o">=</span> <span class="err">@</span><span class="p">{</span><span class="nl">kEAGLDrawablePropertyRetainedBacking:</span> <span class="err">@</span><span class="n">YES</span><span class="p">,</span>
+</span><span class='line'><span class="nl">kEAGLDrawablePropertyColorFormat:</span> <span class="n">kEAGLColorFormatRGBA8</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//然后清屏的时候把Alpha设为0来保证全透明</span>
+</span><span class='line'><span class="n">glClearColor</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>关于kEAGLDrawablePropertyRetainedBacking，搞不懂了啊，按理说应该是NO，但是设置为NO绘制的时候之前的笔迹就会一直在闪。<br/>
+看到一个博文说：“在前面设置 drawable 属性时，我们设置 kEAGLDrawablePropertyRetainedBacking 为FALSE，表示不想保持呈现的内容，因此在下一次呈现时，应用程序必须完全重绘一次。将该设置为 TRUE 对性能和资源影像较大，因此只有当renderbuffer需要保持其内容不变时，我们才设置 kEAGLDrawablePropertyRetainedBacking为TRUE。”</p>
+
+<p>有<a href="https://developer.apple.com/library/ios/documentation/iPhone/Reference/EAGLDrawable_Ref/EAGLDrawable/EAGLDrawable.html#//apple_ref/doc/uid/TP40007664-CH3-SW9">官方文档</a>:</p>
+
+<blockquote><p>The key specifying whether the drawable surface retains its contents after displaying them. The value for this key is an NSNumber object containing a BOOL data type. If NO, you may not rely on the contents being the same after the contents are displayed. If YES, then the contents will not change after being displayed. Setting the value to YES is recommended only when you need the content to remain unchanged, as using it can result in both reduced performance and additional memory usage. The default value is NO.</p></blockquote>
 
 <h3>22.设置状态栏颜色</h3>
 
