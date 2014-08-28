@@ -6,6 +6,25 @@ comments: true
 categories: iOS 
 ---
 <!--more-->
+#[懒人笔记](https://github.com/liaojinxing/Voice2Note)是一个很适合新手学习的项目，调用了讯飞语音识别库、友盟App统计和微信的分享库。功能很简单，实现的也很干净明晰。
+###1.隐藏键盘
+写新笔记界面有一个UITextField和一个UITextView，为了区分让哪一个resignFirstResponder，原作者添加了一个BOOL类型的_isEditingTitle，实际上用下面的代码即可保证界面上全部可能用到键盘的控件全部都resign了。  
+```objective-c
+[[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+```
+其原理是`响应者链`，具体可以看[The Amazing Responder Chain](http://www.cocoanetics.com/2012/09/the-amazing-responder-chain/)。
+###2.根据cell的文本内容来获取cell的高度
+```objective-c
++ (CGFloat)heightWithString:(NSString *)string width:(CGFloat)width
+{
+    NSDictionary *attributes = @{ NSFontAttributeName: [UIFont boldSystemFontOfSize:17] };
+    CGSize size = [string boundingRectWithSize:CGSizeMake(width, kMaxTitleHeight)
+                        options:NSStringDrawingUsesLineFragmentOrigin
+                        attributes:attributes
+                        context:nil].size;
+    return ceilf(size.height);
+}
+```
 #[DDHTimerControl](https://github.com/dasdom/DDHTimerControl)是一个倒计时控件，做的很好看。
 ###1.关于loadView和viewDidLoad
 [这里](http://www.dreamingwish.com/frontui/article/default/correct-online-information-error-loadview-viewdidload-viewdidunload.html)说的很清楚。  
@@ -49,6 +68,12 @@ NSLog(@"what does the fox say!?");
 //可以通过respondToSelector来检查，更简单的方法是createAnimal返回instancetype
 [[Animal createAnimal] say];
 ```
+###4.在类扩展里的`实例变量`和`property`
+以往总是会写花括号然后写实例变量，用property一样实现“私有”，其好处有以下：
+
+1. 可以重写getter，实现lazyloading
+2. property对于实例变量可以设定权限
+
 #[Inkpad](https://github.com/sprang/Inkpad)是一个开源的基于OpenGLES的画矢量图的App。
 ###0. 内联函数的使用
 内联函数只是给编译器的提示，最终能不能内联还要看编译器。  

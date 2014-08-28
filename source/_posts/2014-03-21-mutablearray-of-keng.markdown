@@ -6,6 +6,30 @@ comments: true
 categories: iOS 
 ---
 <!--more-->
+###23.OpenGLES绘制时候实现透明背景
+手写视图设置Alpah为0.5，这是之前的实现方式，缺点是笔迹的颜色会因为这个Alpha值而变淡，很不好看。所以需要一个方法让整个视图除了笔迹的部分，其他部分都透明。
+[Is it possible to make an OpenGL ES layer transparent?](http://stackoverflow.com/questions/3193607/is-it-possible-to-make-an-opengl-es-layer-transparent#)实测有效，代码如下：
+```objective-c
+//initialize your CAEAGLLayer, set the opaque property to NO (or FALSE).
+//这个默认是不透明的
+eaglLayer.opaque = NO;
+
+//make sure your drawableProperties uses a color format that supports transparency (kEAGLColorFormatRGBA8 does,
+//but kEAGLColorFormatRGB565 does not).
+//这里就是设置绘制使用的颜色制式，可以看到后者就没有Alpah通道，而我之前使用的就是这个
+eaglLayer.drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: @YES,
+kEAGLDrawablePropertyColorFormat: kEAGLColorFormatRGBA8};
+
+//然后清屏的时候把Alpha设为0来保证全透明
+glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+```
+关于kEAGLDrawablePropertyRetainedBacking，搞不懂了啊，按理说应该是NO，但是设置为NO绘制的时候之前的笔迹就会一直在闪。  
+看到一个博文说：“在前面设置 drawable 属性时，我们设置 kEAGLDrawablePropertyRetainedBacking 为FALSE，表示不想保持呈现的内容，因此在下一次呈现时，应用程序必须完全重绘一次。将该设置为 TRUE 对性能和资源影像较大，因此只有当renderbuffer需要保持其内容不变时，我们才设置 kEAGLDrawablePropertyRetainedBacking为TRUE。”
+
+有[官方文档](https://developer.apple.com/library/ios/documentation/iPhone/Reference/EAGLDrawable_Ref/EAGLDrawable/EAGLDrawable.html#//apple_ref/doc/uid/TP40007664-CH3-SW9):
+
+> The key specifying whether the drawable surface retains its contents after displaying them. The value for this key is an NSNumber object containing a BOOL data type. If NO, you may not rely on the contents being the same after the contents are displayed. If YES, then the contents will not change after being displayed. Setting the value to YES is recommended only when you need the content to remain unchanged, as using it can result in both reduced performance and additional memory usage. The default value is NO.
+
 ###22.设置状态栏颜色
 很常见的问题但是网上的答案都忽略了一点：`View controller-based status bar appearance的type一定要是Boolean`，一般代码方式修改plist文件，这里会是String，那么状态栏颜色不会改变。  
 具体设置方式如下：  

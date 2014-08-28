@@ -132,7 +132,7 @@ b.总结
 a.OC是`动态类型`的，对象的类型并不是在编译时候进行绑定的，而是在运行时进行查找。
 ##**4: Protocols and Categories**
 ###Item 23: 通过委托和数据源协议进行对象间通信
-a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词：
+a.有一句话没太懂，这个单词居然查不出来，完了看看Item6，里面有这个单词(尼玛，就是自动设置空的意思，对应weak)：
 > A delegate property will always be defined using either the weak attribute to benefit from `autonilling` or unsafe_unretained if autonilling is not required.  
 
 b.在interface中声明遵守协议的话，别的类会知道这一行为，一般把“遵守协议”放在类扩展部分，虽然没太多影响。要知道一个对象是否遵守某个协议可以这样：`[self conformsToProtocol:@protocol(DRDHandWritingProtocol)]`  
