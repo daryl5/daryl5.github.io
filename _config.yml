@@ -63,7 +63,7 @@ titlecase: true       # Converts page and post titles to titlecase
 # ----------------------- #
 
 # Github repositories
-github_user: daryl5
+#github_user: daryl5
 #github_repo_count: 1
 #github_show_profile_link: true
 #github_skip_forks: true
