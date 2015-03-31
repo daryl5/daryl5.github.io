@@ -6,4 +6,4 @@ comments: true
 categories: Life
 ---
 <!--more-->
-我爱你，王小妞。
+我爱你，王小妞!
