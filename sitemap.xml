@@ -2,84 +2,96 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://daryl5.github.io/blog/1989/08/13/i-love-grace/</loc>
-        <lastmod>2014-04-03T09:18:18+08:00</lastmod>
+        <lastmod>2015-03-31T22:57:31+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/03/21/mutablearray-of-keng/</loc>
-        <lastmod>2014-08-28T15:34:42+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://daryl5.github.io/blog/2014/03/26/ce-shi-%5B%3F%5D-xia/</loc>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://daryl5.github.io/blog/2014/03/30/reading-inkpad-source-code/</loc>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/03/30/reading-source-code/</loc>
-        <lastmod>2014-08-10T11:27:25+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/04/01/how-to-use-uidocument/</loc>
-        <lastmod>2014-04-25T22:38:55+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/04/02/use-alfred-with-octopress/</loc>
-        <lastmod>2014-04-28T21:12:19+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/04/07/reading-effective-objective-c-2-dot-0/</loc>
-        <lastmod>2014-07-29T11:11:08+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c/</loc>
-        <lastmod>2014-04-25T19:43:41+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/
         </loc>
-        <lastmod>2014-05-28T10:12:02+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x/
         </loc>
-        <lastmod>2014-07-25T20:43:46+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://daryl5.github.io/blog/2014/06/06/swift-language-highlights-an-objc-develpers-perspective/
         </loc>
-        <lastmod>2014-06-06T15:33:57+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell/</loc>
-        <lastmod>2014-07-10T14:32:06+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/07/10/gfdi-weibo-operation/</loc>
-        <lastmod>2014-07-10T14:47:18+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://daryl5.github.io/blog/2014/07/10/words-to-myself/</loc>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js/</loc>
-        <lastmod>2014-08-08T20:06:18+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/2015/07/10/words-to-myself/</loc>
-        <lastmod>2014-10-15T10:00:22+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/about/</loc>
-        <lastmod>2014-04-09T21:13:51+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/archives/</loc>
-        <lastmod>2014-10-15T10:00:22+08:00</lastmod>
+        <lastmod>2015-03-31T22:57:31+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/blog/categories/</loc>
-        <lastmod>2014-04-03T13:11:43+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/</loc>
-        <lastmod>2014-10-15T10:00:22+08:00</lastmod>
+        <lastmod>2015-03-31T22:57:31+08:00</lastmod>
     </url>
     <url>
         <loc>http://daryl5.github.io/robots.txt</loc>
-        <lastmod>2014-03-26T16:28:56+08:00</lastmod>
+        <lastmod>2015-03-31T22:39:24+08:00</lastmod>
     </url>
 </urlset>
