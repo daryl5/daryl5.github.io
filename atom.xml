@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-03-31T23:07:07+08:00</updated>
+  <updated>2015-03-31T23:19:42+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -3093,21 +3093,6 @@ NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithDat
 <h3>5. 子类不能重写touchesBegan但要在其发生同时完成处理</h3>
 
 <p><code>FingerTackerView</code>重写<code>touchesBegan</code>等等方法，然后在其内部进行一些操作后调用<code>[self methodForSubclassOverwritten]</code>，这个方法可以置空。<code>HandWritingView</code>，<code>GestureEditorView</code>等继承自<code>FingerTrackerView</code>的类里重写<code>[self methodForSubclassOverwritten]</code>，这样就能在采集点的同时，对点的处理根据当前选择功能（即所处的视图）来由对应的子类来处理。子类不会出现<code>touchesBegan</code>等，但是可以通过重写方法来实现手势运动时处理。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[测试一下]]></title>
-    <link href="http://daryl5.github.io/blog/2014/03/26/ce-shi-%5B%3F%5D-xia/"/>
-    <updated>2014-03-26T20:22:07+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/03/26/ce-shi-[?]-xia</id>
-    <content type="html"><![CDATA[<h1>标题一</h1>
-
-<h2>标题二</h2>
-
-<h3>标题三</h3>
-
-<p><strong>粗体</strong></p>
 ]]></content>
   </entry>
   
