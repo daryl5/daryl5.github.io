@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-03-31T23:19:42+08:00</updated>
+  <updated>2015-04-13T11:17:31+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,15 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[WORDS-TO-MYSELF]]></title>
-    <link href="http://daryl5.github.io/blog/2015/07/10/words-to-myself/"/>
-    <updated>2015-07-10T22:42:24+08:00</updated>
-    <id>http://daryl5.github.io/blog/2015/07/10/words-to-myself</id>
-    <content type="html"><![CDATA[<h4>1. 不想干正经事儿、浮躁的时候，就休息一下然后尝试去工作二十分钟，就一定会进入状态的。</h4>
-
-<h4>2. 学到知识的感觉最能让人踏实，现在水没关系，在进步就好。</h4>
-
-<h4>3. 明确当下该干什么，只埋头苦干而不想想其实挺2的。</h4>
+    <title type="html"><![CDATA[『Software Architecture Patterns』笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2015/04/08/reading-software-architecture-patterns/"/>
+    <updated>2015-04-08T20:29:54+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/04/08/reading-software-architecture-patterns</id>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
@@ -3614,18 +3610,6 @@ NSUserDefaults只支持NSString、NSNumber、NSDate、NSArray、NSDictionary，�
 <blockquote><p>Implicit conversion from enumeration type &lsquo;enum CGImageAlphaInfo&rsquo; to different enumeration type &lsquo;CGBitmapInfo&rsquo; (aka &lsquo;enum CGBitmapInfo&rsquo;)</p></blockquote>
 
 <p>解决办法是改为<code>kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst</code>。这是因为iOS7中最后一个属性有变化，由<code>CGImageAlphaInfo</code>变为<code>CGBitmapInfo</code>。<a href="http://www.cnblogs.com/wuxiufang/p/3397070.html">这里</a>说的很详细。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[不要戳进来]]></title>
-    <link href="http://daryl5.github.io/blog/1989/08/13/i-love-grace/"/>
-    <updated>1989-08-13T17:23:25+09:00</updated>
-    <id>http://daryl5.github.io/blog/1989/08/13/i-love-grace</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<p>我爱你，王小妞!</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-03-31T23:19:42+08:00</updated>
+  <updated>2015-04-13T11:17:31+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[『Software Architecture Patterns』笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2015/04/08/reading-software-architecture-patterns/"/>
+    <updated>2015-04-08T20:29:54+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/04/08/reading-software-architecture-patterns</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Node.js开发RESTful WebService]]></title>
@@ -451,125 +460,6 @@ Apple用runtime统一存储所有对象的引用计数，用的是哈希表，�
 <code>__weak</code><br/>
 也称智能指针，因为当对象被release时候指针会被置nil。<br/>
 实现原理是：本质也是<code>哈希表</code>，把对象地址作为key，然后把指向对象的指针的地址（可能有多个指针都指着）作为value。这样当release对象的时候就在weak表中找到所有指向该对象的指针的地址，进而将所有指针都设置为nil。然后还会在weak表中删除该键值对。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Best Practices & Tips]]></title>
-    <link href="http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c/"/>
-    <updated>2014-04-23T19:19:22+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/04/23/best-practices-for-objective-c</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<h3>4.用block实现代理</h3>
-
-<p>关于block的大致介绍，<a href="http://onevcat.com/2011/11/objective-c%E4%B8%AD%E7%9A%84block/">Objective-C中的Block</a>这篇博文写的挺好。其中提到的一点需要注意，如下：
-```objective-c
-int price = 1.99;</p>
-
-<p>float (^finalPrice)(int) = ^(int quantity) {</p>
-
-<pre><code>//Price is accessible here
-return quantiy * price;
-</code></pre>
-
-<p>}</p>
-
-<p>int orderQuantity = 10;
-//Ordering 10 units, final price is: $19.90
-NSLog(@&ldquo;Ordering %d units, final price is: $%2.2f&rdquo;, orderQuantity, finalPrice(orderQuantity));</p>
-
-<p>price = .99;
-//Ordering 10 units, final price is: $19.90
-NSLog(@&ldquo;Ordering %d units, final price is: $%2.2f&rdquo;, orderQuantity, finalPrice(orderQuantity));
-```</p>
-
-<blockquote><p>可以理解为在block内的price是readonly的，只在定义block时能够被赋值（补充说明，实际上是因为price是value type，block内的price是在申明block时复制了一份到block内，block外面的price无论怎么变化都和block内的price无关了。如果是reference type的话，外部的变化实际上是会影响block内的）。</p></blockquote>
-
-<p>解决办法有两种：<br/>
-1.将局部变量声明为__block，表示外部变化将会在block内进行同样操作;<br/>
-2.使用实例变量。关于这点有引文：</p>
-
-<blockquote><p>这个比较没什么好说的，实例内的变量横行于整个实例内..可谓霸道无敌…=_=
-block外的对象和基本数据一样，也可以作为block的参数。而让人开心的是，block将自动retain传递进来的参数，而不需担心在block执行之前局部对象变量已经被释放的问题。这里就不深究这个问题了，只要严格遵循Apple的thread safe来写，block的内存管理并不存在问题。（更新，ARC的引入再次简化了这个问题，完全不用担心内存管理的问题了）</p></blockquote>
-
-<p>这里有个问题就是：因为block会自动retain传进来的参数，所以会出现<a href="http://stackoverflow.com/questions/14556605/capturing-self-strongly-in-this-block-is-likely-to-lead-to-a-retain-cycle">capturing self strongly in this block is likely to lead to a retain cycle</a>的问题，即就是传进去<code>self.xxx</code>之后，会retain self，即构成了循环引用。解决办法是定义一个<code>__weak</code>的self然后在block中使用。</p>
-
-<p><strong>回到正题，block代替protocol</strong>
-```objective-c
-//In DRDHandWriting.h
-typedef void(^didFinishWriting)(NSMutableArray *);
-@property (copy, nonatomic) didFinishWriting didFinishWritingBlock;//注意这里是copy</p>
-
-<p>//In DRDHandWriting.m
-//Submit charUnitArray to Document
-self.didFinishWritingBlock(segmentedCharUnitArray);</p>
-
-<p>//In DRDManuscriptController::loadHandWritingView
-handWritingView = [[DRDHandWriting alloc] initWithFrame:handWritingRect];
-__weak DRDManuscriptController <em>weakSelf = self;
-//这里的参数只是被代理对象需要返回给代理的数据，具体就是手写视图需要返回切分好的字符给controller
-//另一种情形就是多个AlertView的代理，这里就可以传回当前alertView
-[handWritingView setDidFinishWritingBlock:^(NSMutableArray </em>segmentedArray) {</p>
-
-<pre><code>[weakSelf.document addOrInsertCharUnitArray:segmentedArray];
-</code></pre>
-
-<p>}];
-```
-关于上例中block的copy，有<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html">官方文档</a>：</p>
-
-<blockquote><p>Note: You should specify copy as the property attribute, because a block needs to be copied to keep track of its captured state outside of the original scope. This isn’t something you need to worry about when using Automatic Reference Counting, as it will happen automatically, but it’s best practice for the property attribute to show the resultant behavior. For more information, see Blocks Programming Topics.</p></blockquote>
-
-<p>block在创建的时候是分配在栈上的，如果<code>retain</code>（栈上的东西不能retain），在调用block的时候程序就会崩溃，实际上ARC下测试了一下retain，只是代码编辑阶段即给出警告<code>Retain'ed block property does not copy the block - use copy attribute instead</code>并且程序正常运行。而如果是<code>copy</code>，将会把这个block拷贝到堆里，同时retain这个block所引用的所有东西。block在堆上的时候进行copy就没事，不会再拷贝一遍，只是相当于retain。这段摘自<a href="http://blog.refractalize.org/post/10476042560/copy-vs-retain-for-objective-c-blocks">Copy vs retain for Objective-C blocks</a>。</p>
-
-<p><strong>结论：</strong><br/>
-自己实验了一下上面那个改变price输出总价不变的例子，block在创建的时候是分配在栈上的。<br/>
-1.如果block里用到了局部变量，那么就会拷贝一份：比如<code>int a = 5</code>就会拷贝一个int变量其值为5；如果是<code>int *ptr = 5</code>就会拷贝ptr这个指针，这样改变*ptr的值，block里也会跟着变。<br/>
-2.如果用到了实例变量，那么不管是value type还是指针型的，都不会出现外部更新而block内部没跟着变的情况，猜想是因为block引用实例变量其实就是对self指针的弱引用，用到实例变量时候用指针去读的。<br/>
-3.上面<code>capturing self strongly in this block is likely to lead to a retain cycle</code>这一问题，是因为用到了实例变量。两种情况：如果是property那么隐含<code>self.propertyXXX</code>；如果是非property的实例变量，隐含<code>self-&gt;iVar</code>，都有self。因为是用block实现代理，那么需要传block给被代理对象，被代理对象copy block，同时运行时会copy block到堆上并retain block里所有的东西，这就相当于被代理对象里声明了一个<code>@property (strong, nonatomic) id&lt;XXXProtocol&gt; delegate</code>，所以就造成了循环引用。上面那个SO的链接讲得很清楚。<br/>
-4.最后，什么时候用block什么时候用delegation，<a href="http://stablekernel.com/blog/blocks-or-delegation/">Blocks or Delegation</a>讲了，实在不想看了，先马克- -！</p>
-
-<h3>3.Category也能Conform to a protocol</h3>
-
-<h3>2.对集合中每个对象发送消息</h3>
-
-<p><code>objective-c
-// remove all subviews
-[[self.scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-</code></p>
-
-<h3>1.<a href="http://ironwolf.dangerousgames.com/blog/archives/913">The Code Commandments: Best Practices for Objective-C Coding </a></h3>
-
-<p><strong>a.在实例变量前加<code>@private</code></strong>[放在类扩展就好]</p>
-
-<ul>
-<li>表明该变量与API无关</li>
-<li>默认是<code>@protected</code>即就是子类可以访问，如果子类不需要那就不要暴露，面向对象的<code>信息隐藏</code>，（其实最好的应该是子类和其他类用到的在.h，私有变量和方法在类扩展）</li>
-</ul>
-
-
-<p><strong>b.为每一个<code>data member</code>创建<code>@property</code>，在.m中都用<code>self.name</code>来访问</strong>[这个有问题]</p>
-
-<ul>
-<li>property会把访问权限加入，如readonly</li>
-<li>property会把内存管理加入，strong&amp;weak</li>
-</ul>
-
-
-<p><strong>c.<code>实例变量</code>就是只给当前类及其子类使用，<code>@property</code>就是外部类也能用</strong><br/>
-之前看到在头文件里interface部分定义实例变量，同时又用@property重新写一遍。对于想要公开给这个类及其子类以外的类的实例变量，那么就为其写一个对应的property。<br/>
-<strong>d.关于<code>readonly</code></strong>
-就是说这个property在外界不能修改，如<code>self.document.displayHeight</code>会产生<code>assign to readonly property</code>。在类的实现文件里可以通过实例变量来修改，如<code>_displayHeight = 600</code>，此外，在实现文件还可以通过<code>self-&gt;_displayHeight = 600</code>来修改，这里之所以用->大概是因为类本身拥有这个实例变量就意味着类的实例有一个指向这个实例变量的指针，而property只是用于公开给外部，在这里没property什么事。
-另外还可以在类扩展里告诉编译器我还需要一个setter，但只是在实现文件里：
-<code>objective-c
-//公有可读，私有可写
-@interface YourClass ()
-@property (nonatomic, copy) NSString* eventDomain;
-@end
-</code>
-这个问题在<a href="http://stackoverflow.com/questions/4586516/readonly-properties-in-objective-c">Readonly Properties in Objective-C?</a></p>
 ]]></content>
   </entry>
   
