@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-04-13T11:24:41+08:00</updated>
+  <updated>2015-05-22T17:29:27+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[《iOS设计模式解析》笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2015/05/21/ios-design-pattern/"/>
+    <updated>2015-05-21T14:14:16+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/05/21/ios-design-pattern</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>[TOC]</p>
+
+<h2>第一章 你好，设计模式</h2>
+
+<h4>1.5.4 作为复合设计模式的MVC</h4>
+
+<p>MVC本身并不是最基本的设计模式，它包含了很多更加基本的设计模式，在MVC中，基本设计模式相互配合。<br/>
+Cocoa及Cocoa Touch的MVC中包含的基本模式有：Composite、Command、Mediator、Strategy、Observer。</p>
+
+<ul>
+<li>Composite：视图间的相互组合</li>
+<li>Command：Target-Action模式，action代码的执行被延迟到特定事件发生</li>
+<li>Mediator：Controller在Model和View中起的作用</li>
+<li>Strategy：原话是“控制器可以是视图对象的一个策略”，我理解类似代理吧</li>
+<li>Observer：模型对象向它所关注的控制器等对象发出内部状态变化的通知，KVO嘛，应该是模型对象向关注它的控制器等对象发出通知</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[『Software Architecture Patterns』笔记]]></title>

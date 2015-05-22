@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-04-13T11:24:41+08:00</updated>
+  <updated>2015-05-22T17:29:27+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[《iOS设计模式解析》笔记]]></title>
+    <link href="http://daryl5.github.io/blog/2015/05/21/ios-design-pattern/"/>
+    <updated>2015-05-21T14:14:16+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/05/21/ios-design-pattern</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>[TOC]</p>
+
+<h2>第一章 你好，设计模式</h2>
+
+<h4>1.5.4 作为复合设计模式的MVC</h4>
+
+<p>MVC本身并不是最基本的设计模式，它包含了很多更加基本的设计模式，在MVC中，基本设计模式相互配合。<br/>
+Cocoa及Cocoa Touch的MVC中包含的基本模式有：Composite、Command、Mediator、Strategy、Observer。</p>
+
+<ul>
+<li>Composite：视图间的相互组合</li>
+<li>Command：Target-Action模式，action代码的执行被延迟到特定事件发生</li>
+<li>Mediator：Controller在Model和View中起的作用</li>
+<li>Strategy：原话是“控制器可以是视图对象的一个策略”，我理解类似代理吧</li>
+<li>Observer：模型对象向它所关注的控制器等对象发出内部状态变化的通知，KVO嘛，应该是模型对象向关注它的控制器等对象发出通知</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[『Software Architecture Patterns』笔记]]></title>
@@ -378,88 +406,6 @@ floatPair.equal() // false
 ```</p>
 
 <h4>3.Containers</h4>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[『Objective-C高级编程』笔记]]></title>
-    <link href="http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x/"/>
-    <updated>2014-05-10T19:20:32+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/05/10/pro-multithreading-and-memory-management-for-ios-and-os-x</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<h1>第一章 ARC</h1>
-
-<h2>1.2 内存管理</h2>
-
-<h4>1.2.2 ARC进行内存管理的思考方式</h4>
-
-<ul>
-<li>自己生成的对象，自己持有（alloc/new/copy/mutableCopy了就也retain了）</li>
-<li>非自己生成的对象，自己也能持有（retain）</li>
-<li>自己不再需要持有的对象时释放（release）</li>
-<li>非自己持有的对象无法释放（没retain/alloc/new/copy/mutableCopy就不能release）</li>
-</ul>
-
-
-<p>1.OC的内存管理方法实际上不在OC语言里，而是包含在Cocoa框架中的。（OC是C的超集，Cocoa是对OC加了内存管理、多媒体、网络通讯等等的类库形成的用来给OS X开发应用的框架，Cocoa Touch是对Cocoa进行移动适配形成的另一套OC的类库）<br/>
-2.Cocoa框架中Foundation框架类库中的NSObject类担负内存管理的职责，内存管理调用的alloc、retain等方法指代的就是NSObject类中的alloc类方法、retain实例方法等。（所有对象继承自NSObject，alloc、retain等内存管理方法在NSObject中实现，这也就是为什么初始化对象时候要先[super init]以及dealloc最末要[super dealloc]）<br/>
-3.<code>[NSObject new</code>和<code>[[NSObject alloc] init]</code>是完全等价的。<br/>
-4.类似<code>id obj = [NSMutableArray array]</code>这样的生成的类对象并不会被obj所持有，也就是说这行代码里不包含<code>[obj retain]</code>(有<code>[obj autorelease]</code>)，总是这么写不过都是在ARC下，没意识到这个问题。如果是手动管理，加retain就好。</p>
-
-<h4>1.2.3 alloc/retain/release/dealloc实现</h4>
-
-<p>1.NSZone是为了防止内存碎片化而引入的结构。如果分配几块内存依次是小大小大小大，这样释放所有的“小”之后就形成了碎片，所以要有一大一小两种<code>区域</code>，小的去小的大的去大的。<br/>
-<strong>现在的运行时的内存管理已经很高效，使用NSZone反而可能会降低效率或使源代码复杂，所以运行时都会忽略NSZone</strong>。<br/>
-2.GNUstep是Cocoa框架的互换框架，两者实现不一定相同不过行为是一样的，这一节主要通过读GNUstep中<code>NSObject.m</code>中alloc、retain等方法的源代码来深入了解内存管理。<br/>
-3.GNUstep使用<code>内存块头部管理引用计数</code>，苹果使用<code>引用计数表</code>管理引用计数。</p>
-
-<h4>1.2.5 autorelease</h4>
-
-<p>1.和C语言的<code>局部变量(Automatic Variable)</code>类似，如在函数内定义的int，除了函数就废掉了。autorelease的作用范围是NSAutoreleasePool，在<code>[pool drain]</code>时每个调用过autorelease的对象都会调用release。
-2.只要不drain pool，生成的对象就不会被释放，内存就越来越少，所以在for循环里如果有很多autorelease对象那就定义一个NSAutoreleasePool来降低内存峰值。
-3.Cocoa框架也有很多类方法会返回autorelease的对象。如<code>[NSMutableArray arrayWithCapacity:1]</code>等效于<code>[[[NSMutableArray alloc] initWithCapacity:1] autorelease]</code>。</p>
-
-<h3>1.2.6 autorelease的实现</h3>
-
-<p>1.本质就是<code>调用NSAutoreleasePool的addObject方法</code>。<br/>
-2.NSAutoreleasePool的管理应该用的是栈，一个pool是就是栈中的一个项目。</p>
-
-<h2>1.3 ARC规则</h2>
-
-<h4>1.3.3 所有权修饰符</h4>
-
-<p>1.ARC有效时，一共有4种修饰符：</p>
-
-<ol type="a">
-<li>__strong</li>
-<li>__weak</li>
-<li>__unsafe__unretained</li>
-<li>__autoreleasing</li>
-</ol>
-
-
-<p>2.所有id和对象都必须加上所有权修饰符，默认是<em>_strong，也就是说:
-<code>objective-c
-//这两个等效
-id obj = [[NSObject alloc] init];
-id __strong obj = [[NSObject alloc] init];
-</code>
-3.所谓强/弱引用实际就是<code>指针对一块内存（或者说一个对象）的引用</code>。<br/>
-强引用就是，别人可以release，但是运行时不能销毁这个对象，因为我还强引用着呢。其实就是给retainCounter加了1，所以对象不会被销毁，除非自己再去调用release。<br/>
-弱引用就是我在用但是我没给引用计数加1，别人release了我也就用不了了。<br/>
-4.简单总结<br/>
-<code>ARC实现方式</code><br/>
-GNUstep中每个对象头部都存储着自身的引用计数；<br/>
-Apple用runtime统一存储所有对象的引用计数，用的是哈希表，以对象地址作为key，引用计数值和真正的内存地址作为值。有一个好处，即使因为故障导致对象所在内存被破坏，但只要引用计数表还在，就能确认内存块位置（这里真的没太懂，可以参考下面__weak的部分，存储指针的地址）。<br/>
-<code>__autoreleasing</code><br/>
-用该关键词修饰的变量会被注册到autoreleasepool；<br/>
-当方法名不是alloc/new/copy/mutablecopy时候，如果要返回object，这个object会被注册到autoreleasepool；<br/>
-访问_</em>weak修饰的变量时，该变量会被注册到autoreleasepool，以确保不会因为原有对象被释放而非法访问，因为只要pool还在，该对象都是有效的。<br/>
-<code>__weak</code><br/>
-也称智能指针，因为当对象被release时候指针会被置nil。<br/>
-实现原理是：本质也是<code>哈希表</code>，把对象地址作为key，然后把指向对象的指针的地址（可能有多个指针都指着）作为value。这样当release对象的时候就在weak表中找到所有指向该对象的指针的地址，进而将所有指针都设置为nil。然后还会在weak表中删除该键值对。</p>
 ]]></content>
   </entry>
   
