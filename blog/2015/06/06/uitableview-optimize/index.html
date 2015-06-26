@@ -5,11 +5,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Categories - Daryl's Blog</title>
+	<title>UITableView优化方法 - Daryl's Blog</title>
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content=" iOS [13] Mac [1] C/C++ [1] Life [1] ">
+	<meta name="description" content="UITableView优化方法 先看一下UITableView的官方文档，看看有没有什么以前不知道的细节。 NSIndexPath
+官方文档里： The NSIndexPath class represents the path to a specific node in a tree of &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@
 
 	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://daryl5.github.io/blog/categories/">
+	<link rel="canonical" href="http://daryl5.github.io/blog/2015/06/06/uitableview-optimize/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -88,27 +89,55 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="page">
-    
-    <h1 class="title">Categories</h1>
-    
-    <div class="entry-content"><ul>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">UITableView优化方法</h1>
+	<div class="entry-content" itemprop="articleBody"><!--more-->
 
-    <li><a href="/blog/categories/ios/">iOS</a> [13]</li>
 
-    <li><a href="/blog/categories/mac/">Mac</a> [1]</li>
+<p>先看一下UITableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/">官方文档</a>，看看有没有什么以前不知道的细节。</p>
 
-    <li><a href="/blog/categories/c/c++/">C/C++</a> [1]</li>
+<ul>
+<li>NSIndexPath
+官方文档里：
 
-    <li><a href="/blog/categories/life/">Life</a> [1]</li>
-
+<blockquote><p>The NSIndexPath class represents the path to a specific node in a tree of nested array collections. This path is known as an index path.</p></blockquote></li>
 </ul>
 
+
+<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如下图，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？<br/>
+<img src="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif" alt="" /></p>
+
+<p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
+
+<p>国外搜一搜 问问师兄们
+用layer
+runloop
+<a href="http://www.atatech.org/articles/27707">http://www.atatech.org/articles/27707</a> 圆角优化</p>
+
+<p>注意iOS8中字体变大变小</p>
+
+<p>iOS 7 Programming Pushing the limits</p>
+
+<p>hack weixin
+25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
+
+<p>像素对齐
+ata 蚂蚁搜索一下</p>
 </div>
 </article>
 <!--
 
--->
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
 </div>
 			</div>
 			<footer id="footer" class="inner">Copyright &copy; 2015

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-05-22T17:29:27+08:00</updated>
+  <updated>2015-06-26T18:02:50+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,6 +14,46 @@
 
   
   <entry>
+    <title type="html"><![CDATA[UITableView优化方法]]></title>
+    <link href="http://daryl5.github.io/blog/2015/06/06/uitableview-optimize/"/>
+    <updated>2015-06-06T14:21:29+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/06/06/uitableview-optimize</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>先看一下UITableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/">官方文档</a>，看看有没有什么以前不知道的细节。</p>
+
+<ul>
+<li>NSIndexPath
+官方文档里：
+
+<blockquote><p>The NSIndexPath class represents the path to a specific node in a tree of nested array collections. This path is known as an index path.</p></blockquote></li>
+</ul>
+
+
+<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如下图，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？<br/>
+<img src="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif" alt="" /></p>
+
+<p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
+
+<p>国外搜一搜 问问师兄们
+用layer
+runloop
+<a href="http://www.atatech.org/articles/27707">http://www.atatech.org/articles/27707</a> 圆角优化</p>
+
+<p>注意iOS8中字体变大变小</p>
+
+<p>iOS 7 Programming Pushing the limits</p>
+
+<p>hack weixin
+25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
+
+<p>像素对齐
+ata 蚂蚁搜索一下</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[《iOS设计模式解析》笔记]]></title>
     <link href="http://daryl5.github.io/blog/2015/05/21/ios-design-pattern/"/>
     <updated>2015-05-21T14:14:16+08:00</updated>
@@ -21,9 +61,7 @@
     <content type="html"><![CDATA[<!--more-->
 
 
-<p>[TOC]</p>
-
-<h2>第一章 你好，设计模式</h2>
+<h2>第1章 你好，设计模式</h2>
 
 <h4>1.5.4 作为复合设计模式的MVC</h4>
 
@@ -38,6 +76,49 @@ Cocoa及Cocoa Touch的MVC中包含的基本模式有：Composite、Command、Med
 <li>Observer：模型对象向它所关注的控制器等对象发出内部状态变化的通知，KVO嘛，应该是模型对象向关注它的控制器等对象发出通知</li>
 </ul>
 
+
+<h4>1.6 影响设计的几个问题</h4>
+
+<p>说了GoF提的<code>针对接口编程，而不是针对实现编程</code>以及<code>优先使用对象组合而不是类继承</code>。</p>
+
+<h2>第2章 案例分析：设计一个应用程序</h2>
+
+<p>这一章打眼一看就感觉很亲切，因为我做过一个类似的应用。等我读了一小半后甚至发现跟我做的东西几乎一样，思考过程也很类似，不过我的功能更多点。</p>
+
+<h4>设计过程中3个重要的里程碑</h4>
+
+<ul>
+<li>想法的概念化<br/>
+我要做一个手写记事本，大概有abcd功能。头脑风暴，罗列需求，明确需求，细化需求。</li>
+<li>界面外观设计<br/>
+文件展示用collectionView，点击一个就进入编辑界面，这个界面可以切换工具实现写字、绘画、手势编辑功能，要做一个有时差效果的工具栏能四处拖拽，工具栏上还要有redo、undo按钮，设置要做在右上角popover，帮助要用webview呈现用markdown来导出html页。</li>
+<li>架构设计<br/>
+主要的功能有写字、绘画、手势编辑，那么可以做一个FingerTracker的父类，做三个子View，Model层用point类和inkPoint类，存储用UIDocument。</li>
+</ul>
+
+
+<h4>2.3.1 视图管理</h4>
+
+<p>为了避免Canvas、Palette、Thumbnail这3个viewController间的耦合引入了CoordinatingController，然后用requestViewChangeByObject:(UIBarButtonItem)来处理视图切换。<br/>
+想起以前的项目里类似的东西:
+```objective-c
+//TBCityNavigatorRegister
+[TBNavigator registerClass:@&ldquo;TBCityHomeController&rdquo; withPath:TBCityURLHome];</p>
+
+<p>//TBNavigator
+BOOL TBOpenURLFromSourceAndParams(NSString<em> urlPath, id source, NSDictionary</em> params);
+BOOL TBOpenURLFromTarget(NSString* urlPath, id target);</p>
+
+<p>//UIViewController实现UIViewControllerTBNavigator协议来接参数完成初始化
+//为什么要接URL我也不知道
+&ndash; (id)initWithNavigatorURL:(NSURL<em>)URL query:(NSDictionary</em>)query;
+```
+当然这里为了从外部打开，url处理成了scheme形式，如果没有这个需求可以直接是类名。对于解耦还是有好处的。</p>
+
+<h4>2.3.2 如何表现涂鸦</h4>
+
+<p>我的app里model有<code>Point</code>和<code>InkPoint</code>，前者有x、y坐标，后者继承自前者，多一个<code>strokeWidth</code>属性用来实现数字墨水效果，多一个<code>isEnd</code>记录是否是笔划终结点；然后有一个<code>CharUnit</code>代表字符，里面存字符单元的宽、高，一个数组存所有的inkPoint，一个数组存pointsNumPerStroke；然后<code>Document</code>对象有一个NSMutableArray记录所有的charUnit、imageUnit等等，绘制的时候判断当前对象类型来绘制，总的说就是<code>访问者模式</code>。<br/>
+这里引入<code>Vertex</code>存储location，用来记录一个笔划上的一个点，然后<code>Dot</code>继承自Vertext，多一个color和size，记录单独的点，然后一个<code>Stroke</code>实现addMark、count、lastChild等方法，有一个<code>Mark Protocol</code>，声明了addMark、removeMark、childAtIndex、<code>drawWithContext</code>等方法。<strong>Mark协议存在的意义</strong>就在于，Vertex、Dot、Stroke都实现了自己的drawWithContext等方法后，就可以统一的对待所有对象。Vertext就是addLineToPoint到自己的location，Dot就是以自己的frameSize等画出自身就一个点，Stroke就是<code>对所有id&lt;Mark Protocol&gt; child执行drawWithContext然后执行strokePath</code>。这里就是所谓的<code>组合模式</code>。</p>
 ]]></content>
   </entry>
   
@@ -306,106 +387,6 @@ Button
 
 
 <p>未完待续&hellip;</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift Language Highlights: An Objective-C Developer’s Perspective]]></title>
-    <link href="http://daryl5.github.io/blog/2014/06/06/swift-language-highlights-an-objc-develpers-perspective/"/>
-    <updated>2014-06-06T13:57:06+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/06/06/swift-language-highlights-an-objc-develpers-perspective</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<p><a href="http://www.raywenderlich.com/73997/swift-language-highlights">原文</a>是RW Tutorials里Matt Galloway写的，跟之前自己写的<a href="http://daryl5.github.io/blog/2014/04/24/introduction-to-cplusplus-for-ios-developers/">Introduction to C++ for iOS Developers</a>类似，这篇文章是站在Objc开发者的角度来看Swift。这种通过比较两种语言的特性来学习的方法，我认为是最好的。</p>
-
-<h4>1.Types</h4>
-
-<p>a.Swift引入了<a href="http://en.wikipedia.org/wiki/Type_inference">Type Inference</a>，开发者不需要显式指定变量类型，<code>编译器</code>会根据变量被赋的值来推断变量的类型，如下例。
-<code>objective-c
-// automatically inferred
-var name1 = "Matt"
-// explicit typing (optional in this case)
-var name2:String = "Matt"
-</code>
-Swift还引入了<a href="http://en.wikipedia.org/wiki/Type_safety">Type Safety</a>。在Swift中，大多数情形下编译器明确知道一个对象所属的类型，这使得编译器能够在编译期间做更多的事，比如优化。其他少数情形可以参考C++中的<a href="http://en.wikipedia.org/wiki/Vtable">虚表</a>适用情形。<br/>
-b.Objc是<code>Dynamic Typing</code>的，编译期间不会知道变量类型，<code>运行时</code>负责处理对象类型分析、消息分派等。这使得我们拥有在运行时给一个类动态添加方法等等黑魔法。
-<code>objective-c
-Person *matt = [[Person alloc] initWithName:@"Matt Galloway"];
-[matt sayHello];
-</code>
-对上面的代码，编译器会去Person类的头文件去查看是否有sayHello方法，但是只会进行最简单的方法存在确认，由于Objc的动态特性，编译器不知道sayHello方法是否会在运行时改变，甚至不知道sayHello到底有没有实现。这种情形需要手动调用<code>respondsToSelector:</code>来检查。<br/>
-正是因为这种动态类型的特性，编译器能做的优化很少。系统用<code>objc_msgSend</code>来处理方法调度，在这个方法中运行时会根据调用方法的selector去寻找其对应实现并调用。这个过程增加了一些开销。<br/>
-c.下面分析Swifit对于类型的处理，如下例。
-<code>python
-var matt = Person(name:"Matt Galloway")
-matt.sayHello()
-</code>
-编译器明确知道matt是Person类的实例，并知道sayHello方法具体定义在哪儿。那么在编译时就可以优化使得运行时能直接跳到方法实现的地方，而不需要动态调用。在其他特殊情形下，会利用类似C++<a href="http://en.wikipedia.org/wiki/Vtable">虚表</a>的机制来实现，这虽然增加了一些开销但是比<code>Dynamic Dispatch</code>少了很多。</p>
-
-<blockquote><p>总的来说：<br/>
-The compiler is much more helpful in Swift. It will help stop subtle type related bugs from entering your codebase. It will also make your code run faster by enabling smart optimisations.</p></blockquote>
-
-<h4>2.Generics</h4>
-
-<p>Swift引入了<a href="http://en.wikipedia.org/wiki/Generic_programming">泛型</a>，类似C++中的<code>模板</code>。这里有引文：</p>
-
-<blockquote><p> Swift is strict about types, you must declare a function to take parameters of certain types. But sometimes you have some functionality that is the same for multiple different types.</p></blockquote>
-
-<p>```objective-c
-struct IntPair {</p>
-
-<pre><code>let a: Int!
-let b: Int!
-
-init(a: Int, b: Int) {
-    self.a = a
-    self.b = b
-}
-
-func equal() -&gt; Bool {
-    return a == b
-}
-</code></pre>
-
-<p>}</p>
-
-<p>let intPair = IntPair(a: 5, b: 10)
-intPair.a // 5
-intPair.b // 10
-intPair.equal() // false
-<code>
-如果还需要一个FloatPair的话，就需要用到泛型了。
-</code>objective-c
-struct Pair&lt;T: Equatable> {</p>
-
-<pre><code>let a: T!
-let b: T!
-
-init(a: T, b: T) {
-    self.a = a
-    self.b = b
-}
-
-func equal() -&gt; Bool {
-    return a == b
-}
-</code></pre>
-
-<p>}</p>
-
-<p>let pair = Pair(a: 5, b: 10)
-pair.a // 5
-pair.b // 10
-pair.equal() // false</p>
-
-<p>let floatPair = Pair(a: 3.14159, b: 2.0)
-floatPair.a // 3.14159
-floatPair.b // 2.0
-floatPair.equal() // false
-```</p>
-
-<h4>3.Containers</h4>
 ]]></content>
   </entry>
   
