@@ -9,8 +9,7 @@
 	<meta name="author" content="Daryl5">
 
 	
-	<meta name="description" content="UITableView优化方法 先看一下UITableView的官方文档，看看有没有什么以前不知道的细节。 NSIndexPath
-官方文档里： The NSIndexPath class represents the path to a specific node in a tree of &hellip;">
+	<meta name="description" content="UITableView优化方法 结论：搜集了很多资料，看下来感觉提到的方法都差不多，问题的关键是如何做出普适性强的通用库，或者和现有开发框架相结合，设计优雅的API，让大家开发业务时愿意去用。【黑客与画家】有一章的标题是【设计与研究：研究必须是“新”的，而设计必须是“好”的】， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -94,6 +93,8 @@
 	<div class="entry-content" itemprop="articleBody"><!--more-->
 
 
+<blockquote><p>结论：搜集了很多资料，看下来感觉提到的方法都差不多，问题的关键是如何做出普适性强的通用库，或者和现有开发框架相结合，设计优雅的API，让大家开发业务时愿意去用。【黑客与画家】有一章的标题是【设计与研究：研究必须是“新”的，而设计必须是“好”的】，其实很多问题也能归到这两类上，一个问题是偏重设计问题还是研究问题，那关注的点就应该不同。</p></blockquote>
+
 <p>先看一下UITableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/">官方文档</a>，看看有没有什么以前不知道的细节。</p>
 
 <ul>
@@ -104,8 +105,133 @@
 </ul>
 
 
-<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如下图，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？<br/>
-<img src="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif" alt="" /></p>
+<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif">图</a>，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？  <br/>
+代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// This category provides convenience methods to make it easier to use an NSIndexPath to represent a section and row</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">NSIndexPath</span> <span class="nl">(UITableView)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nf">indexPathForRow:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">row</span> <span class="nf">inSection:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">section</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">row</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外在使用runtime方法<code>void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</code>和<code>id objc_getAssociatedObject(id object, const void *key)
+</code>时需要指定一个唯一的key<code>static char const * const ObjectTagKey = "ObjectTag"</code>，在<a href="http://stackoverflow.com/questions/16020918/avoid-extra-static-variables-for-associated-objects-keys/16020927#16020927">这里</a>看到一个可以省去这个key的办法，直接用<code>@selector(anAssociatedObject)</code>做这个key。更进一步，可以用<code>_cmd</code>，原理是每个方法调用都会带两个隐藏参数，一个self用来取到消息接收者的iVar和iMethods，一个_cmd代表方法自身的selector，具体见官方文档的<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtHowMessagingWorks.html">消息机制</a>。</p>
+
+<ul>
+<li>State Preservation<br/>
+看到UIDataSourceModelAssociation，以前没留意过。复制给tableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/index.html#//apple_ref/occ/instp/UIViewController/restorationIdentifier">restorationIdentifier</a>，并且tableView的dataSource实现UIDataSourceModelAssociation协议，然后实现两个代理方法，就能实现关闭app再打开时完全恢复tableView的状态。</li>
+</ul>
+
+
+<h2>为什么卡</h2>
+
+<p>UITableView继承自UIScrollView，需要根据contentSize、bounds、contentInset、contentOffset等属性共同决定是否可以滑动以及滚动条的长度，而且在加载tableView的时候就要询问所有cell的高度，以便确定UIScrollView的contentSize，iOS8引入了estimatedHeight就是为了减少这个过程的耗费，一开始只是估算一下，等到真正要展现cell的时候才计算cell的真实高度。另外就是cell的重用机制，拿出来旧的cell，往里设置内容时需要处理内容，而滚动时候会一直发生cell重用。</p>
+
+<h2>各种常见优化方法</h2>
+
+<ul>
+<li>尽可能使用<code>estimatedHeightForRowAtIndexPath</code>方法</li>
+</ul>
+
+
+<p>iOS7设备占比已经非常高，有必要专门去做一下优化，有实验表明使用了下面这个代理方法后帧数提升30%。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">heightForRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 把上面方法的调用推迟到cell即将展现出来时</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">estimatedHeightForRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">7</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>高度缓存</li>
+</ul>
+
+
+<p>在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/">优化UITableViewCell高度计算的那些事</a>。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Model</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">itemHeight</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nl">heightForItem:</span><span class="p">(</span><span class="n">AAAModel</span> <span class="o">*</span><span class="p">)</span><span class="n">item</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外如果cell是定高的，那么直接用<code>self.tableview.rowHeight = 64</code>而不要用代理方法。如果写了这句还写了代理方法，那么会去调代理方法，这句设置失效。类似的有sectionFooterHeight、sectionHeaderHeight。不过话说回来，如果定高cell一般又不会卡。</p>
+
+<ul>
+<li>Cache Everything. Use Proper Model.</li>
+</ul>
+
+
+<p>其实跟上一条类似，所有复杂计算都保存结果，保存的地方就是model新增的property，或者干脆不暴露太多需要再加工的数据，暴露能直接展现的。</p>
+
+<ul>
+<li>cellForRowAtIndexPath做尽可能少的事</li>
+</ul>
+
+
+<p>把费时操作放到后台，可以用<code>GCD</code>，<code>NSOperationQueue</code>，另外看到个方法，利用通知机制，把不重要的处理放在idle里执行。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">registerForIdleNotification</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver:</span><span class="n">self</span>
+</span><span class='line'>                                             <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">idleNotificationMethod</span><span class="p">)</span>
+</span><span class='line'>                                                 <span class="nl">name:</span><span class="s">@&quot;IdleNotification&quot;</span>
+</span><span class='line'>                                               <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSNotification</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNotification</span> <span class="nl">notificationWithName:</span><span class="s">@&quot;IdleNotification&quot;</span> <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationQueue</span> <span class="n">defaultQueue</span><span class="p">]</span> <span class="nl">enqueueNotification:</span><span class="n">notification</span> <span class="nl">postingStyle:</span><span class="n">NSPostWhenIdle</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>一些好习惯</h2>
+
+<ul>
+<li>reload局部而不是全部</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">reloadRowsAtIndexPaths:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPaths</span> <span class="nf">withRowAnimation:</span><span class="p">(</span><span class="n">UITableViewRowAnimation</span><span class="p">)</span><span class="nv">animation</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
 
@@ -116,13 +242,42 @@ runloop
 
 <p>注意iOS8中字体变大变小</p>
 
-<p>iOS 7 Programming Pushing the limits</p>
+<p>iOS 7 Programming Pushing the limits<br/>
+简单元素自己绘制  按钮图片用customView。图片要decode等等。
+可以有个tableView.needAutoPixelAlign = YES<br/>
+没像素对齐的话会导致抗锯齿处理，也就是把元素的不同部分画到不同像素并且给以不同的alpha
+也可以有个tableView.needRegenerateImage = YES 适合没有交互的也可延伸到简单交互的cell，如点击展开tag，如点击预览评论里的图片，这样就基本没法搞了。要handle很多东西，删除啊、移动啊等等的<br/>
+一个有意思的观点，奇数的字体更容易像素对齐，比如13和12。其实只要用奇数字体，然后把中心放在整数像素上，就能像素对齐了。看一下新鹏的。</p>
+
+<p>cellForRow里做尽可能少的操作</p>
 
 <p>hack weixin
 25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
 
-<p>像素对齐
-ata 蚂蚁搜索一下</p>
+<p>像素对齐 图片对齐
+cache everything 日期格式化等放在model里
+用shadow path</p>
+
+<p>15.Optimize tableview
+reuse cell
+set subview opaque
+avoid gradients, image scale, offscreen drawing
+cache height if height is variable
+use asynchronously method for cell’ contents   如果滚出就不要计算了；思考一下，整个cellForRow都用异步
+use shadowPath to set shadow
+reduce te number of subViews 安卓有类似需求，减少xml的层级
+do as little work possible in cellForRowAtIndexPath:
+use the appropriate data structure
+use rowHeight, sectionFooterHeight,sectionHeaderHeight to set constant height instead of delegte  直接设置省的查代理方法</p>
+
+<p>ata 蚂蚁搜索一下<br/>
+1、stringWithFormat比起sprintf慢了好多，应该还有类似的api，一些操作可以考虑用c写<a href="http://www.atatech.org/articles/19944">ata</a><br/>
+2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法<a href="http://www.atatech.org/articles/17301">ata</a><br/>
+3、图片剪裁很关键，这里有一些可用代码，也有一个用bezierPath给图片加圆角的方法<a href="http://www.atatech.org/articles/19955">ata</a></p>
+
+<p>看了好些东西感觉bat里还是会被业务压到没办法研究很深，微信有专门负责性能优化的部门，很不错，钱包似乎也有。创业公司、个人开发者在这方面倒是研究更多。</p>
+
+<p>问题：方法很多，怎么能做到更高的通用性？</p>
 </div>
 </article>
 <!--

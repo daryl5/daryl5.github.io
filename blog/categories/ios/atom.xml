@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-06-26T18:02:50+08:00</updated>
+  <updated>2015-07-17T17:33:12+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,12 +14,212 @@
 
   
   <entry>
+    <title type="html"><![CDATA[学者]]></title>
+    <link href="http://daryl5.github.io/blog/2015/07/17/xue-zhe/"/>
+    <updated>2015-07-17T11:13:52+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/07/17/xue-zhe</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<ul>
+<li>主要功能<br/>
+技能交换，主要面向程序员</li>
+<li>目标用户<br/>
+主要是程序员，也可以是乐于学习的上进青年，闲着无聊的家庭主妇，想学汉语的外国人</li>
+<li>解决需求<br/>
+学习的需求和分享的需求</li>
+<li>示例场景<br/>
+我是iOS开发者，我想找个人学安卓开发，我也很乐意于教别人iOS开发，于是我在网上找这么一个人，然后线下找家咖啡馆，互相教一个下午或者半天，后续的故事太美不敢想象</li>
+<li>场景展开<br/>
+线上筛选，可以或者不可以线上交谈，约定时间地点，线下学习，有评论系统。甚至可以考虑引入求职等因素。可以不局限于程序员技能交换，可以是吉他，甚至弱化到以教短球为“借口”组织一局羽毛球。更进一步引申到做菜！甚至是语言技能交换！甚至是keynote制作技能换吉他技能！是技能交换就可以。</li>
+<li>头脑风暴<br/>
+0、能不能盈利？<br/>
+前期要不要考虑盈利<br/>
+1、能不能一对多？<br/>
+线下多人教学，或者反向的，我想组织一场线下的分享会，会不会有政策风险。似乎产品方向不清晰了，不是技能交换了，会增加产品在用户心里的“熵”，产品应该尽可能纯粹，心理上感觉“轻”，解决的问题足够清晰明确<br/>
+2、要不要有收费用户？<br/>
+最好不要，保持社区开放性<br/>
+3、要不要引入之前做过的todo list、打卡等功能？是一个更“社区”的app还是一个更“本地”的app？<br/>
+打卡不必要，不是背单词。todo list可以有，是“交换中的技能”，不要有催促用户的感觉<br/>
+4、有没有特定的，高频的激活场景<br/>
+好像没有，技能交换的关系一旦构成，似乎切到微信就行了，没有必要再打开了！怎样才能达到高频次的激活！！<br/>
+5、应该有“教师方”的作品或能力展示，那么怎么展示？<br/>
+app展示很好办，可以直接跳AppStore，如果是前端作品可以跳网页，如果是做菜可以传图片。总的来说4个类型：app、link、text、image<br/>
+6、要不要有一个“进行中的学习”的tab，要不要有共同记录学习进程学习笔记的功能？<br/>
+肯定要有，甚至还是第一个tab。如果是第一个tab，那展示什么内容。学习笔记感觉太重，可以弱化成<strong>对彼此的评价</strong>以及<strong>学习过程中的分享</strong>。分享的话会默认以学生和老师共同身份发分享，有人评论的话老师和学生都能收到通知，这就做的太社区了，会不会太复杂。<br/>
+7、要不要有视频播放功能？<br/>
+用来展示，图片足够，视频代价太大<br/>
+8、要不要做内置IM？<br/>
+技术复杂度高，可以有类似评论功能，评论附加在什么主体上？是一个人还是一个人的一个技能或者一个人的一个教案？“教案”这个东西可以提出来做成个什么<br/>
+9、要不要做打赏功能？<br/>
+可以不要钱，但是用户一共收获了几个赞一定要有，几个好评再考虑，其中几个赞一定要有<br/>
+10、中途不想跟对方继续技能互换了怎么办？要不要引入评价系统？<br/>
+一定要有几个赞<br/>
+11、会不会有人发生人身安全，进而引起法律问题<br/>
+怎么验证一个用户是安全的<br/>
+12、似乎我一直是以自己“教师方”的角度在考虑，如果有人只想上来学点东西怎么办？<br/>
+没人跟他玩儿，搜用户时候的权重，会更注重乐于分享的人<br/>
+13、既然是交换，很难有一个人会A想要B另一个人会B想要A的情况，那怎么match，可不可以有别的玩法？<br/>
+程序员届其实很容易match，其他领域可能很难match，只靠用户个人兴趣吗？虽然我很想学C但是勉为其难教他A吧毕竟他会的B也有点意思<br/>
+14、Airbnb这样的产品逻辑是怎么样的？其实我每次打开并不需要看到全球各地待选的房子，这个列表为什么在第一位，点到自己的“计划旅行”提示你没有计划旅行，快去“探索”一下吧，点击“探索”又到世界各地房子的list。这个app是否有一样的产品逻辑。<br/>
+15、约出去后一定要制造激活场景，比如见面后打卡，加地理位置，记录我都在那里教/学过。<br/>
+Airbnb依次是热门目的地、搜索、消息、即将开始的旅程、我的。</li>
+<li>可能会好玩、能提升b格的点：<br/>
+1、我不只写我会iOS开发，还会写我给自己的水平打的分，以及我的可能的“教案”或者说教学计划，这个“教案”展示出来很有意思，比如第一课我准备教你UIKit和Delegate、Block、通知等，你学完后就可以怎么怎么的，第二课教你tableView，你学完后就可以怎么怎么的<br/>
+2、广告语：这一次，我不是那么想约异性。配两个男生惺惺相惜促膝学习的图。脑袋上的气泡里写UIKit、UITableView，SharedPreference、FragmentManager等，气泡中间画几颗红心。黑程序员，衣服屌丝，表情痴汉。另一个可以是文艺程序员。</li>
+<li>杂乱<br/>
+1、整体交互上可以参考Airbnb<br/>
+2、用一个统一的主色调，用一点动画。主题色感觉浅绿色会比较有爱<br/>
+3、其他社区账号登陆，分享到社区，这两个功能一定要有，不过只能到二期<br/>
+4、抽奖可以用各种程序员书籍，甚至机械键盘<br/>
+5、左边的抽屉式菜单，整体深色，下部区域绿色的“我要分享”按钮，文案要改，以及“我要学习”按钮。这两个是一个按钮里还是怎么的，是不是必须分享才能学习，发布分享的时候要不要同时添我要学习。<br/>
+是要分开的，我想学习是个单独的列表，我要分享也是单独的。我要学习、我要分享这种是否要在第一次打开后就展现，还是第一次打开直接进到空app里。<br/>
+6、知乎关于Airbnb有一个答案，说“我每次去一个新的城市，都会坚持尽量使用Airbnb，做到live like a local，因此我在选择房东的时候会尽量选择志同道合/有类似兴趣爱好的房东”，这个app里也要有类似的考虑：兴趣社交并不会把产品初衷搞混，而是一个轻而美的附加物。技能交换很重要，但是社交是本质。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Objc Zen Book总结]]></title>
+    <link href="http://daryl5.github.io/blog/2015/07/13/objc-zen-book/"/>
+    <updated>2015-07-13T22:28:32+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/07/13/objc-zen-book</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><a href="https://github.com/objc-zen/objc-zen-book">原文</a>, <a href="https://github.com/oa414/objc-zen-book-cn">中译版</a></p>
+
+<h2>Yoda表达式</h2>
+
+<p>写<code>if (count == 5)</code>而不是<code>if (5 == count)</code>，因为后者看上去像是“5是count的值”而不是“count的值是5”，“蓝色是天空的颜色”而不是“天空的颜色是蓝色”，显然前者更合理啊。名字源于星球大战，因为Yoda讲话的方式总是倒桩:-p</p>
+
+<h2>黄金大道</h2>
+
+<p>不要嵌套过多的if，多个return也行，看上去也清晰，比如：
+```objective-c
+&ndash; (void)someMethod {</p>
+
+<pre><code>if (![someOther boolValue]) {
+    return;
+}
+
+//Do something important
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>if判断如果过于复杂应拆分</h2>
+
+<p>三元运算符?:里的表达式如果复杂也应该拆分出来，提升代码可读性。<code>result = object ? object : [self createObject];</code>简化成<code>result = object ? : [self createObject];</code>
+```objective-c
+BOOL nameContainsSwift  = [sessionName containsString:@&ldquo;Swift&rdquo;];
+BOOL isCurrentYear      = [sessionDateCompontents year] == 2014;
+BOOL isSwiftSession     = nameContainsSwift &amp;&amp; isCurrentYear;</p>
+
+<p>if (isSwiftSession) {</p>
+
+<pre><code>// Do something very cool
+</code></pre>
+
+<p>}
+```</p>
+
+<h2><font color="red">错误处理</font></h2>
+
+<p>当方法返回一个错误参数的引用的时候，检查返回值，而不是错误的变量。
+```objective-c
+NSError *error = nil;
+if (![self trySomethingWithError:&amp;error]) {</p>
+
+<pre><code>// Handle Error
+</code></pre>
+
+<p>}
+```
+此外，一些苹果的 API 在成功的情况下会对 error 参数（如果它非 NULL）写入垃圾值（garbage values），所以如果检查 error 的值可能导致错误 （甚至崩溃）。</p>
+
+<h2>switch语句</h2>
+
+<p>当在 switch 语句里面使用一个可枚举的变量的时候，default是不必要的。
+```objective-c
+switch (menuType) {</p>
+
+<pre><code>case ZOCEnumNone:
+    // ...
+    break;
+case ZOCEnumValue1:
+    // ...
+    break;
+case ZOCEnumValue2:
+    // ...
+    break;
+</code></pre>
+
+<p>}
+<code>``
+此外，为了避免使用默认的 case，如果新的值加入到 enum，会马上收到一个 warning 通知</code>Enumeration value &lsquo;ZOCEnumValue3&rsquo; not handled in switch.`</p>
+
+<h2>方法命名</h2>
+
+<p>使用“and”命名的时候应当更加谨慎，它不应该用作阐明有多个参数。
+<code>objective-c
+//pros
+- (instancetype)initWithWidth:(CGFloat)width height:(CGFloat)height;
+//cons
+- (instancetype)initWithWidth:(CGFloat)width andHeight:(CGFloat)height;
+</code></p>
+
+<h2>字面量</h2>
+
+<p>尽量用简洁语法，一方面可读，一方面避免要往array里插入nil导致崩溃。<br/>
+不过应该避免<code>NSMutableArray *aMutableArray = [@[] mutableCopy]</code>这种写法，先创建了一个不可变变量，然后进行了mutableCopy，造成浪费。</p>
+
+<h2>Initializer 和 dealloc</h2>
+
+<p>dealloc应该放在最前面，init紧随其后，这两个从字面意思上看也应该放在一起。如果有多个initializer，designated initializer应该放在最前面。<br/>
+详细解释<code>[[NSObject alloc] init]</code>，从字面上看<code>分配内存</code>和<code>初始化</code>是两个操作。</p>
+
+<ul>
+<li>alloc表示对象分配内存，这个过程涉及分配足够的可用内存来保存对象，写入isa指针，初始化 retain 的计数，并且初始化所有实例变量。</li>
+<li>init 是表示初始化对象，这意味着把对象转换到了个可用的状态。这通常是指把可用的值赋给了对象的实例变量。</li>
+</ul>
+
+
+<p>alloc返回一个没有初始化的对象。每个发送到实例的消息都会被运行时转为<code>objc_msgSend()</code>函数的调用，这个函数的第一个参数就是指向alloc返回的、名为self的指针。一般的objc方法也带了两个隐含参数，一个<code>self</code>，一个<code>_cmd</code>。alloc后，self有值了，这个实例便可执行所有方法。</p>
+
+<h2>Mutable Object</h2>
+
+<p>任何可以用可变对象设置值 (eg. NSString,NSArray,NSURLRequest) 的 property 都要用<code>copy</code>，以免被其他对象随意赋值。<br/>
+另外对于本身就mutable的property，如果需要暴漏给外界就暴漏一个immutable的拷贝，如下：</p>
+
+<p>```objective-c
+/<em> .h </em>/
+@property (nonatomic, readonly) NSArray *elements</p>
+
+<p>/<em> .m </em>/
+&ndash; (NSArray *)elements {</p>
+
+<pre><code>return [self.mutableElements copy];
+</code></pre>
+
+<p>}
+```</p>
+
+<p><code>readonly</code>还是要多用。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[UITableView优化方法]]></title>
     <link href="http://daryl5.github.io/blog/2015/06/06/uitableview-optimize/"/>
     <updated>2015-06-06T14:21:29+08:00</updated>
     <id>http://daryl5.github.io/blog/2015/06/06/uitableview-optimize</id>
     <content type="html"><![CDATA[<!--more-->
 
+
+<blockquote><p>结论：搜集了很多资料，看下来感觉提到的方法都差不多，问题的关键是如何做出普适性强的通用库，或者和现有开发框架相结合，设计优雅的API，让大家开发业务时愿意去用。【黑客与画家】有一章的标题是【设计与研究：研究必须是“新”的，而设计必须是“好”的】，其实很多问题也能归到这两类上，一个问题是偏重设计问题还是研究问题，那关注的点就应该不同。</p></blockquote>
 
 <p>先看一下UITableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/">官方文档</a>，看看有没有什么以前不知道的细节。</p>
 
@@ -31,8 +231,102 @@
 </ul>
 
 
-<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如下图，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？<br/>
-<img src="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif" alt="" /></p>
+<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif">图</a>，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？  <br/>
+代码如下：
+```objective-c
+// This category provides convenience methods to make it easier to use an NSIndexPath to represent a section and row
+@interface NSIndexPath (UITableView)</p>
+
+<ul>
+<li>(NSIndexPath *)indexPathForRow:(NSInteger)row inSection:(NSInteger)section;</li>
+</ul>
+
+
+<p>@property(nonatomic,readonly) NSInteger section;
+@property(nonatomic,readonly) NSInteger row;</p>
+
+<p>@end
+<code>``
+另外在使用runtime方法</code>void objc_setAssociatedObject(id object, const void <em>key, id value, objc_AssociationPolicy policy)<code>和</code>id objc_getAssociatedObject(id object, const void </em>key)
+<code>时需要指定一个唯一的key</code>static char const * const ObjectTagKey = &ldquo;ObjectTag&rdquo;<code>，在[这里](http://stackoverflow.com/questions/16020918/avoid-extra-static-variables-for-associated-objects-keys/16020927#16020927)看到一个可以省去这个key的办法，直接用</code>@selector(anAssociatedObject)<code>做这个key。更进一步，可以用</code><em>cmd`，原理是每个方法调用都会带两个隐藏参数，一个self用来取到消息接收者的iVar和iMethods，一个</em>cmd代表方法自身的selector，具体见官方文档的<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtHowMessagingWorks.html">消息机制</a>。</p>
+
+<ul>
+<li>State Preservation<br/>
+看到UIDataSourceModelAssociation，以前没留意过。复制给tableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/index.html#//apple_ref/occ/instp/UIViewController/restorationIdentifier">restorationIdentifier</a>，并且tableView的dataSource实现UIDataSourceModelAssociation协议，然后实现两个代理方法，就能实现关闭app再打开时完全恢复tableView的状态。</li>
+</ul>
+
+
+<h2>为什么卡</h2>
+
+<p>UITableView继承自UIScrollView，需要根据contentSize、bounds、contentInset、contentOffset等属性共同决定是否可以滑动以及滚动条的长度，而且在加载tableView的时候就要询问所有cell的高度，以便确定UIScrollView的contentSize，iOS8引入了estimatedHeight就是为了减少这个过程的耗费，一开始只是估算一下，等到真正要展现cell的时候才计算cell的真实高度。另外就是cell的重用机制，拿出来旧的cell，往里设置内容时需要处理内容，而滚动时候会一直发生cell重用。</p>
+
+<h2>各种常见优化方法</h2>
+
+<ul>
+<li>尽可能使用<code>estimatedHeightForRowAtIndexPath</code>方法</li>
+</ul>
+
+
+<p>iOS7设备占比已经非常高，有必要专门去做一下优化，有实验表明使用了下面这个代理方法后帧数提升30%。
+```objective-c
+&ndash; (CGFloat)tableView:(UITableView <em>)tableView heightForRowAtIndexPath:(NSIndexPath </em>)indexPath;</p>
+
+<p>// 把上面方法的调用推迟到cell即将展现出来时
+&ndash; (CGFloat)tableView:(UITableView <em>)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath </em>)indexPath NS_AVAILABLE_IOS(7_0);
+```</p>
+
+<ul>
+<li>高度缓存</li>
+</ul>
+
+
+<p>在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/">优化UITableViewCell高度计算的那些事</a>。
+```objective-c
+//Model
+@property (nonatomic, assign) CGFloat itemHeight</p>
+
+<ul>
+<li><p>(CGFloat)heightForItem:(AAAModel *)item;
+<code>``
+另外如果cell是定高的，那么直接用</code>self.tableview.rowHeight = 64`而不要用代理方法。如果写了这句还写了代理方法，那么会去调代理方法，这句设置失效。类似的有sectionFooterHeight、sectionHeaderHeight。不过话说回来，如果定高cell一般又不会卡。</p></li>
+<li><p>Cache Everything. Use Proper Model.</p></li>
+</ul>
+
+
+<p>其实跟上一条类似，所有复杂计算都保存结果，保存的地方就是model新增的property，或者干脆不暴露太多需要再加工的数据，暴露能直接展现的。</p>
+
+<ul>
+<li>cellForRowAtIndexPath做尽可能少的事</li>
+</ul>
+
+
+<p>把费时操作放到后台，可以用<code>GCD</code>，<code>NSOperationQueue</code>，另外看到个方法，利用通知机制，把不重要的处理放在idle里执行。
+```objective-c
+&ndash;(void)registerForIdleNotification
+{</p>
+
+<pre><code>[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(idleNotificationMethod)
+                                             name:@"IdleNotification"
+                                           object:nil];
+
+NSNotification *notification = [NSNotification notificationWithName:@"IdleNotification" object:nil];
+
+[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle];
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>一些好习惯</h2>
+
+<ul>
+<li>reload局部而不是全部
+```objective-c</li>
+<li>(void)reloadRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
+```</li>
+</ul>
+
 
 <p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
 
@@ -43,13 +337,42 @@ runloop
 
 <p>注意iOS8中字体变大变小</p>
 
-<p>iOS 7 Programming Pushing the limits</p>
+<p>iOS 7 Programming Pushing the limits<br/>
+简单元素自己绘制  按钮图片用customView。图片要decode等等。
+可以有个tableView.needAutoPixelAlign = YES<br/>
+没像素对齐的话会导致抗锯齿处理，也就是把元素的不同部分画到不同像素并且给以不同的alpha
+也可以有个tableView.needRegenerateImage = YES 适合没有交互的也可延伸到简单交互的cell，如点击展开tag，如点击预览评论里的图片，这样就基本没法搞了。要handle很多东西，删除啊、移动啊等等的<br/>
+一个有意思的观点，奇数的字体更容易像素对齐，比如13和12。其实只要用奇数字体，然后把中心放在整数像素上，就能像素对齐了。看一下新鹏的。</p>
+
+<p>cellForRow里做尽可能少的操作</p>
 
 <p>hack weixin
 25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
 
-<p>像素对齐
-ata 蚂蚁搜索一下</p>
+<p>像素对齐 图片对齐
+cache everything 日期格式化等放在model里
+用shadow path</p>
+
+<p>15.Optimize tableview
+reuse cell
+set subview opaque
+avoid gradients, image scale, offscreen drawing
+cache height if height is variable
+use asynchronously method for cell’ contents   如果滚出就不要计算了；思考一下，整个cellForRow都用异步
+use shadowPath to set shadow
+reduce te number of subViews 安卓有类似需求，减少xml的层级
+do as little work possible in cellForRowAtIndexPath:
+use the appropriate data structure
+use rowHeight, sectionFooterHeight,sectionHeaderHeight to set constant height instead of delegte  直接设置省的查代理方法</p>
+
+<p>ata 蚂蚁搜索一下<br/>
+1、stringWithFormat比起sprintf慢了好多，应该还有类似的api，一些操作可以考虑用c写<a href="http://www.atatech.org/articles/19944">ata</a><br/>
+2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法<a href="http://www.atatech.org/articles/17301">ata</a><br/>
+3、图片剪裁很关键，这里有一些可用代码，也有一个用bezierPath给图片加圆角的方法<a href="http://www.atatech.org/articles/19955">ata</a></p>
+
+<p>看了好些东西感觉bat里还是会被业务压到没办法研究很深，微信有专门负责性能优化的部门，很不错，钱包似乎也有。创业公司、个人开发者在这方面倒是研究更多。</p>
+
+<p>问题：方法很多，怎么能做到更高的通用性？</p>
 ]]></content>
   </entry>
   
@@ -128,265 +451,6 @@ BOOL TBOpenURLFromTarget(NSString* urlPath, id target);</p>
     <updated>2015-04-08T20:29:54+08:00</updated>
     <id>http://daryl5.github.io/blog/2015/04/08/reading-software-architecture-patterns</id>
     <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Node.js开发RESTful WebService]]></title>
-    <link href="http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js/"/>
-    <updated>2014-08-07T19:26:41+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/08/07/learn-node-dot-js</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<h2>Node.js的Hello World</h2>
-
-<p>```javascript
-var http = require(&lsquo;http&rsquo;);</p>
-
-<p>//当有http请求发送过来时，就会调用此回调函数
-http.createServer(function (req, res) {</p>
-
-<pre><code>res.writeHead(200, {'Content-Type': 'text/plain'});
-res.end('Hello World\n');
-</code></pre>
-
-<p>}).listen(80, &ldquo;127.0.0.1&rdquo;);
-```</p>
-
-<h2>Node.js是什么</h2>
-
-<p>在Chrome V8引擎上进行扩展从而生成的一个<code>Javascript运行环境/引擎</code>。一般JS都运行在客户端，Node.js使得JS可以在服务器端运行。</p>
-
-<h2>Node.js的特点</h2>
-
-<p><code>1.事件驱动、异步编程</code><br/>
-在传统的网络编程中会用到回调函数，比如当socket资源达到某一状态时注册的回调函数就会执行。以Node.js中的Net模块为例，net.Socket对象就有connect、data、end等事件，开发者可以根据自己的业务逻辑注册响应的回调函数到这些事件。在代码中这些事件看上去是顺次注册的，但是它们并<code>不依赖自身出现的顺序</code>，而是在相应事件发生时触发。<br/>
-这两个特点得益于Node.js采用的语言是<code>Javascript</code>，Javascript的<code>匿名函数</code>和<code>闭包</code>特性非常适合事件驱动、异步编程。<br/>
-<code>2.高性能</code><br/>
-选择C++和V8而不选择Ruby或其他虚拟机就是出于性能考虑。<br/>
-事实上Node.js是以<code>单进程、单线程</code>模式运行的，事件驱动机制是Node.js通过对内部单线程高效率的维护时间循环队列来实现，没有多线程的资源占用和上下文切换。面对大规模http请求，Node.js凭借事件驱动搞定一切。实验表明Node.js的事件驱动机制和单进程单线程模式导致CPU占用很高。现在已经有一些支持多进程的模块。</p>
-
-<h2>使用Express</h2>
-
-<p><a href="http://expressjs.com/">Express</a>是基于Node.js的web开发框架，它被作为Node.js的一个module导入项目。下面借助Express来实现简单的REST API，这个主题的内容来自<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">这里</a>。什么是<code>REST API</code>？可以看<a href="https://en.wikipedia.org/wiki/Representational_state_transfer#RESTful_web_APIs">维基</a>。简单来说是由GET, PUT, POST和DELETE四种类型的方法组成。<br/>
-<code>1.集成Express到项目</code><br/>
-修改<code>package.json</code>然后使用<code>npm install</code>来集成。
-```javascript
-{</p>
-
-<pre><code>"name": "first-express-app",
-"description": "a fine piece of express art",
-"version": "0.0.1",
-"dependencies": {
-    "express": "3.x"
-}
-</code></pre>
-
-<p>}
-<code>
-上例中会有警告，没有README之类的，添加private为true就没有警告了。  
-`2.Express版的Hello World`  
-</code>javascript
-var express = require(&lsquo;express&rsquo;);
-var app = express(); //app是Express server的一个实例</p>
-
-<p>app.get(&lsquo;/&rsquo;, function(req, res) {</p>
-
-<pre><code>res.type('text/plain');
-res.send('Hello World from Express');
-</code></pre>
-
-<p>});</p>
-
-<p>//使用process.env.PORT就是说如果设置了PORT环境变量那就会用设置的端口，否则就是自己设定的3000
-app.listen(process.env.PORT || 3000);</p>
-
-<p>console.log(&lsquo;Server is running&hellip;&rsquo;);
-<code>
-然后`node filename.js`并在浏览器访问`http://localhost:3000`即可。  
-`3.添加route实现新的API`  
-route可以译作路由，就是访问网站时站点名后加的参数等等，用于实现在网站内跳转。在上面的代码中添加代码
-</code>javascript
-var quotes = [
-{ author : &lsquo;Audrey Hepburn&rsquo;, text : &ldquo;Nothing is impossible, the word itself says &lsquo;I&rsquo;m possible&rsquo;!&rdquo;},
-{ author : &lsquo;Walt Disney&rsquo;, text : &ldquo;You may not realize it when it happens,</p>
-
-<pre><code>        but a kick in the teeth may be the best thing in the world for you"},
-</code></pre>
-
-<p>{ author : &lsquo;Unknown&rsquo;, text : &ldquo;Even the greatest was once a beginner. Don&rsquo;t be afraid to take that first step.&rdquo;},
-{ author : &lsquo;Neale Donald Walsch&rsquo;, text : &ldquo;You are afraid to die, and you&rsquo;re afraid to live. What a way to exist.&rdquo;}
-];</p>
-
-<p>//bodyParser中间件，可以parse请求的body，然后把body传给request的body property
-//用于解析POST请求的内容
-app.use(express.bodyParser());</p>
-
-<p>app.get(&lsquo;/&rsquo;, function(req, res) {</p>
-
-<pre><code>res.json(quotes);
-</code></pre>
-
-<p>});</p>
-
-<p>app.get(&lsquo;/quote/random&rsquo;, function(req, res) {</p>
-
-<pre><code>var id = Math.floor(Math.random() * quotes.length);
-var q = quotes[id];
-res.json(q);
-</code></pre>
-
-<p>});</p>
-
-<p>//支持传入参数
-//<a href="http://localhost:3000/quote/2">http://localhost:3000/quote/2</a>
-app.get(&lsquo;/quote/:id&rsquo;, function(req, res) {</p>
-
-<pre><code>if(quotes.length &lt;= req.params.id || req.params.id &lt; 0) {
-    res.statusCode = 404;
-    return res.send('Error 404: No quote found');
-}
-
-var q = quotes[req.params.id];
-res.json(q);
-</code></pre>
-
-<p>});</p>
-
-<p>//curl -v -H &ldquo;Accept: application/json&rdquo; -H &ldquo;Content-type: application/json&rdquo; -X<br/>
-//POST -d &lsquo;{&ldquo;author&rdquo;: &ldquo;daryl&rdquo;, &ldquo;text&rdquo;: &ldquo;daryls post&rdquo;}&rsquo; <a href="http://localhost:3000/quote/">http://localhost:3000/quote/</a>
-app.post(&lsquo;/quote&rsquo;, function(req, res) {</p>
-
-<pre><code>if(!req.body.hasOwnProperty('author') || !req.body.hasOwnProperty('text')) {
-    res.statusCode = 400;
-    return res.send('Error 400: Post syntax incorrect.');
-}
-
-var newQuote = {
-    author : req.body.author,
-    text : req.body.text
-}; 
-
-quotes.push(newQuote);
-res.json(true);
-</code></pre>
-
-<p>});</p>
-
-<p>//curl -I -X DELETE <a href="http://localhost:3000/quote/7">http://localhost:3000/quote/7</a>
-app.delete(&lsquo;/quote/:id&rsquo;, function(req, res) {</p>
-
-<pre><code>if(quotes.length &lt;= req.params.id) {
-    res.statusCode = 404;
-    return res.send('Error 404: No quote found');
-}
-
-quotes.splice(req.params.id, 1);
-    res.json(true);
-</code></pre>
-
-<p>});
-```</p>
-
-<h2>参考文献</h2>
-
-<p>1.<a href="http://www.infoq.com/cn/articles/what-is-nodejs">深入浅出Node.js（一）：什么是Node.js</a>  系列文章在<a href="http://www.infoq.com/cn/master-nodejs">这里</a><br/>
-2.<a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">NODE.JS AND EXPRESS &ndash; CREATING A REST API</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Make A Swipeable TableviewCell]]></title>
-    <link href="http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell/"/>
-    <updated>2014-06-25T19:59:06+08:00</updated>
-    <id>http://daryl5.github.io/blog/2014/06/25/swipeable-table-view-cell</id>
-    <content type="html"><![CDATA[<p>来自RW的博文<a href="http://www.raywenderlich.com/62435/make-swipeable-table-view-cell-actions-without-going-nuts-scroll-views">How To Make A Swipeable Table View Cell With Actions – Without Going Nuts With Scroll Views</a>。</p>
-
-<!--more-->
-
-
-<h3>1.UITableViewCell结构解析</h3>
-
-<p><code>给view添加背景色</code>和<code>recursiveDescription</code>都可以用来解析控件结构。
-```objective-c</p>
-
-<h1>ifdef DEBUG</h1>
-
-<p>NSLog(@&ldquo;Cell recursive description:\n\n%@\n\n&rdquo;, [cell performSelector:@selector(recursiveDescription)]);</p>
-
-<h1>endif</h1>
-
-<p><code>
-iOS7上tableViewCell的结构如下：
-</code>objective-c
-TableViewCell</p>
-
-<pre><code>CellScrollView
-    //SeparatorView
-    Button                 disclosure button
-        ImageView          button's image
-    ContentView
-        Label              cell text label
-    //SeparatorView
-</code></pre>
-
-<p><code>
-删除时候结构如下：
-</code>objective-c
-TableViewCell</p>
-
-<pre><code>CellScrollView
-    DeleteConfirmationView
-        Confirmation Button
-            Label          "Delete"
-    //SeparatorView
-    ContentView
-        Label
-    //Separator View
-    Button
-        ImageView
-</code></pre>
-
-<p><code>
-iOS8上如下，对比iOS7主要是少了`UITableViewCellScrollView`，这是个UIScrollView的实例：
-</code>objective-c
-TableViewCell</p>
-
-<pre><code>ContentView
-    Label                  cell text label
-//SeparatorView
-Button
-    ImageView
-</code></pre>
-
-<p>```
-根据官方文档，自定义cell只能在ContentView上添加subview。我们要做的，就是参照苹果实现滑动展示删除按钮的思路，在ContentView上另外实现一套，然后把原本的删除禁掉。</p>
-
-<h3>2.一个Swipeable TableViewCell的必要成分</h3>
-
-<p>由上一部分最后一段可以知道，我们需要一些<code>需要展示的UIButton</code>，然后一个位于这些按钮之上的<code>Container view</code>来显示所有内容，然后需要一个UIScrollView或者<code>UIPanGestureRecognizer</code>来显示或者隐藏按钮，这里我们用后者。最后，<code>需要展示cell内容的views</code>。然后把这些内容都贴到cell的ContentView上。这里有点拗口，对应上面iOS7的cell结构。<br/>
-需要禁掉系统cell的滑动删除：
-```objective-c
-&ndash; (BOOL)tableView:(UITableView <em>)tableView canEditRowAtIndexPath:(NSIndexPath </em>)indexPath {</p>
-
-<pre><code>return NO;
-</code></pre>
-
-<p>}
-```</p>
-
-<h3>3.建立自定义cell</h3>
-
-<p>直接在storyboard中编辑prototypecell，然后绑定cell所属类，并在tableview代理中返回相应的类型。这里非常坑，半天显示不出来两个按钮，基础太差代码写的太少了，哎。原因见<a href="http://stackoverflow.com/questions/22352587/xcode-5-1-uitableview-in-uiviewcontroller-custom-tableviewcell-outlets-are-nil">Xcode 5.1 UITableView in UIViewController &ndash; Custom TableViewCell Outlets are nil</a>。具体原因是：</p>
-
-<ol>
-<li>如果在xib或者storyboard中建立cell了，那么直接deque就能获得cell；</li>
-<li>如果要用自定义的cell，那么就要先registerclass，然后重用的时候deque；这时候虽然没有xib，但是运行时也知道如何去建立cell，就用刚注册过的类建立。</li>
-</ol>
-
-
-<p>未完待续&hellip;</p>
 ]]></content>
   </entry>
   

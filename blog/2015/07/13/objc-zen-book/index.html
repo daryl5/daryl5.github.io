@@ -1,0 +1,274 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Objc Zen Book总结 - Daryl's Blog</title>
+	<meta name="author" content="Daryl5">
+
+	
+	<meta name="description" content="Objc Zen Book总结 原文, 中译版 Yoda表达式 写if (count == 5)而不是if (5 == count)，因为后者看上去像是“5是count的值”而不是“count的值是5”，“蓝色是天空的颜色”而不是“天空的颜色是蓝色”，显然前者更合理啊。名字源于星球大战， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="" rel="alternate" title="Daryl's Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://daryl5.github.io/blog/2015/07/13/objc-zen-book/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!-- 
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+          //$('.profilepic').append("<img src='../images/avatar.jpg" + MD5("") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='../images/avatar.jpg alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+     -->
+    <img src="/images/avatar.jpg" alt="Profile Picture" style="width: 160px;" />
+</div>
+<h1><a href="/">Daryl's Blog</a></h1>
+<p class="subtitle"></p>
+<nav id="main-nav"><ul class="main-navigation">
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+    <li><a href="/blog/categories">Categories</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+        <a class="weibo" href="http://weibo.com/wuyunpeng" title="Weibo">Weibo</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Objc Zen Book总结</h1>
+	<div class="entry-content" itemprop="articleBody"><!--more-->
+
+
+<p><a href="https://github.com/objc-zen/objc-zen-book">原文</a>, <a href="https://github.com/oa414/objc-zen-book-cn">中译版</a></p>
+
+<h2>Yoda表达式</h2>
+
+<p>写<code>if (count == 5)</code>而不是<code>if (5 == count)</code>，因为后者看上去像是“5是count的值”而不是“count的值是5”，“蓝色是天空的颜色”而不是“天空的颜色是蓝色”，显然前者更合理啊。名字源于星球大战，因为Yoda讲话的方式总是倒桩:-p</p>
+
+<h2>黄金大道</h2>
+
+<p>不要嵌套过多的if，多个return也行，看上去也清晰，比如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">someMethod</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">someOther</span> <span class="n">boolValue</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Do something important</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>if判断如果过于复杂应拆分</h2>
+
+<p>三元运算符?:里的表达式如果复杂也应该拆分出来，提升代码可读性。<code>result = object ? object : [self createObject];</code>简化成<code>result = object ? : [self createObject];</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">BOOL</span> <span class="n">nameContainsSwift</span>  <span class="o">=</span> <span class="p">[</span><span class="n">sessionName</span> <span class="nl">containsString:</span><span class="s">@&quot;Swift&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">isCurrentYear</span>      <span class="o">=</span> <span class="p">[</span><span class="n">sessionDateCompontents</span> <span class="n">year</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2014</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">isSwiftSession</span>     <span class="o">=</span> <span class="n">nameContainsSwift</span> <span class="o">&amp;&amp;</span> <span class="n">isCurrentYear</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">isSwiftSession</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Do something very cool</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2><font color="red">错误处理</font></h2>
+
+<p>当方法返回一个错误参数的引用的时候，检查返回值，而不是错误的变量。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nl">trySomethingWithError:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Handle Error</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外，一些苹果的 API 在成功的情况下会对 error 参数（如果它非 NULL）写入垃圾值（garbage values），所以如果检查 error 的值可能导致错误 （甚至崩溃）。</p>
+
+<h2>switch语句</h2>
+
+<p>当在 switch 语句里面使用一个可枚举的变量的时候，default是不必要的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">switch</span> <span class="p">(</span><span class="n">menuType</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumNone:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumValue1:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumValue2:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外，为了避免使用默认的 case，如果新的值加入到 enum，会马上收到一个 warning 通知<code>Enumeration value 'ZOCEnumValue3' not handled in switch.</code></p>
+
+<h2>方法命名</h2>
+
+<p>使用“and”命名的时候应当更加谨慎，它不应该用作阐明有多个参数。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//pros</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWidth:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span> <span class="nf">height:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//cons</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWidth:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span> <span class="nf">andHeight:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>字面量</h2>
+
+<p>尽量用简洁语法，一方面可读，一方面避免要往array里插入nil导致崩溃。<br/>
+不过应该避免<code>NSMutableArray *aMutableArray = [@[] mutableCopy]</code>这种写法，先创建了一个不可变变量，然后进行了mutableCopy，造成浪费。</p>
+
+<h2>Initializer 和 dealloc</h2>
+
+<p>dealloc应该放在最前面，init紧随其后，这两个从字面意思上看也应该放在一起。如果有多个initializer，designated initializer应该放在最前面。<br/>
+详细解释<code>[[NSObject alloc] init]</code>，从字面上看<code>分配内存</code>和<code>初始化</code>是两个操作。</p>
+
+<ul>
+<li>alloc表示对象分配内存，这个过程涉及分配足够的可用内存来保存对象，写入isa指针，初始化 retain 的计数，并且初始化所有实例变量。</li>
+<li>init 是表示初始化对象，这意味着把对象转换到了个可用的状态。这通常是指把可用的值赋给了对象的实例变量。</li>
+</ul>
+
+
+<p>alloc返回一个没有初始化的对象。每个发送到实例的消息都会被运行时转为<code>objc_msgSend()</code>函数的调用，这个函数的第一个参数就是指向alloc返回的、名为self的指针。一般的objc方法也带了两个隐含参数，一个<code>self</code>，一个<code>_cmd</code>。alloc后，self有值了，这个实例便可执行所有方法。</p>
+
+<h2>Mutable Object</h2>
+
+<p>任何可以用可变对象设置值 (eg. NSString,NSArray,NSURLRequest) 的 property 都要用<code>copy</code>，以免被其他对象随意赋值。<br/>
+另外对于本身就mutable的property，如果需要暴漏给外界就暴漏一个immutable的拷贝，如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cm">/* .h */</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">elements</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* .m */</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">elements</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mutableElements</span> <span class="n">copy</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>readonly</code>还是要多用。</p>
+</div>
+</article>
+<!--
+
+	<!--<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>-->
+
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2015
+
+    Daryl5
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>

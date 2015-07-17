@@ -4,7 +4,7 @@
   <title><![CDATA[Daryl's Blog]]></title>
   <link href="http://daryl5.github.io/atom.xml" rel="self"/>
   <link href="http://daryl5.github.io/"/>
-  <updated>2015-06-26T18:02:50+08:00</updated>
+  <updated>2015-07-17T17:33:12+08:00</updated>
   <id>http://daryl5.github.io/</id>
   <author>
     <name><![CDATA[Daryl5]]></name>
@@ -14,12 +14,244 @@
 
   
   <entry>
+    <title type="html"><![CDATA[学者]]></title>
+    <link href="http://daryl5.github.io/blog/2015/07/17/xue-zhe/"/>
+    <updated>2015-07-17T11:13:52+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/07/17/xue-zhe</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<ul>
+<li>主要功能<br/>
+技能交换，主要面向程序员</li>
+<li>目标用户<br/>
+主要是程序员，也可以是乐于学习的上进青年，闲着无聊的家庭主妇，想学汉语的外国人</li>
+<li>解决需求<br/>
+学习的需求和分享的需求</li>
+<li>示例场景<br/>
+我是iOS开发者，我想找个人学安卓开发，我也很乐意于教别人iOS开发，于是我在网上找这么一个人，然后线下找家咖啡馆，互相教一个下午或者半天，后续的故事太美不敢想象</li>
+<li>场景展开<br/>
+线上筛选，可以或者不可以线上交谈，约定时间地点，线下学习，有评论系统。甚至可以考虑引入求职等因素。可以不局限于程序员技能交换，可以是吉他，甚至弱化到以教短球为“借口”组织一局羽毛球。更进一步引申到做菜！甚至是语言技能交换！甚至是keynote制作技能换吉他技能！是技能交换就可以。</li>
+<li>头脑风暴<br/>
+0、能不能盈利？<br/>
+前期要不要考虑盈利<br/>
+1、能不能一对多？<br/>
+线下多人教学，或者反向的，我想组织一场线下的分享会，会不会有政策风险。似乎产品方向不清晰了，不是技能交换了，会增加产品在用户心里的“熵”，产品应该尽可能纯粹，心理上感觉“轻”，解决的问题足够清晰明确<br/>
+2、要不要有收费用户？<br/>
+最好不要，保持社区开放性<br/>
+3、要不要引入之前做过的todo list、打卡等功能？是一个更“社区”的app还是一个更“本地”的app？<br/>
+打卡不必要，不是背单词。todo list可以有，是“交换中的技能”，不要有催促用户的感觉<br/>
+4、有没有特定的，高频的激活场景<br/>
+好像没有，技能交换的关系一旦构成，似乎切到微信就行了，没有必要再打开了！怎样才能达到高频次的激活！！<br/>
+5、应该有“教师方”的作品或能力展示，那么怎么展示？<br/>
+app展示很好办，可以直接跳AppStore，如果是前端作品可以跳网页，如果是做菜可以传图片。总的来说4个类型：app、link、text、image<br/>
+6、要不要有一个“进行中的学习”的tab，要不要有共同记录学习进程学习笔记的功能？<br/>
+肯定要有，甚至还是第一个tab。如果是第一个tab，那展示什么内容。学习笔记感觉太重，可以弱化成<strong>对彼此的评价</strong>以及<strong>学习过程中的分享</strong>。分享的话会默认以学生和老师共同身份发分享，有人评论的话老师和学生都能收到通知，这就做的太社区了，会不会太复杂。<br/>
+7、要不要有视频播放功能？<br/>
+用来展示，图片足够，视频代价太大<br/>
+8、要不要做内置IM？<br/>
+技术复杂度高，可以有类似评论功能，评论附加在什么主体上？是一个人还是一个人的一个技能或者一个人的一个教案？“教案”这个东西可以提出来做成个什么<br/>
+9、要不要做打赏功能？<br/>
+可以不要钱，但是用户一共收获了几个赞一定要有，几个好评再考虑，其中几个赞一定要有<br/>
+10、中途不想跟对方继续技能互换了怎么办？要不要引入评价系统？<br/>
+一定要有几个赞<br/>
+11、会不会有人发生人身安全，进而引起法律问题<br/>
+怎么验证一个用户是安全的<br/>
+12、似乎我一直是以自己“教师方”的角度在考虑，如果有人只想上来学点东西怎么办？<br/>
+没人跟他玩儿，搜用户时候的权重，会更注重乐于分享的人<br/>
+13、既然是交换，很难有一个人会A想要B另一个人会B想要A的情况，那怎么match，可不可以有别的玩法？<br/>
+程序员届其实很容易match，其他领域可能很难match，只靠用户个人兴趣吗？虽然我很想学C但是勉为其难教他A吧毕竟他会的B也有点意思<br/>
+14、Airbnb这样的产品逻辑是怎么样的？其实我每次打开并不需要看到全球各地待选的房子，这个列表为什么在第一位，点到自己的“计划旅行”提示你没有计划旅行，快去“探索”一下吧，点击“探索”又到世界各地房子的list。这个app是否有一样的产品逻辑。<br/>
+15、约出去后一定要制造激活场景，比如见面后打卡，加地理位置，记录我都在那里教/学过。<br/>
+Airbnb依次是热门目的地、搜索、消息、即将开始的旅程、我的。</li>
+<li>可能会好玩、能提升b格的点：<br/>
+1、我不只写我会iOS开发，还会写我给自己的水平打的分，以及我的可能的“教案”或者说教学计划，这个“教案”展示出来很有意思，比如第一课我准备教你UIKit和Delegate、Block、通知等，你学完后就可以怎么怎么的，第二课教你tableView，你学完后就可以怎么怎么的<br/>
+2、广告语：这一次，我不是那么想约异性。配两个男生惺惺相惜促膝学习的图。脑袋上的气泡里写UIKit、UITableView，SharedPreference、FragmentManager等，气泡中间画几颗红心。黑程序员，衣服屌丝，表情痴汉。另一个可以是文艺程序员。</li>
+<li>杂乱<br/>
+1、整体交互上可以参考Airbnb<br/>
+2、用一个统一的主色调，用一点动画。主题色感觉浅绿色会比较有爱<br/>
+3、其他社区账号登陆，分享到社区，这两个功能一定要有，不过只能到二期<br/>
+4、抽奖可以用各种程序员书籍，甚至机械键盘<br/>
+5、左边的抽屉式菜单，整体深色，下部区域绿色的“我要分享”按钮，文案要改，以及“我要学习”按钮。这两个是一个按钮里还是怎么的，是不是必须分享才能学习，发布分享的时候要不要同时添我要学习。<br/>
+是要分开的，我想学习是个单独的列表，我要分享也是单独的。我要学习、我要分享这种是否要在第一次打开后就展现，还是第一次打开直接进到空app里。<br/>
+6、知乎关于Airbnb有一个答案，说“我每次去一个新的城市，都会坚持尽量使用Airbnb，做到live like a local，因此我在选择房东的时候会尽量选择志同道合/有类似兴趣爱好的房东”，这个app里也要有类似的考虑：兴趣社交并不会把产品初衷搞混，而是一个轻而美的附加物。技能交换很重要，但是社交是本质。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Objc Zen Book总结]]></title>
+    <link href="http://daryl5.github.io/blog/2015/07/13/objc-zen-book/"/>
+    <updated>2015-07-13T22:28:32+08:00</updated>
+    <id>http://daryl5.github.io/blog/2015/07/13/objc-zen-book</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><a href="https://github.com/objc-zen/objc-zen-book">原文</a>, <a href="https://github.com/oa414/objc-zen-book-cn">中译版</a></p>
+
+<h2>Yoda表达式</h2>
+
+<p>写<code>if (count == 5)</code>而不是<code>if (5 == count)</code>，因为后者看上去像是“5是count的值”而不是“count的值是5”，“蓝色是天空的颜色”而不是“天空的颜色是蓝色”，显然前者更合理啊。名字源于星球大战，因为Yoda讲话的方式总是倒桩:-p</p>
+
+<h2>黄金大道</h2>
+
+<p>不要嵌套过多的if，多个return也行，看上去也清晰，比如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">someMethod</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">someOther</span> <span class="n">boolValue</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Do something important</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>if判断如果过于复杂应拆分</h2>
+
+<p>三元运算符?:里的表达式如果复杂也应该拆分出来，提升代码可读性。<code>result = object ? object : [self createObject];</code>简化成<code>result = object ? : [self createObject];</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">BOOL</span> <span class="n">nameContainsSwift</span>  <span class="o">=</span> <span class="p">[</span><span class="n">sessionName</span> <span class="nl">containsString:</span><span class="s">@&quot;Swift&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">isCurrentYear</span>      <span class="o">=</span> <span class="p">[</span><span class="n">sessionDateCompontents</span> <span class="n">year</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2014</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">isSwiftSession</span>     <span class="o">=</span> <span class="n">nameContainsSwift</span> <span class="o">&amp;&amp;</span> <span class="n">isCurrentYear</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">isSwiftSession</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Do something very cool</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2><font color="red">错误处理</font></h2>
+
+<p>当方法返回一个错误参数的引用的时候，检查返回值，而不是错误的变量。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nl">trySomethingWithError:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Handle Error</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外，一些苹果的 API 在成功的情况下会对 error 参数（如果它非 NULL）写入垃圾值（garbage values），所以如果检查 error 的值可能导致错误 （甚至崩溃）。</p>
+
+<h2>switch语句</h2>
+
+<p>当在 switch 语句里面使用一个可枚举的变量的时候，default是不必要的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">switch</span> <span class="p">(</span><span class="n">menuType</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumNone:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumValue1:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nl">ZOCEnumValue2:</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外，为了避免使用默认的 case，如果新的值加入到 enum，会马上收到一个 warning 通知<code>Enumeration value 'ZOCEnumValue3' not handled in switch.</code></p>
+
+<h2>方法命名</h2>
+
+<p>使用“and”命名的时候应当更加谨慎，它不应该用作阐明有多个参数。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//pros</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWidth:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span> <span class="nf">height:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//cons</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWidth:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span> <span class="nf">andHeight:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>字面量</h2>
+
+<p>尽量用简洁语法，一方面可读，一方面避免要往array里插入nil导致崩溃。<br/>
+不过应该避免<code>NSMutableArray *aMutableArray = [@[] mutableCopy]</code>这种写法，先创建了一个不可变变量，然后进行了mutableCopy，造成浪费。</p>
+
+<h2>Initializer 和 dealloc</h2>
+
+<p>dealloc应该放在最前面，init紧随其后，这两个从字面意思上看也应该放在一起。如果有多个initializer，designated initializer应该放在最前面。<br/>
+详细解释<code>[[NSObject alloc] init]</code>，从字面上看<code>分配内存</code>和<code>初始化</code>是两个操作。</p>
+
+<ul>
+<li>alloc表示对象分配内存，这个过程涉及分配足够的可用内存来保存对象，写入isa指针，初始化 retain 的计数，并且初始化所有实例变量。</li>
+<li>init 是表示初始化对象，这意味着把对象转换到了个可用的状态。这通常是指把可用的值赋给了对象的实例变量。</li>
+</ul>
+
+
+<p>alloc返回一个没有初始化的对象。每个发送到实例的消息都会被运行时转为<code>objc_msgSend()</code>函数的调用，这个函数的第一个参数就是指向alloc返回的、名为self的指针。一般的objc方法也带了两个隐含参数，一个<code>self</code>，一个<code>_cmd</code>。alloc后，self有值了，这个实例便可执行所有方法。</p>
+
+<h2>Mutable Object</h2>
+
+<p>任何可以用可变对象设置值 (eg. NSString,NSArray,NSURLRequest) 的 property 都要用<code>copy</code>，以免被其他对象随意赋值。<br/>
+另外对于本身就mutable的property，如果需要暴漏给外界就暴漏一个immutable的拷贝，如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cm">/* .h */</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">elements</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* .m */</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">elements</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mutableElements</span> <span class="n">copy</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>readonly</code>还是要多用。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[UITableView优化方法]]></title>
     <link href="http://daryl5.github.io/blog/2015/06/06/uitableview-optimize/"/>
     <updated>2015-06-06T14:21:29+08:00</updated>
     <id>http://daryl5.github.io/blog/2015/06/06/uitableview-optimize</id>
     <content type="html"><![CDATA[<!--more-->
 
+
+<blockquote><p>结论：搜集了很多资料，看下来感觉提到的方法都差不多，问题的关键是如何做出普适性强的通用库，或者和现有开发框架相结合，设计优雅的API，让大家开发业务时愿意去用。【黑客与画家】有一章的标题是【设计与研究：研究必须是“新”的，而设计必须是“好”的】，其实很多问题也能归到这两类上，一个问题是偏重设计问题还是研究问题，那关注的点就应该不同。</p></blockquote>
 
 <p>先看一下UITableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/">官方文档</a>，看看有没有什么以前不知道的细节。</p>
 
@@ -31,8 +263,133 @@
 </ul>
 
 
-<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如下图，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？<br/>
-<img src="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif" alt="" /></p>
+<p>UITableView对NSIndexPath做了个类扩展所以能直接取section和row，实际就是长度为2的index path第一个指明在sections里的位置第二个指明在rows里的位置。对于indexPath1.4.2.3如<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Art/indexpath.gif">图</a>，以前除了在tableView几乎没用过indexPath。什么时候有用？OC写个b树？  <br/>
+代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// This category provides convenience methods to make it easier to use an NSIndexPath to represent a section and row</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">NSIndexPath</span> <span class="nl">(UITableView)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nf">indexPathForRow:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">row</span> <span class="nf">inSection:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">section</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readonly</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">row</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外在使用runtime方法<code>void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</code>和<code>id objc_getAssociatedObject(id object, const void *key)
+</code>时需要指定一个唯一的key<code>static char const * const ObjectTagKey = "ObjectTag"</code>，在<a href="http://stackoverflow.com/questions/16020918/avoid-extra-static-variables-for-associated-objects-keys/16020927#16020927">这里</a>看到一个可以省去这个key的办法，直接用<code>@selector(anAssociatedObject)</code>做这个key。更进一步，可以用<code>_cmd</code>，原理是每个方法调用都会带两个隐藏参数，一个self用来取到消息接收者的iVar和iMethods，一个_cmd代表方法自身的selector，具体见官方文档的<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtHowMessagingWorks.html">消息机制</a>。</p>
+
+<ul>
+<li>State Preservation<br/>
+看到UIDataSourceModelAssociation，以前没留意过。复制给tableView的<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/index.html#//apple_ref/occ/instp/UIViewController/restorationIdentifier">restorationIdentifier</a>，并且tableView的dataSource实现UIDataSourceModelAssociation协议，然后实现两个代理方法，就能实现关闭app再打开时完全恢复tableView的状态。</li>
+</ul>
+
+
+<h2>为什么卡</h2>
+
+<p>UITableView继承自UIScrollView，需要根据contentSize、bounds、contentInset、contentOffset等属性共同决定是否可以滑动以及滚动条的长度，而且在加载tableView的时候就要询问所有cell的高度，以便确定UIScrollView的contentSize，iOS8引入了estimatedHeight就是为了减少这个过程的耗费，一开始只是估算一下，等到真正要展现cell的时候才计算cell的真实高度。另外就是cell的重用机制，拿出来旧的cell，往里设置内容时需要处理内容，而滚动时候会一直发生cell重用。</p>
+
+<h2>各种常见优化方法</h2>
+
+<ul>
+<li>尽可能使用<code>estimatedHeightForRowAtIndexPath</code>方法</li>
+</ul>
+
+
+<p>iOS7设备占比已经非常高，有必要专门去做一下优化，有实验表明使用了下面这个代理方法后帧数提升30%。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">heightForRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 把上面方法的调用推迟到cell即将展现出来时</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">estimatedHeightForRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span> <span class="n">NS_AVAILABLE_IOS</span><span class="p">(</span><span class="mi">7</span><span class="n">_0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>高度缓存</li>
+</ul>
+
+
+<p>在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/">优化UITableViewCell高度计算的那些事</a>。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//Model</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">itemHeight</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nl">heightForItem:</span><span class="p">(</span><span class="n">AAAModel</span> <span class="o">*</span><span class="p">)</span><span class="n">item</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外如果cell是定高的，那么直接用<code>self.tableview.rowHeight = 64</code>而不要用代理方法。如果写了这句还写了代理方法，那么会去调代理方法，这句设置失效。类似的有sectionFooterHeight、sectionHeaderHeight。不过话说回来，如果定高cell一般又不会卡。</p>
+
+<ul>
+<li>Cache Everything. Use Proper Model.</li>
+</ul>
+
+
+<p>其实跟上一条类似，所有复杂计算都保存结果，保存的地方就是model新增的property，或者干脆不暴露太多需要再加工的数据，暴露能直接展现的。</p>
+
+<ul>
+<li>cellForRowAtIndexPath做尽可能少的事</li>
+</ul>
+
+
+<p>把费时操作放到后台，可以用<code>GCD</code>，<code>NSOperationQueue</code>，另外看到个方法，利用通知机制，把不重要的处理放在idle里执行。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">registerForIdleNotification</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver:</span><span class="n">self</span>
+</span><span class='line'>                                             <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">idleNotificationMethod</span><span class="p">)</span>
+</span><span class='line'>                                                 <span class="nl">name:</span><span class="s">@&quot;IdleNotification&quot;</span>
+</span><span class='line'>                                               <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSNotification</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNotification</span> <span class="nl">notificationWithName:</span><span class="s">@&quot;IdleNotification&quot;</span> <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationQueue</span> <span class="n">defaultQueue</span><span class="p">]</span> <span class="nl">enqueueNotification:</span><span class="n">notification</span> <span class="nl">postingStyle:</span><span class="n">NSPostWhenIdle</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>一些好习惯</h2>
+
+<ul>
+<li>reload局部而不是全部</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">reloadRowsAtIndexPaths:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPaths</span> <span class="nf">withRowAnimation:</span><span class="p">(</span><span class="n">UITableViewRowAnimation</span><span class="p">)</span><span class="nv">animation</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
 
@@ -43,13 +400,42 @@ runloop
 
 <p>注意iOS8中字体变大变小</p>
 
-<p>iOS 7 Programming Pushing the limits</p>
+<p>iOS 7 Programming Pushing the limits<br/>
+简单元素自己绘制  按钮图片用customView。图片要decode等等。
+可以有个tableView.needAutoPixelAlign = YES<br/>
+没像素对齐的话会导致抗锯齿处理，也就是把元素的不同部分画到不同像素并且给以不同的alpha
+也可以有个tableView.needRegenerateImage = YES 适合没有交互的也可延伸到简单交互的cell，如点击展开tag，如点击预览评论里的图片，这样就基本没法搞了。要handle很多东西，删除啊、移动啊等等的<br/>
+一个有意思的观点，奇数的字体更容易像素对齐，比如13和12。其实只要用奇数字体，然后把中心放在整数像素上，就能像素对齐了。看一下新鹏的。</p>
+
+<p>cellForRow里做尽可能少的操作</p>
 
 <p>hack weixin
 25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
 
-<p>像素对齐
-ata 蚂蚁搜索一下</p>
+<p>像素对齐 图片对齐
+cache everything 日期格式化等放在model里
+用shadow path</p>
+
+<p>15.Optimize tableview
+reuse cell
+set subview opaque
+avoid gradients, image scale, offscreen drawing
+cache height if height is variable
+use asynchronously method for cell’ contents   如果滚出就不要计算了；思考一下，整个cellForRow都用异步
+use shadowPath to set shadow
+reduce te number of subViews 安卓有类似需求，减少xml的层级
+do as little work possible in cellForRowAtIndexPath:
+use the appropriate data structure
+use rowHeight, sectionFooterHeight,sectionHeaderHeight to set constant height instead of delegte  直接设置省的查代理方法</p>
+
+<p>ata 蚂蚁搜索一下<br/>
+1、stringWithFormat比起sprintf慢了好多，应该还有类似的api，一些操作可以考虑用c写<a href="http://www.atatech.org/articles/19944">ata</a><br/>
+2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法<a href="http://www.atatech.org/articles/17301">ata</a><br/>
+3、图片剪裁很关键，这里有一些可用代码，也有一个用bezierPath给图片加圆角的方法<a href="http://www.atatech.org/articles/19955">ata</a></p>
+
+<p>看了好些东西感觉bat里还是会被业务压到没办法研究很深，微信有专门负责性能优化的部门，很不错，钱包似乎也有。创业公司、个人开发者在这方面倒是研究更多。</p>
+
+<p>问题：方法很多，怎么能做到更高的通用性？</p>
 ]]></content>
   </entry>
   
