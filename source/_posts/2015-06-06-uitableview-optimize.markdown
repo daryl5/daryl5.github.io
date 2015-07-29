@@ -52,7 +52,8 @@ iOS7设备占比已经非常高，有必要专门去做一下优化，有实验�
 
 - 高度缓存
 
-在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有[优化UITableViewCell高度计算的那些事](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)。
+在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有[优化UITableViewCell高度计算的那些事](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)。另外这里有关于RunLoop的使用可以看看。
+
 ```objective-c
 //Model
 @property (nonatomic, assign) CGFloat itemHeight
@@ -82,69 +83,87 @@ iOS7设备占比已经非常高，有必要专门去做一下优化，有实验�
 }
 ```
 
-##一些好习惯
 - reload局部而不是全部
+
 ```objective-c
 - (void)reloadRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
 ```
 
+- 像素对齐
 
+不对齐会导致抗锯齿处理，就是把一个像素的东西画在相邻的两个像素上，并且设置不同的亮度。在iOS7 Programming Pushing the Limits看到一个小tip，可以用奇数字体，一般比偶数字体更容易像素对齐。
 
+另外对齐中心：
 
-vvebo 缓存力度 专门针对uitableview的缓存框架
+```objective-c
+- (void)setAlignedCenter:(CGPoint)center {
+    self.center = center;
+    self.frame = CGRectIntegral(self.frame);
+}
+```
 
-国外搜一搜 问问师兄们
-用layer
-runloop
-http://www.atatech.org/articles/27707 圆角优化
+- image大小和imageView保持一致
 
-注意iOS8中字体变大变小
+这样可以防止系统进行图片解码浪费性能。对图片数据进行decode。在子线程中设置image的大小后，在imageview中使用缩放后的image。原因：由于UIImage的imageWithData函数是每次画图的时候才将Data解压成ARGB的图像，所以在每次画图的时候，会有一个解压操作，UIImage初始化后仅仅是把图片加载到内存中，而实际的解码和重采样是在图片需要显示时才进行。
+另外`Debug-Color misaligned images`里可以看到没对齐的imageView。
 
-iOS 7 Programming Pushing the limits  
-简单元素自己绘制  按钮图片用customView。图片要decode等等。
-可以有个tableView.needAutoPixelAlign = YES  
-没像素对齐的话会导致抗锯齿处理，也就是把元素的不同部分画到不同像素并且给以不同的alpha
-也可以有个tableView.needRegenerateImage = YES 适合没有交互的也可延伸到简单交互的cell，如点击展开tag，如点击预览评论里的图片，这样就基本没法搞了。要handle很多东西，删除啊、移动啊等等的  
-一个有意思的观点，奇数的字体更容易像素对齐，比如13和12。其实只要用奇数字体，然后把中心放在整数像素上，就能像素对齐了。看一下新鹏的。
+```objective-c
+//图片重采样，在子线程中进行
+CGSize itemSize = CGSizeMake(width, height);//实际要缩放的大小
+UIGraphicsBeginImageContext(itemSize);
+CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+[image drawInRect:imageRect];
+UIImage newImage = UIGraphicsGetImageFromCurrentImageContext(); //重采样后的图片
+UIGraphicsEndImageContext();
+```
 
+- 简单控件用Core Graphics绘制
 
-cellForRow里做尽可能少的操作
+设置圆角、简单控件、设置阴影等都用Core Graphics。
 
+- C Functions
 
+自定义含表情显示的Label。服务端返回的是类似/:026、/:-W之类的伪符号，所以循环把这些伪符号替换成一段类似html的代码，并且每次循环都用到[NSString stringWithFormat:]方法构建了这段类似html的代码。
 
-hack weixin
-25 tips to optimize http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/
+```objective-c
+sprintf(emojiKey, EMOJI_DIRECTORY, [value UTF8String],pointSize,pointSize);
+NSString *imageValue = [NSString stringWithCString:emojiKey encoding:NSASCIIStringEncoding];
+s = [s stringByReplacingOccurrencesOfString:key withString:imageValue];
+```
 
+- 方法指针缓存
 
+如果一个方法在一个循环次数非常多的循环中使用，在进入循环前使用methodForSelector获取该方法的IMP，在循环体中直接调用该IMP。
 
+- 按需加载
 
-像素对齐 图片对齐
-cache everything 日期格式化等放在model里
-用shadow path
+如果滚出就不加载内容了，不过体验不好。
 
+- AsyncDisplayKit
 
-15.Optimize tableview
-reuse cell
-set subview opaque
+待续
+
 avoid gradients, image scale, offscreen drawing
-cache height if height is variable
-use asynchronously method for cell’ contents   如果滚出就不要计算了；思考一下，整个cellForRow都用异步
-use shadowPath to set shadow
-reduce te number of subViews 安卓有类似需求，减少xml的层级
-do as little work possible in cellForRowAtIndexPath:
-use the appropriate data structure
-use rowHeight, sectionFooterHeight,sectionHeaderHeight to set constant height instead of delegte  直接设置省的查代理方法
 
 
-
-
-
-ata 蚂蚁搜索一下  
-1、stringWithFormat比起sprintf慢了好多，应该还有类似的api，一些操作可以考虑用c写[ata](http://www.atatech.org/articles/19944)  
 2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法[ata](http://www.atatech.org/articles/17301)  
-3、图片剪裁很关键，这里有一些可用代码，也有一个用bezierPath给图片加圆角的方法[ata](http://www.atatech.org/articles/19955)
+```objective-c
+- (NSDateFormatter *)getDateFormatter {
+    NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
+    NSDateFormatter *dateFormatter = threadDict[@"reuse_dateFormatter"];
+    if (!dateFormatter) {
+        @synchronized(self) {
+            dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd a HH:mm:ss EEEE"];
+            threadDict[@"reuse_dateFormatter"] = dateFormatter;
+        }
+    }
 
-看了好些东西感觉bat里还是会被业务压到没办法研究很深，微信有专门负责性能优化的部门，很不错，钱包似乎也有。创业公司、个人开发者在这方面倒是研究更多。
+    return dateFormatter;
+}
+```
 
+3、减少subviews数量，定制复杂cell使用drawRect。尽量使用drawRect而不是layoutSubView。
 
-问题：方法很多，怎么能做到更高的通用性？
+1、不在viewWillApear中进行费时操作
+
