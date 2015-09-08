@@ -167,7 +167,7 @@
 </ul>
 
 
-<p>在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/">优化UITableViewCell高度计算的那些事</a>。</p>
+<p>在类方法中先判断item.itemHeight是不是0，如果不是则直接返回，否则进入计算过程，并在计算完成后赋值给itemHeight保存。关于算高有<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/">优化UITableViewCell高度计算的那些事</a>。另外这里有关于RunLoop的使用可以看看。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -221,8 +221,6 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>一些好习惯</h2>
-
 <ul>
 <li>reload局部而不是全部</li>
 </ul>
@@ -233,51 +231,131 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>vvebo 缓存力度 专门针对uitableview的缓存框架</p>
+<ul>
+<li>像素对齐</li>
+</ul>
 
-<p>国外搜一搜 问问师兄们
-用layer
-runloop
-<a href="http://www.atatech.org/articles/27707">http://www.atatech.org/articles/27707</a> 圆角优化</p>
 
-<p>注意iOS8中字体变大变小</p>
+<p>不对齐会导致抗锯齿处理，就是把一个像素的东西画在相邻的两个像素上，并且设置不同的亮度。在iOS7 Programming Pushing the Limits看到一个小tip，可以用奇数字体，一般比偶数字体更容易像素对齐。</p>
 
-<p>iOS 7 Programming Pushing the limits<br/>
-简单元素自己绘制  按钮图片用customView。图片要decode等等。
-可以有个tableView.needAutoPixelAlign = YES<br/>
-没像素对齐的话会导致抗锯齿处理，也就是把元素的不同部分画到不同像素并且给以不同的alpha
-也可以有个tableView.needRegenerateImage = YES 适合没有交互的也可延伸到简单交互的cell，如点击展开tag，如点击预览评论里的图片，这样就基本没法搞了。要handle很多东西，删除啊、移动啊等等的<br/>
-一个有意思的观点，奇数的字体更容易像素对齐，比如13和12。其实只要用奇数字体，然后把中心放在整数像素上，就能像素对齐了。看一下新鹏的。</p>
+<p>另外对齐中心：</p>
 
-<p>cellForRow里做尽可能少的操作</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setAlignedCenter:</span><span class="p">(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">center</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectIntegral</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">frame</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>hack weixin
-25 tips to optimize <a href="http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/">http://traximus.github.io/blog/2014/01/21/ios-performance-tips-and-tricksks/</a></p>
 
-<p>像素对齐 图片对齐
-cache everything 日期格式化等放在model里
-用shadow path</p>
+<ul>
+<li>image大小和imageView保持一致</li>
+</ul>
 
-<p>15.Optimize tableview
-reuse cell
-set subview opaque
-avoid gradients, image scale, offscreen drawing
-cache height if height is variable
-use asynchronously method for cell’ contents   如果滚出就不要计算了；思考一下，整个cellForRow都用异步
-use shadowPath to set shadow
-reduce te number of subViews 安卓有类似需求，减少xml的层级
-do as little work possible in cellForRowAtIndexPath:
-use the appropriate data structure
-use rowHeight, sectionFooterHeight,sectionHeaderHeight to set constant height instead of delegte  直接设置省的查代理方法</p>
 
-<p>ata 蚂蚁搜索一下<br/>
-1、stringWithFormat比起sprintf慢了好多，应该还有类似的api，一些操作可以考虑用c写<a href="http://www.atatech.org/articles/19944">ata</a><br/>
-2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法<a href="http://www.atatech.org/articles/17301">ata</a><br/>
-3、图片剪裁很关键，这里有一些可用代码，也有一个用bezierPath给图片加圆角的方法<a href="http://www.atatech.org/articles/19955">ata</a></p>
+<p>这样可以防止系统进行图片解码浪费性能。对图片数据进行decode。在子线程中设置image的大小后，在imageview中使用缩放后的image。原因：由于UIImage的imageWithData函数是每次画图的时候才将Data解压成ARGB的图像，所以在每次画图的时候，会有一个解压操作，UIImage初始化后仅仅是把图片加载到内存中，而实际的解码和重采样是在图片需要显示时才进行。
+另外<code>Debug-Color misaligned images</code>里可以看到没对齐的imageView。</p>
 
-<p>看了好些东西感觉bat里还是会被业务压到没办法研究很深，微信有专门负责性能优化的部门，很不错，钱包似乎也有。创业公司、个人开发者在这方面倒是研究更多。</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//图片重采样，在子线程中进行</span>
+</span><span class='line'><span class="n">CGSize</span> <span class="n">itemSize</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span><span class="c1">//实际要缩放的大小</span>
+</span><span class='line'><span class="n">UIGraphicsBeginImageContext</span><span class="p">(</span><span class="n">itemSize</span><span class="p">);</span>
+</span><span class='line'><span class="n">CGRect</span> <span class="n">imageRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">itemSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">itemSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+</span><span class='line'><span class="p">[</span><span class="n">image</span> <span class="nl">drawInRect:</span><span class="n">imageRect</span><span class="p">];</span>
+</span><span class='line'><span class="n">UIImage</span> <span class="n">newImage</span> <span class="o">=</span> <span class="n">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span> <span class="c1">//重采样后的图片</span>
+</span><span class='line'><span class="n">UIGraphicsEndImageContext</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>问题：方法很多，怎么能做到更高的通用性？</p>
+
+<ul>
+<li>简单控件用Core Graphics绘制</li>
+</ul>
+
+
+<p>设置圆角、简单控件、设置阴影等都用Core Graphics。</p>
+
+<ul>
+<li>C Functions</li>
+</ul>
+
+
+<p>自定义含表情显示的Label。服务端返回的是类似/:026、/:-W之类的伪符号，所以循环把这些伪符号替换成一段类似html的代码，并且每次循环都用到[NSString stringWithFormat:]方法构建了这段类似html的代码。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">sprintf</span><span class="p">(</span><span class="n">emojiKey</span><span class="p">,</span> <span class="n">EMOJI_DIRECTORY</span><span class="p">,</span> <span class="p">[</span><span class="n">value</span> <span class="n">UTF8String</span><span class="p">],</span><span class="n">pointSize</span><span class="p">,</span><span class="n">pointSize</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">imageValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithCString:</span><span class="n">emojiKey</span> <span class="nl">encoding:</span><span class="n">NSASCIIStringEncoding</span><span class="p">];</span>
+</span><span class='line'><span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="nl">stringByReplacingOccurrencesOfString:</span><span class="n">key</span> <span class="nl">withString:</span><span class="n">imageValue</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>方法指针缓存</li>
+</ul>
+
+
+<p>如果一个方法在一个循环次数非常多的循环中使用，在进入循环前使用methodForSelector获取该方法的IMP，在循环体中直接调用该IMP。</p>
+
+<ul>
+<li>按需加载</li>
+</ul>
+
+
+<p>如果滚出就不加载内容了，不过体验不好。</p>
+
+<ul>
+<li>AsyncDisplayKit</li>
+</ul>
+
+
+<p>待续</p>
+
+<p>avoid gradients, image scale, offscreen drawing</p>
+
+<p>2、NSDateFormatter的重用大家都知道，但是是线程不安全的，这里有安全的写法<a href="http://www.atatech.org/articles/17301">ata</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="p">)</span><span class="nf">getDateFormatter</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">threadDict</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]</span> <span class="n">threadDictionary</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">dateFormatter</span> <span class="o">=</span> <span class="n">threadDict</span><span class="p">[</span><span class="s">@&quot;reuse_dateFormatter&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dateFormatter</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">@synchronized</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">dateFormatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">dateFormatter</span> <span class="nl">setDateFormat:</span><span class="s">@&quot;yyyy-MM-dd a HH:mm:ss EEEE&quot;</span><span class="p">];</span>
+</span><span class='line'>            <span class="n">threadDict</span><span class="p">[</span><span class="s">@&quot;reuse_dateFormatter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dateFormatter</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">dateFormatter</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3、减少subviews数量，定制复杂cell使用drawRect。尽量使用drawRect而不是layoutSubView。</p>
+
+<p>1、不在viewWillApear中进行费时操作</p>
 </div>
 </article>
 <!--
